@@ -206,18 +206,18 @@ return [
     'Datasources' => [
         'default' => [
             'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
+            'driver' => 'Cake\Database\Driver\Postgres',
             'persistent' => false,
-            'host' => 'localhost',
+            'host' => 'ec2-46-137-72-123.eu-west-1.compute.amazonaws.com',
             /**
              * CakePHP will use the default DB port based on the driver selected
              * MySQL on MAMP uses port 8889, MAMP users will want to uncomment
              * the following line and set the port accordingly
              */
             //'port' => 'nonstandard_port_number',
-            'username' => 'my_app',
-            'password' => 'secret',
-            'database' => 'my_app',
+            'username' => 'osngqbjladzzlx',
+            'password' => 'w22CBcaRLbI8XduqhnRyb-HXv4',
+            'database' => 'd9f1ihu8e69jh4',
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'cacheMetadata' => true,
