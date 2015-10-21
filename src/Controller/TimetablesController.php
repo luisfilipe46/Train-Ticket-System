@@ -11,6 +11,11 @@ use App\Controller\AppController;
 class TimetablesController extends AppController
 {
 
+    public function initialize()
+    {
+        $this->loadComponent('RequestHandler');
+    }
+
     /**
      * Index method
      *

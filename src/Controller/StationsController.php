@@ -11,6 +11,10 @@ use App\Controller\AppController;
 class StationsController extends AppController
 {
 
+    public function initialize()
+    {
+        $this->loadComponent('RequestHandler');
+    }
     /**
      * Index method
      *

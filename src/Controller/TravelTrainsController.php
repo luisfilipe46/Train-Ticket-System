@@ -11,6 +11,10 @@ use App\Controller\AppController;
 class TravelTrainsController extends AppController
 {
 
+    public function initialize()
+    {
+        $this->loadComponent('RequestHandler');
+    }
     /**
      * Index method
      *

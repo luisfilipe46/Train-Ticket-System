@@ -13,7 +13,6 @@ class CreditCardsController extends AppController
 
     public function initialize()
     {
-        //...
         $this->loadComponent('RequestHandler');
     }
     /**
