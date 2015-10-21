@@ -46,6 +46,11 @@ Router::scope('/api', function ($routes) {
     $routes->extensions(['json', 'xml']);
     $routes->resources('Recipes');
     $routes->resources('CreditCards');
+    $routes->resources('Stations');
+    $routes->resources('Tickets');
+    $routes->resources('Timetables');
+    $routes->resources('TravelTrains');
+    $routes->resources('Users');
 });
 
 Router::scope('/', function ($routes) {
