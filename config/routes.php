@@ -45,6 +45,7 @@ Router::defaultRouteClass('DashedRoute');
 Router::scope('/api', function ($routes) {
     $routes->extensions(['json', 'xml']);
     $routes->resources('Recipes');
+    $routes->resources('CreditCards');
 });
 
 Router::scope('/', function ($routes) {
@@ -63,6 +64,9 @@ Router::scope('/', function ($routes) {
 
     //$routes->extensions(['json', 'xml']);
     //$routes->resources('Recipes');
+    
+    //$routes->resources('Creditcards');
+    
     /**
      * Connect catchall routes for all controllers.
      *
