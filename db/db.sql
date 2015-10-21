@@ -1,15 +1,15 @@
-user
+user - done
 - username (PK)
 - name
 - password
 - id credit card
 
-credit card
+credit card - done
 - number (PK)
 - type
 - validity
 
-ticket
+ticket - done
 - id
 - username
 - origin station
@@ -19,15 +19,15 @@ ticket
 - departure time
 - arrival time
 
-station
+station - done
 - name (PK)
 - line (A, C or both)
 
-neighbors station
+neighbors station - done
 - name1 (FK station)
 - name2 (FK station)
 
-timetable
+timetable - done
 - id
 - origin station (FK station)
 - destiny station (FK station)
@@ -36,7 +36,7 @@ timetable
 - arrival time
 - lotation
 
-travels train
+travels train - done
 - timetable id (FK)
 - date
 - passengers number
