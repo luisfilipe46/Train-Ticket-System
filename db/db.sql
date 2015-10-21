@@ -1,15 +1,15 @@
-user - done
+user - done - model & controller created
 - username (PK)
 - name
 - password
 - id credit card
 
-credit card - done
+credit card - done - model & controller created
 - number (PK)
 - type
 - validity
 
-ticket - done
+ticket - done - model & controller created
 - id
 - username
 - origin station
@@ -19,15 +19,15 @@ ticket - done
 - departure time
 - arrival time
 
-station - done
+station - done - model & controller created
 - name (PK)
 - line (A, C or both)
 
-neighbors station - done
+neighbors station - done - model created
 - name1 (FK station)
 - name2 (FK station)
 
-timetable - done
+timetable - done - model & controller created
 - id
 - origin station (FK station)
 - destiny station (FK station)
@@ -36,7 +36,7 @@ timetable - done
 - arrival time
 - lotation
 
-travels train - done
+travels train - done - model & controller created
 - timetable id (FK)
 - date
 - passengers number
