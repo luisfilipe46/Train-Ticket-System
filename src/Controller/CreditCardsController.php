@@ -18,7 +18,7 @@ class CreditCardsController extends AppController
     }
 
 
-    public function beforeFilter(Event $event)
+    public function beforeFilter(Cake\Event\Event $event)
     {
         //parent::beforeFilter($event);
         $this->Security->requireSecure();
