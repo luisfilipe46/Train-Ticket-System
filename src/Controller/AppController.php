@@ -47,13 +47,6 @@ class AppController extends Controller
         
     }
 
-    public function beforeFilter(Event $event)
-    {
-        parent::beforeFilter($event);
-        //AuthComponent::$sessionKey = false;
-        $this->Security->requireSecure();
-    }
-
     /**
      * Before render callback.
      *

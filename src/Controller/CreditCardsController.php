@@ -13,8 +13,17 @@ class CreditCardsController extends AppController
 
     public function initialize()
     {
+        $this->loadComponent('Security');
         $this->loadComponent('RequestHandler');
     }
+
+
+    public function beforeFilter(Event $event)
+    {
+        //parent::beforeFilter($event);
+        $this->Security->requireSecure();
+    }
+
     /**
      * Index method
      *
