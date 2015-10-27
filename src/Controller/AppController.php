@@ -43,6 +43,15 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+        $this->loadComponent('Security');
+        
+    }
+
+    public function beforeFilter(Event $event)
+    {
+        parent::beforeFilter($event);
+        //AuthComponent::$sessionKey = false;
+        $this->Security->requireSecure();
     }
 
     /**
