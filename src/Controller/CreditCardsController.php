@@ -23,7 +23,7 @@ class CreditCardsController extends AppController
     public function beforeFilter(Event $event)
     {
         //parent::beforeFilter($event);
-        $this->Security->requireSecure();
+        $this->Security->requireSecure('index');
     }
 
     /**
