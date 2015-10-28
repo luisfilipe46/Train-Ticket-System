@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Controller\Controller;
+use Cake\Event\Event;
 
 /**
  * CreditCards Controller
@@ -13,8 +15,17 @@ class CreditCardsController extends AppController
 
     public function initialize()
     {
+        $this->loadComponent('Security');
         $this->loadComponent('RequestHandler');
     }
+
+
+    public function beforeFilter(Event $event)
+    {
+        //parent::beforeFilter($event);
+        //$this->Security->requireSecure('index');
+    }
+
     /**
      * Index method
      *
