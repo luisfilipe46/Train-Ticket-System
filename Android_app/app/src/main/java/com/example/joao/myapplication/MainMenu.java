@@ -4,22 +4,31 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.StrictMode;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -46,6 +55,8 @@ public class MainMenu extends AppCompatActivity {
     private String mActivityTitle;
     private RestClient restClient;
     private TextView restResult;
+    private ProgressBar progressBar;
+    private TableLayout ll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +89,12 @@ public class MainMenu extends AppCompatActivity {
         spinnerStart = (Spinner) findViewById(R.id.spinner_start_station);
         spinnerEnd = (Spinner) findViewById(R.id.spinner_end_station);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
         mActivityTitle = getTitle().toString();
+        ll = (TableLayout) findViewById(R.id.available_trains);
+
+        //
+        progressBar.setVisibility(View.GONE);
 
         // add side menu items
         addDrawerItems();
@@ -126,7 +142,7 @@ public class MainMenu extends AppCompatActivity {
                 if (position == 0) // My tickets
                 {
                     Toast.makeText(MainMenu.this, "Show tickets", Toast.LENGTH_SHORT).show();
-                } else if(position ==1){
+                } else if (position == 1) { //REST GET TEST
 
                     String result;
                     try {
@@ -139,33 +155,45 @@ public class MainMenu extends AppCompatActivity {
                         e.printStackTrace();
                     } catch (JSONException e) {
                         e.printStackTrace();
-                    }
-                }
-                else if(position == 2)
-                {
-                    String result;
-                    try {
-
-                        restClient.setMethod("POST");
-                        restClient.setUrl("https://httpbin.org/post");
-                        restClient.addParam("testeName1", "testeValue1");
-                        restClient.addParam("testeName3","testeValue3");
-                        result = restClient.execute();
-                        restResult.setText(result);
-
-                    } catch (ProtocolException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                }else if(position == 3)
-                {
+                } else if (position == 2) { //REST POST TEST
+
+                    restClient.setMethod("POST");
+                    restClient.setUrl("https://httpbin.org/post");
+                    restClient.addParam("testeName1", "testeValue1");
+                    restClient.addParam("testeName3", "testeValue3");
+                    progressBar.setVisibility(View.VISIBLE);
+
+                    new Thread(new Runnable() {
+                        public void run() {
+                            try {
+
+                                Thread.sleep(2000);
+                                restClient.execute();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            restResult.post(new Runnable() {
+                                public void run() {
+                                    progressBar.setVisibility(View.GONE);
+                                    updateText();
+                                }
+                            });
+                        }
+                    }).start();
+
+
+                    // restResult.setText(result);
+
+                } else if (position == 3) {
                     restResult.setText("");
-                }
-                else
-                {
+                } else {
                     Toast.makeText(MainMenu.this, "Nothing to do", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -174,8 +202,66 @@ public class MainMenu extends AppCompatActivity {
 
     }
 
-    public void getTravels(View view)
+    private void updateText() {
+        String str = restClient.getReturn();
+        restResult.setText(str);
+    }
+
+    private void updateAvailableTravels()
     {
+        progressBar.setVisibility(View.GONE);
+
+
+        for (int i = 0; i <2; i++) {
+
+            String station1 = "Name1";
+            String station2 = "Name2";
+            String hour1 = "14:15";
+            String hour2 = "15:30";
+
+            TableRow row= new TableRow(this);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(0,100,0,0);
+
+            row.setLayoutParams(lp);
+            Button addBtn = new Button(this);
+            addBtn.setText("Buy");
+            addBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    buyTicket();
+                }
+            });
+
+            TableLayout innerTable = new TableLayout(this);
+            TableRow innerRow1 = new TableRow(this);
+            TableRow innerRow2 = new TableRow(this);
+
+
+            TextView station1Text = new TextView(this);
+            station1Text.setText(Html.fromHtml("<b>"+ station1 +"</b>" + "(" + hour1 + ")"));
+
+            TextView toText = new TextView(this);
+            toText.setText(" to ");
+
+            TextView station2Text = new TextView(this);
+            station2Text.setText(Html.fromHtml("<b>"+ station2 +"</b>" + "(" + hour2 + ")"));
+
+            innerRow1.addView(station1Text);
+            innerRow2.addView(station2Text);
+
+            innerTable.addView(innerRow1);
+            innerTable.addView(toText);
+            innerTable.addView(innerRow2);
+
+
+            row.addView(innerTable);
+            row.addView(addBtn);
+            ll.addView(row,i);
+        }
+    }
+
+    public void getTravels(View view) throws InterruptedException {
         if(spinnerEnd.getSelectedItemPosition() == spinnerStart.getSelectedItemPosition())
         {
 
@@ -195,9 +281,60 @@ public class MainMenu extends AppCompatActivity {
             alertDialog.show();
 
         }
+        else // make request To DB and show available options
+        {
+            progressBar.setVisibility(View.VISIBLE);
+
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+
+                        Thread.sleep(2000);
+                        restClient.execute();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    ll.post(new Runnable() {
+                        public void run() {
+                            updateAvailableTravels();
+                        }
+                    });
+                }
+            }).start();
+
+
+
+
+
+        }
 
 
     }
+
+    private void buyTicket() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        // set title
+        alertDialogBuilder.setTitle("Buying");
+
+        // set dialog message
+        alertDialogBuilder.setMessage("Ticket sad sadas 10 pm" );
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
+
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -34,6 +34,8 @@ public class RestClient {
     private String method;
     private boolean paramsBool;
     private List<Pair<String, String>> params;
+    private String ret;
+
 
     public RestClient(String url) throws MalformedURLException {
 
@@ -41,7 +43,7 @@ public class RestClient {
         method = "GET";
         paramsBool = false;
         params = new ArrayList<>();
-
+        ret = null;
     }
 
     public void setParams(List<Pair<String,String>> params)
@@ -55,6 +57,11 @@ public class RestClient {
     {
         paramsBool = true;
 
+    }
+
+    public String getReturn()
+    {
+        return ret;
     }
 
     public void addParam(String name,String value)
@@ -80,13 +87,13 @@ public class RestClient {
        this.method = method;
     }
 
-    public String execute() throws IOException, JSONException {
+    public String execute() throws IOException, JSONException, InterruptedException {
 
 
 
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setRequestMethod(method);
-        if(paramsBool)
+        if(params.size()>0)
         {
             addParams(urlConnection);
         }
@@ -111,6 +118,8 @@ public class RestClient {
 
         if(params != null)
         params.clear();
+
+        this.ret = ret;
 
         return ret;
 
@@ -165,5 +174,6 @@ public class RestClient {
         }
         return response.toString();
     }
+
 
 }
