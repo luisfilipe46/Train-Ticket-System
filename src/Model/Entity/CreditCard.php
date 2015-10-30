@@ -26,6 +26,6 @@ class CreditCard extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'number' => false,
+        'number' => true,
     ];
 }

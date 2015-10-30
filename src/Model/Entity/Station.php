@@ -25,6 +25,6 @@ class Station extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'name' => false,
+        'name' => true,
     ];
 }

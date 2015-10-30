@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Error\Debugger;
 
 /**
  * Stations Controller
@@ -13,6 +14,7 @@ class StationsController extends AppController
 
     public function initialize()
     {
+	parent::initialize();
         $this->loadComponent('RequestHandler');
     }
     /**
@@ -49,12 +51,16 @@ class StationsController extends AppController
      */
     public function add()
     {
+	//Debugger::dump($this->request->data);
+	
+	
         $station = $this->Stations->newEntity();
         if ($this->request->is('post')) {
             $station = $this->Stations->patchEntity($station, $this->request->data);
             if ($this->Stations->save($station)) {
                 $this->Flash->success(__('The station has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                //return $this->redirect(['action' => 'index']);
+	        $this->set('_serialize', ['station']);
             } else {
                 $this->Flash->error(__('The station could not be saved. Please, try again.'));
             }

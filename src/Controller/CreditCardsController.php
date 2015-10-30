@@ -16,6 +16,7 @@ class CreditCardsController extends AppController
 
     public function initialize()
     {
+	parent::initialize();
         $this->loadComponent('Security');
         $this->loadComponent('RequestHandler');
     }

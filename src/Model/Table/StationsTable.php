@@ -40,8 +40,12 @@ class StationsTable extends Table
      */
     public function validationDefault(Validator $validator)
     {
+        /*$validator
+            ->allowEmpty('name', 'create');*/
+
         $validator
-            ->allowEmpty('name', 'create');
+            ->requirePresence('name', 'create')
+            ->notEmpty('name');
 
         $validator
             ->requirePresence('line', 'create')

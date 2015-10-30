@@ -764,6 +764,228 @@ $data = [
 			'arrival_time' => '2016-10-06 21:20:00',
 		],
 	],
+	'routes' => [
+		'_truncate' => true,
+		'_defaults' => ['created' => '2016-06-06 01:00:00',
+			'modified' => '2016-06-06 01:00:00'],
+			// station 11 to anothers
+		[
+			'name_station1' => '11',
+			'name_station2' => '12',
+			'route' => serialize(['11', '12']),
+		],
+		[
+			'name_station1' => '11',
+			'name_station2' => '01',
+			'route' => serialize(['11', '12', '01']),
+		],
+		[
+			'name_station1' => '11',
+			'name_station2' => '32',
+			'route' => serialize(['11', '12', '01', '32']),
+		],
+		[
+			'name_station1' => '11',
+			'name_station2' => '31',
+			'route' => serialize(['11', '12', '01', '32', '31']),
+		],
+		[
+			'name_station1' => '11',
+			'name_station2' => '22',
+			'route' => serialize(['11', '12', '01', '22']),
+		],
+		[
+			'name_station1' => '11',
+			'name_station2' => '21',
+			'route' => serialize(['11', '12', '01', '22', '21']),
+		],
+			// station 21 to anothers
+		[
+			'name_station1' => '21',
+			'name_station2' => '22',
+			'route' => serialize(['21', '22']),
+		],
+		[
+			'name_station1' => '21',
+			'name_station2' => '01',
+			'route' => serialize(['21', '22', '01']),
+		],
+		[
+			'name_station1' => '21',
+			'name_station2' => '32',
+			'route' => serialize(['21', '22', '01', '32']),
+		],
+		[
+			'name_station1' => '21',
+			'name_station2' => '31',
+			'route' => serialize(['21', '22', '01', '32', '31']),
+		],
+		[
+			'name_station1' => '21',
+			'name_station2' => '12',
+			'route' => serialize(['21', '22', '01', '12']),
+		],
+		[
+			'name_station1' => '21',
+			'name_station2' => '11',
+			'route' => serialize(['21', '22', '01', '12', '11']),
+		],
+			// station 31 to anothers
+		[
+			'name_station1' => '31',
+			'name_station2' => '32',
+			'route' => serialize(['31', '32']),
+		],
+		[
+			'name_station1' => '31',
+			'name_station2' => '01',
+			'route' => serialize(['31', '32', '01']),
+		],
+		[
+			'name_station1' => '31',
+			'name_station2' => '22',
+			'route' => serialize(['31', '32', '01', '22']),
+		],
+		[
+			'name_station1' => '31',
+			'name_station2' => '21',
+			'route' => serialize(['31', '32', '01', '22', '21']),
+		],
+		[
+			'name_station1' => '31',
+			'name_station2' => '12',
+			'route' => serialize(['31', '32', '01', '12']),
+		],
+		[
+			'name_station1' => '31',
+			'name_station2' => '11',
+			'route' => serialize(['31', '32', '01', '12', '11']),
+		],
+			// station 12 to anothers
+		[
+			'name_station1' => '12',
+			'name_station2' => '11',
+			'route' => serialize(['12', '11']),
+		],
+		[
+			'name_station1' => '12',
+			'name_station2' => '01',
+			'route' => serialize(['12', '01']),
+		],
+		[
+			'name_station1' => '12',
+			'name_station2' => '32',
+			'route' => serialize(['12', '01', '32']),
+		],
+		[
+			'name_station1' => '12',
+			'name_station2' => '31',
+			'route' => serialize(['12', '01', '32', '31']),
+		],
+		[
+			'name_station1' => '12',
+			'name_station2' => '22',
+			'route' => serialize(['12', '01', '22']),
+		],
+		[
+			'name_station1' => '12',
+			'name_station2' => '21',
+			'route' => serialize(['12', '01', '22', '21']),
+		],
+			// station 22 to anothers
+		[
+			'name_station1' => '22',
+			'name_station2' => '21',
+			'route' => serialize(['22', '21']),
+		],
+		[
+			'name_station1' => '22',
+			'name_station2' => '01',
+			'route' => serialize(['22', '01']),
+		],
+		[
+			'name_station1' => '22',
+			'name_station2' => '32',
+			'route' => serialize(['22', '01', '32']),
+		],
+		[
+			'name_station1' => '22',
+			'name_station2' => '31',
+			'route' => serialize(['22', '01', '32', '31']),
+		],
+		[
+			'name_station1' => '22',
+			'name_station2' => '12',
+			'route' => serialize(['22', '01', '12']),
+		],
+		[
+			'name_station1' => '22',
+			'name_station2' => '11',
+			'route' => serialize(['22', '01', '12', '11']),
+		],
+			// station 32 to anothers
+		[
+			'name_station1' => '32',
+			'name_station2' => '31',
+			'route' => serialize(['32', '31']),
+		],
+		[
+			'name_station1' => '32',
+			'name_station2' => '01',
+			'route' => serialize(['32', '01']),
+		],
+		[
+			'name_station1' => '32',
+			'name_station2' => '22',
+			'route' => serialize(['32', '01', '22']),
+		],
+		[
+			'name_station1' => '32',
+			'name_station2' => '21',
+			'route' => serialize(['32', '01', '22', '21']),
+		],
+		[
+			'name_station1' => '32',
+			'name_station2' => '12',
+			'route' => serialize(['32', '01', '12']),
+		],
+		[
+			'name_station1' => '32',
+			'name_station2' => '11',
+			'route' => serialize(['32', '01', '12', '11']),
+		],
+			// station 01 to anothers
+		[
+			'name_station1' => '01',
+			'name_station2' => '12',
+			'route' => serialize(['01', '12']),
+		],
+		[
+			'name_station1' => '01',
+			'name_station2' => '22',
+			'route' => serialize(['01', '22']),
+		],
+		[
+			'name_station1' => '01',
+			'name_station2' => '32',
+			'route' => serialize(['01', '32']),
+		],
+		[
+			'name_station1' => '01',
+			'name_station2' => '11',
+			'route' => serialize(['01', '12', '11']),
+		],
+		[
+			'name_station1' => '01',
+			'name_station2' => '21',
+			'route' => serialize(['01', '22', '21']),
+		],
+		[
+			'name_station1' => '01',
+			'name_station2' => '31',
+			'route' => serialize(['01', '32', '31']),
+		],
+	],
 ];
 
 for ($i = 1; $i < 73; $i++) {
