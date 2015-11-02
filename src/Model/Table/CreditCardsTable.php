@@ -25,8 +25,8 @@ class CreditCardsTable extends Table
         parent::initialize($config);
 
         $this->table('credit_cards');
-        $this->displayField('number');
-        $this->primaryKey('number');
+        $this->displayField('id');
+        $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
 
@@ -41,7 +41,13 @@ class CreditCardsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->allowEmpty('number', 'create');
+            ->add('id', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('id', 'create');
+
+        $validator
+            ->requirePresence('number', 'create')
+            ->notEmpty('number')
+            ->add('number', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
             ->requirePresence('type', 'create')

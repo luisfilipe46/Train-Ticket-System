@@ -17,13 +17,15 @@ class CreditCardsFixture extends TestFixture
      */
     // @codingStandardsIgnoreStart
     public $fields = [
+        'id' => ['type' => 'integer', 'length' => 10, 'autoIncrement' => true, 'default' => null, 'null' => false, 'comment' => null, 'precision' => null, 'unsigned' => null],
         'number' => ['type' => 'string', 'length' => 255, 'default' => null, 'null' => false, 'comment' => null, 'precision' => null, 'fixed' => null],
         'type' => ['type' => 'string', 'length' => 255, 'default' => null, 'null' => false, 'comment' => null, 'precision' => null, 'fixed' => null],
         'validity' => ['type' => 'date', 'length' => null, 'default' => null, 'null' => false, 'comment' => null, 'precision' => null],
         'created' => ['type' => 'timestamp', 'length' => null, 'default' => null, 'null' => false, 'comment' => null, 'precision' => null],
         'modified' => ['type' => 'timestamp', 'length' => null, 'default' => null, 'null' => false, 'comment' => null, 'precision' => null],
         '_constraints' => [
-            'primary' => ['type' => 'primary', 'columns' => ['number'], 'length' => []],
+            'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
+            'unique_number' => ['type' => 'unique', 'columns' => ['number'], 'length' => []],
         ],
     ];
     // @codingStandardsIgnoreEnd
@@ -35,11 +37,12 @@ class CreditCardsFixture extends TestFixture
      */
     public $records = [
         [
-            'number' => '3f8c9822-d1a8-49f4-bb07-267aa77725e8',
+            'id' => 1,
+            'number' => 'Lorem ipsum dolor sit amet',
             'type' => 'Lorem ipsum dolor sit amet',
-            'validity' => '2015-10-21',
-            'created' => 1445442680,
-            'modified' => 1445442680
+            'validity' => '2015-11-02',
+            'created' => 1446485321,
+            'modified' => 1446485321
         ],
     ];
 }

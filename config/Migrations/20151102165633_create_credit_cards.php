@@ -3,9 +3,6 @@ use Migrations\AbstractMigration;
 
 class CreateCreditCards extends AbstractMigration
 {
-
-    public $autoId = false;
-
     /**
      * Change Method.
      *
@@ -38,8 +35,11 @@ class CreateCreditCards extends AbstractMigration
             'default' => null,
             'null' => false,
         ]);
-        $table->addPrimaryKey([
+        $table->addIndex([
             'number',
+        ], [
+            'name' => 'UNIQUE_NUMBER',
+            'unique' => true,
         ]);
         $table->create();
     }

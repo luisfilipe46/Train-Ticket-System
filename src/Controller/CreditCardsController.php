@@ -2,9 +2,6 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-use Cake\Controller\Controller;
-use Cake\Event\Event;
-use Cake\Utility\Security;
 
 /**
  * CreditCards Controller
@@ -14,20 +11,6 @@ use Cake\Utility\Security;
 class CreditCardsController extends AppController
 {
 
-    public function initialize()
-    {
-	parent::initialize();
-        $this->loadComponent('Security');
-        $this->loadComponent('RequestHandler');
-    }
-
-
-    public function beforeFilter(Event $event)
-    {
-        //parent::beforeFilter($event);
-        //$this->Security->requireSecure('index');
-    }
-
     /**
      * Index method
      *
@@ -35,16 +18,7 @@ class CreditCardsController extends AppController
      */
     public function index()
     {
-        $creditCards = $this->paginate($this->CreditCards);
-	//echo $creditCards;
-        //$key = 'wt1U5MACWJFTXGenFoZoiLwQGrLgdbHA';
-	//Security::encrypt($creditCards, $key);
-
-	//foreach ($creditCards as &$creditCard) {
-	    //dump($creditCard);
-	//}
-	//dump ($creditCards);
-        $this->set('creditCards', $creditCards);
+        $this->set('creditCards', $this->paginate($this->CreditCards));
         $this->set('_serialize', ['creditCards']);
     }
 
@@ -60,10 +34,8 @@ class CreditCardsController extends AppController
         $creditCard = $this->CreditCards->get($id, [
             'contain' => []
         ]);
-
         $this->set('creditCard', $creditCard);
         $this->set('_serialize', ['creditCard']);
-        //$this->RequestHandler->renderAs($creditCard, 'xml');
     }
 
     /**

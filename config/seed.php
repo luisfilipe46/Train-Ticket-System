@@ -43,18 +43,20 @@ $data = [
 		//],
 		'_defaults' => [],
 		[
-			'username' => 'luminosity',
+			'email' => 'luminosity@cs.com',
 			'name' => 'brasuca',
 			'password' => '2018-07-05',
-			'id_credit_card' => '1234',
+			'role' => 'client',
+			'id_credit_card' => 1,
 			'created' => '2016-06-06 01:00:00',
 			'modified' => '2016-06-06 01:00:00'
 		],
 		[
-			'username' => 'fnatic',
+			'email' => 'fnatic@cs.com',
 			'name' => 'suissinhos',
 			'password' => '2018-07-05',
-			'id_credit_card' => '123',
+			'role' => 'pica',
+			'id_credit_card' => 2,
 			'created' => '2016-06-06 01:00:00',
 			'modified' => '2016-06-06 01:00:00'
 		],
@@ -737,7 +739,7 @@ $data = [
 		'_defaults' => ['created' => '2016-06-06 01:00:00',
 			'modified' => '2016-06-06 01:00:00'],
 		[
-			'username' => 'luminosity',
+			'id_users' => 1,
 			'origin_station' => '11',
 			'destiny_station' => '12',
 			'qr_code' => 'TO IMPROVE0',
@@ -746,7 +748,7 @@ $data = [
 			'arrival_time' => '2016-10-06 09:10:00',
 		],
 		[
-			'username' => 'fnatic',
+			'id_users' => 1,
 			'origin_station' => '21',
 			'destiny_station' => '22',
 			'qr_code' => 'TO IMPROVE1',
@@ -755,7 +757,7 @@ $data = [
 			'arrival_time' => '2015-10-06 21:10:00',
 		],
 		[
-			'username' => 'fnatic',
+			'id_users' => 1,
 			'origin_station' => '22',
 			'destiny_station' => '01',
 			'qr_code' => 'TO IMPROVE2',

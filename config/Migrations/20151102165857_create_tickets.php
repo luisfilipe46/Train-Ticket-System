@@ -13,24 +13,23 @@ class CreateTickets extends AbstractMigration
     public function change()
     {
         $table = $this->table('tickets');
-        $table->addColumn('username', 'string', [
+        $table->addColumn('email', 'string', [
             'default' => null,
             'limit' => 255,
             'null' => false,
-        ])->addForeignKey('username', 'users', 'username', array('delete'=>'SET_NULL', 'update'=>'NO_ACTION'));
+        ])->addForeignKey('email', 'users', 'email', array('delete'=>'SET_NULL', 'update'=>'CASCADE'));
         $table->addColumn('origin_station', 'string', [
             'default' => null,
             'limit' => 255,
             'null' => false,
-        ])->addForeignKey('origin_station', 'stations', 'name', array('delete'=>'SET_NULL', 'update'=>'NO_ACTION'));
+        ])->addForeignKey('origin_station', 'stations', 'name', array('delete'=>'SET_NULL', 'update'=>'CASCADE'));
         $table->addColumn('destiny_station', 'string', [
             'default' => null,
             'limit' => 255,
             'null' => false,
-        ])->addForeignKey('destiny_station', 'stations', 'name', array('delete'=>'SET_NULL', 'update'=>'NO_ACTION'));
-        $table->addColumn('qr_code', 'string', [
+        ])->addForeignKey('destiny_station', 'stations', 'name', array('delete'=>'SET_NULL', 'update'=>'CASCADE'));
+        $table->addColumn('qr_code', 'text', [
             'default' => null,
-            'limit' => 255,
             'null' => false,
         ]);
         $table->addColumn('used', 'boolean', [

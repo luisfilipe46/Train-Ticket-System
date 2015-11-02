@@ -6,6 +6,7 @@ use Cake\ORM\Entity;
 /**
  * CreditCard Entity.
  *
+ * @property int $id
  * @property string $number
  * @property string $type
  * @property \Cake\I18n\Time $validity
@@ -26,6 +27,6 @@ class CreditCard extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'number' => true,
+        'id' => false,
     ];
 }

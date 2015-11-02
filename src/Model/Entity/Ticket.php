@@ -7,7 +7,6 @@ use Cake\ORM\Entity;
  * Ticket Entity.
  *
  * @property int $id
- * @property string $username
  * @property string $origin_station
  * @property string $destiny_station
  * @property string $qr_code
@@ -16,6 +15,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $arrival_time
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ * @property int $id_users
  */
 class Ticket extends Entity
 {

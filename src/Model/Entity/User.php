@@ -6,10 +6,12 @@ use Cake\ORM\Entity;
 /**
  * User Entity.
  *
- * @property string $username
+ * @property int $id
+ * @property string $email
  * @property string $name
  * @property string $password
- * @property string $id_credit_card
+ * @property string $role
+ * @property int $id_credit_card
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
  */
@@ -27,6 +29,6 @@ class User extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'username' => true,
+        'id' => false,
     ];
 }

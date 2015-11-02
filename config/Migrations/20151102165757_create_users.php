@@ -3,9 +3,6 @@ use Migrations\AbstractMigration;
 
 class CreateUsers extends AbstractMigration
 {
-
-    public $autoId = false;
-
     /**
      * Change Method.
      *
@@ -16,7 +13,7 @@ class CreateUsers extends AbstractMigration
     public function change()
     {
         $table = $this->table('users');
-        $table->addColumn('username', 'string', [
+        $table->addColumn('email', 'string', [
             'default' => null,
             'limit' => 255,
             'null' => false,
@@ -28,14 +25,19 @@ class CreateUsers extends AbstractMigration
         ]);
         $table->addColumn('password', 'string', [
             'default' => null,
-            'limit' => 1023,
+            'limit' => 255,
             'null' => false,
         ]);
-        $table->addColumn('id_credit_card', 'string', [
+        $table->addColumn('role', 'string', [
             'default' => null,
             'limit' => 255,
             'null' => false,
-        ])->addForeignKey('id_credit_card', 'credit_cards', 'number', array('delete'=>'SET_NULL', 'update'=>'NO_ACTION'));
+        ]);
+        $table->addColumn('id_credit_card', 'integer', [
+            'default' => null,
+            'limit' => 11,
+            'null' => true,
+        ])->addForeignKey('id_credit_card', 'credit_cards', 'id', array('delete'=>'SET_NULL', 'update'=>'CASCADE'));
         $table->addColumn('created', 'datetime', [
             'default' => null,
             'null' => false,
@@ -44,12 +46,12 @@ class CreateUsers extends AbstractMigration
             'default' => null,
             'null' => false,
         ]);
-        $table->addPrimaryKey([
-            'username',
+	$table->addIndex([
+            'email',
+        ], [
+            'name' => 'UNIQUE_EMAIL',
+            'unique' => true,
         ]);
-        /*$table->addForeignKey([
-            'id_credit_card', 'credit_cards', 'number', array('delete'=>'SET_NULL', 'update'=>'NO_ACTION')
-        ]);*/
         $table->create();
     }
 }
