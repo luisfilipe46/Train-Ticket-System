@@ -17,58 +17,40 @@ $data = [
 		//'_saveOptions' => [
 		//	'checkRules' => false,
 		//],
-		'_defaults' => [],
+		'_defaults' => ['created' => '2016-06-06 01:00:00',
+			'modified' => '2016-06-06 01:00:00'],
 		[
 			'number' => '123',
 			'type' => 'visa',
 			'validity' => new \DateTime('2018-07-05'),
-			'created' => '2016-06-06 01:00:00',
-			'modified' => '2016-06-06 01:00:00'
 		],
 		[
 			'number' => '1234',
 			'type' => 'mastercard',
 			'validity' => new \DateTime('2019-07-05'),
-			'created' => '2016-06-06 01:00:00',
-			'modified' => '2016-06-06 01:00:00'
 		],
 	],
 	'users' => [
 		'_truncate' => true,
-		//'_entityOptions' => [
-		//	'validate' => false,
-		//],
-		//'_saveOptions' => [
-		//	'checkRules' => false,
-		//],
-		'_defaults' => [],
+		'_defaults' => ['created' => '2016-06-06 01:00:00',
+			'modified' => '2016-06-06 01:00:00'],
 		[
 			'email' => 'luminosity@cs.com',
 			'name' => 'brasuca',
 			'password' => '2018-07-05',
 			'role' => 'client',
 			'id_credit_card' => 1,
-			'created' => '2016-06-06 01:00:00',
-			'modified' => '2016-06-06 01:00:00'
 		],
 		[
 			'email' => 'fnatic@cs.com',
 			'name' => 'suissinhos',
 			'password' => '2018-07-05',
 			'role' => 'pica',
-			'id_credit_card' => 2,
-			'created' => '2016-06-06 01:00:00',
-			'modified' => '2016-06-06 01:00:00'
+			'id_credit_card' => null,
 		],
 	],
 	'stations' => [
 		'_truncate' => true,
-		//'_entityOptions' => [
-		//	'validate' => false,
-		//],
-		//'_saveOptions' => [
-		//	'checkRules' => false,
-		//],
 		'_defaults' => ['created' => '2016-06-06 01:00:00',
 			'modified' => '2016-06-06 01:00:00'],
 		[
@@ -102,12 +84,6 @@ $data = [
 	],
 	'neighbor_stations' => [
 		'_truncate' => true,
-		//'_entityOptions' => [
-		//	'validate' => false,
-		//],
-		//'_saveOptions' => [
-		//	'checkRules' => false,
-		//],
 		'_defaults' => [],
 		[
 			'name1' => '11',
@@ -160,12 +136,6 @@ $data = [
 	],
 	'timetables' => [
 		'_truncate' => true,
-		//'_entityOptions' => [
-		//	'validate' => false,
-		//],
-		//'_saveOptions' => [
-		//	'checkRules' => false,
-		//],
 		'_defaults' => ['created' => '2016-06-06 01:00:00',
 			'modified' => '2016-06-06 01:00:00'],
 		// A - B
