@@ -10,6 +10,11 @@ use App\Controller\AppController;
  */
 class CreditCardsController extends AppController
 {
+    public function initialize()
+    {
+        $this->loadComponent('RequestHandler');
+        $this->loadComponent('Flash');
+    }
 
     /**
      * Index method
