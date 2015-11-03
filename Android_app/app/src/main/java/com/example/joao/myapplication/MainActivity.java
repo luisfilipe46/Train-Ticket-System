@@ -18,6 +18,9 @@ public class MainActivity extends AppCompatActivity {
 
         username = (EditText) findViewById(R.id.username);
         password= (EditText) findViewById(R.id.password);
+
+        // bypass login, for test purposes
+        bypassLogin();
     }
 
     private boolean getFields()
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public void login(View view)
     {
 
-        if(getFields() == true)
+        if(getFields() == true )
         {
             //try login
 
@@ -60,6 +63,18 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
 
         }
+    }
+
+    public void bypassLogin()
+    {
+        Intent intent = new Intent(this, MainMenu.class);
+        Bundle info = new Bundle();
+        info.putString("username","user");
+        info.putString("password", "pass");
+
+        intent.putExtras(info);
+
+        startActivity(intent);
     }
 
     public void register(View view) {

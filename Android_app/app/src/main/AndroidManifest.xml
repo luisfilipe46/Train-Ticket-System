@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.joao.myapplication" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,8 +19,14 @@
         </activity>
         <activity android:name=".MainMenu" >
         </activity>
+        <activity
+            android:name=".My_tickets"
+            android:label="@string/title_activity_my_tickets"
+            android:parentActivityName=".MainMenu">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.joao.myapplication.MainMenu" />
+        </activity>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET"/>
 
 </manifest>

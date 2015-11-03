@@ -1,26 +1,27 @@
 package com.example.joao.myapplication;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
 import android.os.StrictMode;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -28,17 +29,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.util.ArrayDeque;
-import java.util.List;
 import java.util.Vector;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class MainMenu extends AppCompatActivity {
 
@@ -54,9 +48,10 @@ public class MainMenu extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private String mActivityTitle;
     private RestClient restClient;
-    private TextView restResult;
-    private ProgressBar progressBar;
-    private TableLayout ll;
+   // private TextView restResult;
+    private RelativeLayout progressBar;
+    private TableLayout availableTravels;
+    private Activity MyTicketsActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,14 +79,16 @@ public class MainMenu extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        restResult = (TextView)findViewById(R.id.restResult);
+        //restResult = (TextView)findViewById(R.id.restResult);
         mDrawerList = (ListView)findViewById(R.id.navList);
         spinnerStart = (Spinner) findViewById(R.id.spinner_start_station);
         spinnerEnd = (Spinner) findViewById(R.id.spinner_end_station);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar = (RelativeLayout)findViewById(R.id.loadingPanel);
         mActivityTitle = getTitle().toString();
-        ll = (TableLayout) findViewById(R.id.available_trains);
+        setTitle("Choose Travel");
+
+        availableTravels = (TableLayout) findViewById(R.id.available_trains);
 
         //
         progressBar.setVisibility(View.GONE);
@@ -102,13 +99,7 @@ public class MainMenu extends AppCompatActivity {
         //set handler
         setHandlerDrawer();
 
-        TextView msg = (TextView) findViewById(R.id.displayName);
 
-        if(msg != null)
-        {
-            Log.i("MSG_CONTENT", (String) msg.getText());
-            msg.setText("Hello " + user + " your pass is: " + pass);
-        }
 
 
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -130,6 +121,8 @@ public class MainMenu extends AppCompatActivity {
     }
 
 
+
+
     private void setHandlerDrawer()
     {
         mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
@@ -141,15 +134,17 @@ public class MainMenu extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) // My tickets
                 {
+                    Intent intent = new Intent(getBaseContext(), My_tickets.class);
+                    startActivity(intent);
                     Toast.makeText(MainMenu.this, "Show tickets", Toast.LENGTH_SHORT).show();
                 } else if (position == 1) { //REST GET TEST
 
                     String result;
                     try {
                         restClient.setMethod("GET");
-                        restClient.setUrl("https://httpbin.org/get");
+                        restClient.setUrl("https://testcake3333.herokuapp.com/api/credit_cards/123456.json");
                         result = restClient.execute();
-                        restResult.setText(result);
+                        Toast.makeText(MainMenu.this, result, Toast.LENGTH_SHORT).show();
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -176,10 +171,10 @@ public class MainMenu extends AppCompatActivity {
                                 e.printStackTrace();
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                            } catch (InterruptedException e) {
+                            }catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            restResult.post(new Runnable() {
+                            availableTravels.post(new Runnable() {
                                 public void run() {
                                     progressBar.setVisibility(View.GONE);
                                     updateText();
@@ -192,7 +187,7 @@ public class MainMenu extends AppCompatActivity {
                     // restResult.setText(result);
 
                 } else if (position == 3) {
-                    restResult.setText("");
+
                 } else {
                     Toast.makeText(MainMenu.this, "Nothing to do", Toast.LENGTH_SHORT).show();
                 }
@@ -204,7 +199,8 @@ public class MainMenu extends AppCompatActivity {
 
     private void updateText() {
         String str = restClient.getReturn();
-        restResult.setText(str);
+        //restResult.setText(str)
+        Toast.makeText(MainMenu.this, str, Toast.LENGTH_SHORT).show();
     }
 
     private void updateAvailableTravels()
@@ -214,14 +210,14 @@ public class MainMenu extends AppCompatActivity {
 
         for (int i = 0; i <2; i++) {
 
-            String station1 = "Name1";
-            String station2 = "Name2";
+            String station1 = "Station 1";
+            String station2 = "Station 2";
             String hour1 = "14:15";
             String hour2 = "15:30";
 
             TableRow row= new TableRow(this);
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(0,100,0,0);
+            lp.setMargins(0,0,0,0);
 
             row.setLayoutParams(lp);
             Button addBtn = new Button(this);
@@ -239,13 +235,14 @@ public class MainMenu extends AppCompatActivity {
 
 
             TextView station1Text = new TextView(this);
-            station1Text.setText(Html.fromHtml("<b>"+ station1 +"</b>" + "(" + hour1 + ")"));
+            station1Text.setText(Html.fromHtml(station1 + "(" + hour1 + ")"));
 
             TextView toText = new TextView(this);
             toText.setText(" to ");
+            toText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
 
             TextView station2Text = new TextView(this);
-            station2Text.setText(Html.fromHtml("<b>"+ station2 +"</b>" + "(" + hour2 + ")"));
+            station2Text.setText(Html.fromHtml(station2 + "(" + hour2 + ")"));
 
             innerRow1.addView(station1Text);
             innerRow2.addView(station2Text);
@@ -253,11 +250,18 @@ public class MainMenu extends AppCompatActivity {
             innerTable.addView(innerRow1);
             innerTable.addView(toText);
             innerTable.addView(innerRow2);
+            TableRow.LayoutParams param = new TableRow.LayoutParams(
+                    TableRow.LayoutParams.WRAP_CONTENT,
+                    TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
 
+            innerTable.setLayoutParams(param);
 
             row.addView(innerTable);
             row.addView(addBtn);
-            ll.addView(row,i);
+            row.setBackgroundResource(R.drawable.table);
+            availableTravels.addView(row, i);
+
+
         }
     }
 
@@ -289,16 +293,12 @@ public class MainMenu extends AppCompatActivity {
                 public void run() {
                     try {
 
-                        Thread.sleep(2000);
-                        restClient.execute();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        Thread.sleep(500);
+                        //restClient.execute();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    ll.post(new Runnable() {
+                    availableTravels.post(new Runnable() {
                         public void run() {
                             updateAvailableTravels();
                         }

@@ -7,92 +7,130 @@
     android:layout_height="match_parent">
 
 
-    <RelativeLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
 
-        <TextView
-            android:layout_width="wrap_content"
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Name"
-            android:id="@+id/displayName"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:weightSum="1"
+            android:layout_weight="0.14">
 
-        <Spinner
-            android:layout_width="176dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinner_start_station"
-            android:layout_marginTop="39dp"
-            android:spinnerMode="dropdown"
-            android:layout_below="@+id/displayName"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_gravity="center_vertical" />
+            <ImageView
+                android:layout_width="62dp"
+                android:layout_height="62dp"
+                android:id="@+id/imageView"
+                android:src="@drawable/start"
+                android:paddingTop="10dp" />
 
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinner_end_station"
-            android:spinnerMode="dropdown"
-            android:layout_alignTop="@+id/spinner_start_station"
-            android:layout_toRightOf="@+id/spinner_start_station"
-            android:layout_toEndOf="@+id/spinner_start_station" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="73dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Start Station"
+                android:textAlignment="center"
+                android:id="@+id/textView3"
+                android:gravity="top|bottom" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Get Trains"
-            android:id="@+id/button_getTrains"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:onClick="getTravels"/>
+            <ImageView
+                android:layout_width="55dp"
+                android:layout_height="62dp"
+                android:id="@+id/imageView2"
+                android:src="@drawable/end"
+                android:paddingTop="10dp" />
 
-        <ScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="100dp"
-            android:id="@+id/scrollView"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignBottom="@+id/restResult"
-            android:layout_alignTop="@+id/restResult"
-            android:scrollbarAlwaysDrawHorizontalTrack="true">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Destiny Station"
+                android:textAlignment="center"
+                android:id="@+id/textView4"
+                android:gravity="top|bottom" />
 
-            <TableLayout
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_weight="0.04">
+
+            <Spinner
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_start_station"
+                android:spinnerMode="dropdown" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_end_station"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="186dp"
+            android:layout_weight="0.81">
+
+
+
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/available_trains"
-                android:layout_alignTop="@+id/restResult"
-                android:layout_marginTop="30dp"
-                android:layout_above="@+id/button_getTrains"></TableLayout>
-        </ScrollView>
+                android:id="@+id/scrollView"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:scrollbarAlwaysDrawHorizontalTrack="true"
+                android:layout_alignBottom="@+id/button_getTrains">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/restResult"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_above="@+id/button_getTrains"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/spinner_start_station" />
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/available_trains"
+                    android:layout_alignTop="@+id/restResult"
+                    android:layout_above="@+id/button_getTrains"></TableLayout>
+            </ScrollView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Get Trains"
+                android:id="@+id/button_getTrains"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:onClick="getTravels"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" >
 
         <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-
+            android:indeterminate="true" />
     </RelativeLayout>
 
     <ListView

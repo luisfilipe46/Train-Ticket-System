@@ -24,12 +24,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.net.ssl.HttpsURLConnection;
+
 /**
  * Created by joao on 25-10-2015.
  */
 public class RestClient {
     private URL url;
-
     private InputStream in;
     private String method;
     private boolean paramsBool;
@@ -38,7 +39,6 @@ public class RestClient {
 
 
     public RestClient(String url) throws MalformedURLException {
-
         this.url = new URL(url);
         method = "GET";
         paramsBool = false;
@@ -91,7 +91,7 @@ public class RestClient {
 
 
 
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
         urlConnection.setRequestMethod(method);
         if(params.size()>0)
         {
@@ -127,7 +127,7 @@ public class RestClient {
 
     }
 
-    private void addParams(HttpURLConnection conn) throws IOException {
+    private void addParams(HttpsURLConnection conn) throws IOException {
         conn.setDoInput(true);
         conn.setDoOutput(true);
 
