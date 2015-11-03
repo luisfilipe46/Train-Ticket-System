@@ -29,6 +29,7 @@ class CreditCardsTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+	//$this->hasOne('Users');
 
     }
 

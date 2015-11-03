@@ -41,6 +41,7 @@ class CreditCardsController extends AppController
         $creditCard = $this->CreditCards->get($id, [
             'contain' => []
         ]);
+	Debugger::dump($creditCard->user);
         $this->set('creditCard', $creditCard);
         $this->set('_serialize', ['creditCard']);
     }
