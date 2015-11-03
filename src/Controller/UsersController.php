@@ -49,18 +49,23 @@ class UsersController extends AppController
      */
     public function add()
     {
+	
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
+            $this->request->data['role'] = 'cliente';
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
-                return $this->redirect(['action' => 'index']);
+		$this->response->statusCode(201);
+                //$this->Flash->success(__('The user has been saved.'));
+                //$this->Flash->success(__('The user has been saved.'));
+                //return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The user could not be saved. Please, try again.'));
+		$this->response->statusCode(400);
+                //$this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
         }
         $this->set(compact('user'));
-        $this->set('_serialize', ['user']);
+        $this->set('_serialize', ['']);
     }
 
     /**

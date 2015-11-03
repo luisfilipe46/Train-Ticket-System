@@ -9,7 +9,7 @@ use Cake\ORM\TableRegistry;
 
 // Write your data import statements here.
 $data = [
-	'credit_cards' => [
+	'users' => [
 		'_truncate' => true,
 		//'_entityOptions' => [
 		//	'validate' => false,
@@ -20,33 +20,27 @@ $data = [
 		'_defaults' => ['created' => '2016-06-06 01:00:00',
 			'modified' => '2016-06-06 01:00:00'],
 		[
-			'number' => '123',
-			'type' => 'visa',
-			'validity' => new \DateTime('2018-07-05'),
-		],
-		[
-			'number' => '1234',
-			'type' => 'mastercard',
-			'validity' => new \DateTime('2019-07-05'),
-		],
-	],
-	'users' => [
-		'_truncate' => true,
-		'_defaults' => ['created' => '2016-06-06 01:00:00',
-			'modified' => '2016-06-06 01:00:00'],
-		[
 			'email' => 'luminosity@cs.com',
 			'name' => 'brasuca',
 			'password' => '2018-07-05',
 			'role' => 'client',
-			'id_credit_card' => 1,
 		],
 		[
 			'email' => 'fnatic@cs.com',
 			'name' => 'suissinhos',
 			'password' => '2018-07-05',
 			'role' => 'pica',
-			'id_credit_card' => null,
+		],
+	],
+	'credit_cards' => [
+		'_truncate' => true,
+		'_defaults' => ['created' => '2016-06-06 01:00:00',
+			'modified' => '2016-06-06 01:00:00'],
+		[
+			'number' => '123',
+			'type' => 'visa',
+			'validity' => new \DateTime('2018-07-05'),
+			'id_user' => 1
 		],
 	],
 	'stations' => [

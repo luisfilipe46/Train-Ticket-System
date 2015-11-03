@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-
+use Cake\I18n\Time;
 /**
  * CreditCards Controller
  *
@@ -50,14 +50,16 @@ class CreditCardsController extends AppController
      */
     public function add()
     {
+	$data['validity'] = new \DateTime($this->request->data['validity']);
+	$data['number'] = $this->request->data['number'];
+	$data['type'] = $this->request->data['type'];
         $creditCard = $this->CreditCards->newEntity();
         if ($this->request->is('post')) {
-            $creditCard = $this->CreditCards->patchEntity($creditCard, $this->request->data);
+            $creditCard = $this->CreditCards->patchEntity($creditCard, $data);
             if ($this->CreditCards->save($creditCard)) {
-                $this->Flash->success(__('The credit card has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                $this->response->statusCode(201);
             } else {
-                $this->Flash->error(__('The credit card could not be saved. Please, try again.'));
+                $this->response->statusCode(400);
             }
         }
         $this->set(compact('creditCard'));

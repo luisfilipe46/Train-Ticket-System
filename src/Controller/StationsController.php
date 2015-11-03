@@ -52,22 +52,14 @@ class StationsController extends AppController
     public function add()
     {
 	//Debugger::dump($this->request->data);
-	
-	
-	echo $this->request->data['username'];
-	echo $this->request->data['password'];
 
         $station = $this->Stations->newEntity();
         if ($this->request->is('post')) {
             $station = $this->Stations->patchEntity($station, $this->request->data);
             if ($this->Stations->save($station)) {
-                //$this->Flash->success(__('The station has been saved.'));
-                //return $this->redirect(['action' => 'index']);
 		$this->response->statusCode(201);
             } else {
-                //$this->Flash->error(__('The station could not be saved. Please, try again.'));
 		$this->response->statusCode(400);
-		//throw new BadRequestException('Bad request');
             }
         }
         //$this->set(compact('station'));
