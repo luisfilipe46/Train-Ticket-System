@@ -2,7 +2,9 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-use Cake\I18n\Time;
+use Cake\ORM\TableRegistry;
+use Cake\Error\Debugger;
+
 /**
  * CreditCards Controller
  *
@@ -50,18 +52,28 @@ class CreditCardsController extends AppController
      */
     public function add()
     {
-	$data['validity'] = new \DateTime($this->request->data['validity']);
-	$data['number'] = $this->request->data['number'];
-	$data['type'] = $this->request->data['type'];
-        $creditCard = $this->CreditCards->newEntity();
-        if ($this->request->is('post')) {
-            $creditCard = $this->CreditCards->patchEntity($creditCard, $data);
-            if ($this->CreditCards->save($creditCard)) {
-                $this->response->statusCode(201);
-            } else {
-                $this->response->statusCode(400);
+	$users = TableRegistry::get('Users');
+	$queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->data['email'], 'password =' => $this->request->data['password']])->toArray();
+	if (!empty($queryResultsInArray))
+	{
+	    $data['id_user'] = $queryResultsInArray[0]['id'];
+	    $data['validity'] = new \DateTime($this->request->data['validity']);
+	    $data['number'] = $this->request->data['number'];
+	    $data['type'] = $this->request->data['type'];
+            $creditCard = $this->CreditCards->newEntity();
+            if ($this->request->is('post')) {
+                $creditCard = $this->CreditCards->patchEntity($creditCard, $data);
+                if ($this->CreditCards->save($creditCard)) {
+                    $this->response->statusCode(201);
+                } else {
+                    $this->response->statusCode(400);
+                }
             }
         }
+	else
+	{
+	    $this->response->statusCode(400);
+	}
         $this->set(compact('creditCard'));
         $this->set('_serialize', ['creditCard']);
     }

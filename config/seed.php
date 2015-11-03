@@ -22,13 +22,13 @@ $data = [
 		[
 			'email' => 'luminosity@cs.com',
 			'name' => 'brasuca',
-			'password' => '2018-07-05',
+			'password' => 'test',
 			'role' => 'cliente',
 		],
 		[
 			'email' => 'fnatic@cs.com',
 			'name' => 'suissinhos',
-			'password' => '2018-07-05',
+			'password' => 'test',
 			'role' => 'pica',
 		],
 	],

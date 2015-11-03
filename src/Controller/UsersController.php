@@ -56,12 +56,8 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
 		$this->response->statusCode(201);
-                //$this->Flash->success(__('The user has been saved.'));
-                //$this->Flash->success(__('The user has been saved.'));
-                //return $this->redirect(['action' => 'index']);
             } else {
 		$this->response->statusCode(400);
-                //$this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
         }
         $this->set(compact('user'));
