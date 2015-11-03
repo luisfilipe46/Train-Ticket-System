@@ -51,6 +51,14 @@ Router::scope('/api', function ($routes) {
     $routes->resources('Timetables');
     $routes->resources('TravelTrains');
     $routes->resources('Users');
+    
+    $routes->connect('/timetables/:station1/:station2',
+        ['controller' => 'Timetables', 'action' => 'timetableBetweenStations', '_method' => 'GET'],
+        [
+            'pass' => ['station1', 'station2']
+        ]
+    );
+
 });
 
 Router::scope('/', function ($routes) {

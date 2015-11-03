@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
+use Cake\Error\Debugger;
 
 /**
  * Timetables Controller
@@ -23,9 +25,25 @@ class TimetablesController extends AppController
      */
     public function index()
     {
-        $this->set('timetables', $this->paginate($this->Timetables));
+        $this->set('timetables', $this->Timetables->find('all'));
+        $this->set('_serialize', ['timetables']);
+	
+    }
+
+    public function timetableBetweenStations($station1, $station2)
+    {
+	$routes = TableRegistry::get('Routes');
+	$query = $routes->find()->where(['name_station1 =' => $station1, 'name_station2 =' => $station2])->toArray();
+	$routeArray = unserialize($query[0]['route']);
+	for($i = 0; $i < sizeof($routeArray)-1; $i++)
+	{
+	    $timetables[] = $this->Timetables->find()->where(['origin_station =' => $routeArray[$i], 'destiny_station =' => $routeArray[$i+1]]);
+	}
+	
+        $this->set('timetables', $timetables);
         $this->set('_serialize', ['timetables']);
     }
+
 
     /**
      * View method
