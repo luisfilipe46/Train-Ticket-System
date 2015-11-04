@@ -23,6 +23,7 @@ class UsersController extends AppController
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
     }
+
     /**
      * Index method
      *
@@ -71,34 +72,39 @@ class UsersController extends AppController
         $this->set(compact('user'));
         $this->set('_serialize', ['']);
     }
-    public function login() {
-        $user = $this->Users->exists(['email =' => $this->request->data('email'), 'password =' =>$this->request->data('password')]);
-        if ($user)
-            $this->response->statusCode(200);
-        else
-            $this->response->statusCode(400);
 
-        $this->set('_serialize', ['']);
-
-    }
-/*
     public function login()
     {
         if ($this->request->is('post')) {
-            $user = $this->Auth->identify();
-            if ($user) {
-                $this->Auth->setUser($user);
-                return $this->redirect($this->Auth->redirectUrl());
-            }
-            $this->Flash->error(__('Invalid username or password, try again'));
+            $user = $this->Users->exists(['email =' => $this->request->data('email'), 'password =' => $this->request->data('password')]);
+            if ($user)
+                $this->response->statusCode(200);
+            else
+                $this->response->statusCode(400);
+
+            $this->set('_serialize', ['']);
+
         }
     }
 
-    public function logout()
-    {
-        return $this->redirect($this->Auth->logout());
-    }
-*/
+    /*
+        public function login()
+        {
+            if ($this->request->is('post')) {
+                $user = $this->Auth->identify();
+                if ($user) {
+                    $this->Auth->setUser($user);
+                    return $this->redirect($this->Auth->redirectUrl());
+                }
+                $this->Flash->error(__('Invalid username or password, try again'));
+            }
+        }
+
+        public function logout()
+        {
+            return $this->redirect($this->Auth->logout());
+        }
+    */
     /**
      * Edit method
      *
