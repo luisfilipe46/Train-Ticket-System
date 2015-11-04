@@ -394,14 +394,14 @@ $data = [
 		],
 		[
 			'origin_station' => '01',
-			'destiny_station' => '12',
+			'destiny_station' => '32',
 			'lotation' => 50,
 			'departure_time' => '21:20:00',
 			'arrival_time' => '21:30:00',
 		],
 		[
-			'origin_station' => '12',
-			'destiny_station' => '11',
+			'origin_station' => '32',
+			'destiny_station' => '31',
 			'lotation' => 50,
 			'departure_time' => '21:30:00',
 			'arrival_time' => '21:40:00',
