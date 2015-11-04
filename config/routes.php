@@ -58,6 +58,12 @@ Router::scope('/api', function ($routes) {
             'pass' => ['station1', 'station2']
         ]
     );
+    $routes->connect('/timetables_with_final_stations/:station1/:station2',
+        ['controller' => 'Timetables', 'action' => 'timetableBetweenFinalStations', '_method' => 'GET'],
+        [
+            'pass' => ['station1', 'station2']
+        ]
+    );
     $routes->connect('/tickets/:user_id',
         ['controller' => 'Tickets', 'action' => 'fromUser', '_method' => 'GET'],
         [

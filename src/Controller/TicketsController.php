@@ -32,6 +32,7 @@ class TicketsController extends AppController
         parent::initialize();
         $this->set('tickets', $this->paginate($this->Tickets));
         $this->set('_serialize', ['tickets']);
+        //debug($_COOKIE);
     }
 
     /**

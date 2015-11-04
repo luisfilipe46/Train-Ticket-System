@@ -52,11 +52,9 @@ class AppController extends Controller
     				]
 	    		]
 		    ],
-            /*'loginRedirect' => [
-                'controller' => 'Timetables',
-                'action' => 'index'
-            ],*/
-            'authError' => 'Did you really think you are allowed to see that?',
+            'unauthorizedRedirect' => false,
+            'storage' => 'Memory',
+
 		    'loginAction' => [
     			'controller' => 'Users',
     			'action' => 'login'
@@ -89,7 +87,8 @@ class AppController extends Controller
     public function beforeFilter(Event $event)
     {
 	    //debug(gettype($this->Auth));
-        $this->Auth->allow([/*'index', 'view'*/]);
+        //$this->Auth->allow(['index', 'view']);
+        $this->Auth->allow();
     }
 
     /**

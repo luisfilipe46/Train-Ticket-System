@@ -71,7 +71,7 @@ class UsersController extends AppController
         $this->set(compact('user'));
         $this->set('_serialize', ['']);
     }
-
+/*
     public function login()
     {
         if ($this->request->is('post')) {
@@ -88,7 +88,7 @@ class UsersController extends AppController
     {
         return $this->redirect($this->Auth->logout());
     }
-
+*/
     /**
      * Edit method
      *
