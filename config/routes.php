@@ -44,14 +44,16 @@ Router::defaultRouteClass('DashedRoute');
 
 Router::scope('/api', function ($routes) {
     $routes->extensions(['json', 'xml']);
-    //$routes->resources('Recipes');
     $routes->resources('CreditCards');
     $routes->resources('Stations');
     $routes->resources('Tickets');
     $routes->resources('Timetables');
     $routes->resources('TravelTrains');
     $routes->resources('Users');
-    
+
+    $routes->connect('/login',
+        ['controller' => 'Users', 'action' => 'login', '_method' => 'POST']
+    );
     $routes->connect('/timetables/:station1/:station2',
         ['controller' => 'Timetables', 'action' => 'timetableBetweenStations', '_method' => 'GET'],
         [

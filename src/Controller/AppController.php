@@ -43,7 +43,7 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
-	    $this->loadComponent('Auth', [
+	    /*$this->loadComponent('Auth', [
 		    'authenticate' => [
 			    'Basic' => [
     				'fields' => [
@@ -60,10 +60,10 @@ class AppController extends Controller
     			'action' => 'login'
 
     		]
-    	]);
+    	]);*/
     }
 
-    public function isCliente($user)
+    /*public function isCliente($user)
     {
         // Admin can access every action
         if (isset($user['role']) && $user['role'] === 'cliente') {
@@ -82,13 +82,13 @@ class AppController extends Controller
     
         // Default deny
         return false;
-    }
+    }*/
 
     public function beforeFilter(Event $event)
     {
 	    //debug(gettype($this->Auth));
         //$this->Auth->allow(['index', 'view']);
-        $this->Auth->allow();
+        //$this->Auth->allow();
     }
 
     /**

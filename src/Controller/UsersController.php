@@ -14,7 +14,7 @@ class UsersController extends AppController
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
-        $this->Auth->allow('add');
+        //$this->Auth->allow('add');
     }
 
     public function initialize()
@@ -70,6 +70,16 @@ class UsersController extends AppController
         }
         $this->set(compact('user'));
         $this->set('_serialize', ['']);
+    }
+    public function login() {
+        $user = $this->Users->exists(['email =' => $this->request->data('email'), 'password =' =>$this->request->data('password')]);
+        if ($user)
+            $this->response->statusCode(200);
+        else
+            $this->response->statusCode(400);
+
+        $this->set('_serialize', ['']);
+
     }
 /*
     public function login()
