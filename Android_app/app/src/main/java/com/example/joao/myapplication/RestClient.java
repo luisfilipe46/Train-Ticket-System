@@ -36,14 +36,22 @@ public class RestClient {
     private boolean paramsBool;
     private List<Pair<String, String>> params;
     private String ret;
+    private String defaultUrl = "https://testcake3333.herokuapp.com/";
+    private static RestClient restClient = null;
 
-
-    public RestClient(String url) throws MalformedURLException {
-        this.url = new URL(url);
+    public RestClient() throws MalformedURLException {
+        this.url = new URL(defaultUrl);
         method = "GET";
         paramsBool = false;
         params = new ArrayList<>();
         ret = null;
+    }
+
+    public static RestClient getInstance() throws MalformedURLException {
+        if(restClient == null) {
+            restClient = new RestClient();
+        }
+        return restClient;
     }
 
     public void setParams(List<Pair<String,String>> params)
@@ -106,6 +114,12 @@ public class RestClient {
         if(responseCode == 200) {
             in = new BufferedInputStream(urlConnection.getInputStream());
             ret = readStream(in);
+            Log.i("RESTCLIENT", "VAlor retorno: " + ret);
+
+            if(ret.equals("null"))
+            {
+                ret = "200";
+            }
             // Log.i("RESULT", ret);
             //JSONObject json = new JSONObject(ret); // Convert text to object
             //Log.i("JSON",json.toString());

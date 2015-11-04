@@ -37,10 +37,9 @@ import java.util.Vector;
 public class MainMenu extends AppCompatActivity {
 
     final Context context = this;
-    public String name;
+    public String name, pass,email;
     Spinner spinnerStart;
     Spinner spinnerEnd;
-    public Vector<Ticket> tickets;
 
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
@@ -51,14 +50,14 @@ public class MainMenu extends AppCompatActivity {
    // private TextView restResult;
     private RelativeLayout progressBar;
     private TableLayout availableTravels;
-    private Activity MyTicketsActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         try {
-            restClient = new RestClient("https://httpbin.org/get");
+            restClient = RestClient.getInstance();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -66,9 +65,10 @@ public class MainMenu extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle info = intent.getExtras();
 
-        String user = info.getString("username");
-        String pass = info.getString("password");
-        name = user;
+        email = info.getString("email");
+        pass = info.getString("password");
+
+
 
         setContentView(R.layout.activity_main_menu);
 
@@ -136,7 +136,6 @@ public class MainMenu extends AppCompatActivity {
                 {
                     Intent intent = new Intent(getBaseContext(), My_tickets.class);
                     startActivity(intent);
-                    Toast.makeText(MainMenu.this, "Show tickets", Toast.LENGTH_SHORT).show();
                 } else if (position == 1) { //REST GET TEST
 
                     String result;
