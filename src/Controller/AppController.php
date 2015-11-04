@@ -16,7 +16,6 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
-use Cake\Controller\Component\AuthComponent;
 
 /**
  * Application Controller
@@ -44,10 +43,9 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
-        $this->loadComponent('Auth');/*
 	    $this->loadComponent('Auth', [
 		    'authenticate' => [
-			    'Form' => [
+			    'Basic' => [
     				'fields' => [
     					'username' => 'email',
 	    				'password' => 'password'
@@ -59,7 +57,7 @@ class AppController extends Controller
     			'action' => 'login'
 
     		]
-    	]);*/
+    	]);
     }
 
     /*public function isCliente($user)
