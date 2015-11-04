@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
+use Cake\Event\Event;
 
 /**
  * Tickets Controller
@@ -10,6 +12,9 @@ use App\Controller\AppController;
  */
 class TicketsController extends AppController
 {
+    public function beforeFilter(Event $event) {
+        parent::beforeFilter($event);
+    }
     public function initialize()
     {
         $this->loadComponent('RequestHandler');
@@ -41,6 +46,24 @@ class TicketsController extends AppController
         ]);
         $this->set('ticket', $ticket);
         $this->set('_serialize', ['ticket']);
+    }
+
+
+    public function fromUser($userId)
+    {
+	$users = TableRegistry::get('Users');
+	$queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->data['email'], 'password =' => $this->request->data['password']])->toArray();
+	if (!empty($queryResultsInArray))
+	{
+	    
+	    $tickets = $this->Tickets->find()->where(['id_users =' => $userId])->toArray();
+            $this->set('tickets', $tickets);
+            $this->set('_serialize', ['tickets']);
+        }
+	else
+	{
+	    $this->response->statusCode(400);
+	}
     }
 
     /**

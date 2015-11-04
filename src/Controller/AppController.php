@@ -16,6 +16,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\Controller\Component\AuthComponent;
 
 /**
  * Application Controller
@@ -43,8 +44,49 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
-        //$this->loadComponent('Security');
-        
+        $this->loadComponent('Auth');/*
+	    $this->loadComponent('Auth', [
+		    'authenticate' => [
+			    'Form' => [
+    				'fields' => [
+    					'username' => 'email',
+	    				'password' => 'password'
+    				]
+	    		]
+		    ],
+		    'loginAction' => [
+    			'controller' => 'Users',
+    			'action' => 'login'
+
+    		]
+    	]);*/
+    }
+
+    /*public function isCliente($user)
+    {
+        // Admin can access every action
+        if (isset($user['role']) && $user['role'] === 'cliente') {
+            return true;
+        }
+    
+        // Default deny
+        return false;
+    }
+    public function isPica($user)
+    {
+        // Admin can access every action
+        if (isset($user['role']) && $user['role'] === 'pica') {
+            return true;
+        }
+    
+        // Default deny
+        return false;
+    }*/
+
+    public function beforeFilter(Event $event)
+    {
+	    //debug(gettype($this->Auth));
+        //$this->Auth->allow(/*['index', 'view']*/);
     }
 
     /**
