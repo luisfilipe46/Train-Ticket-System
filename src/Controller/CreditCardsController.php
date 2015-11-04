@@ -42,7 +42,7 @@ class CreditCardsController extends AppController
         $creditCard = $this->CreditCards->get($id, [
             'contain' => []
         ]);
-	Debugger::dump($creditCard->user);
+        //Debugger::dump($creditCard->user);
         $this->set('creditCard', $creditCard);
         $this->set('_serialize', ['creditCard']);
     }
@@ -54,14 +54,14 @@ class CreditCardsController extends AppController
      */
     public function add()
     {
-	$users = TableRegistry::get('Users');
-	$queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->data['email'], 'password =' => $this->request->data['password']])->toArray();
-	if (!empty($queryResultsInArray))
-	{
-	    $data['id_user'] = $queryResultsInArray[0]['id'];
-	    $data['validity'] = new \DateTime($this->request->data['validity']);
-	    $data['number'] = $this->request->data['number'];
-	    $data['type'] = $this->request->data['type'];
+        $users = TableRegistry::get('Users');
+        $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->header('email'), 'password =' => $this->request->header('password')])->toArray();
+        if (!empty($queryResultsInArray))
+        {
+            $data['id_user'] = $queryResultsInArray[0]['id'];
+            $data['validity'] = new \DateTime($this->request->data['validity']);
+            $data['number'] = $this->request->data['number'];
+            $data['type'] = $this->request->data['type'];
             $creditCard = $this->CreditCards->newEntity();
             if ($this->request->is('post')) {
                 $creditCard = $this->CreditCards->patchEntity($creditCard, $data);
@@ -72,10 +72,10 @@ class CreditCardsController extends AppController
                 }
             }
         }
-	else
-	{
-	    $this->response->statusCode(400);
-	}
+        else
+        {
+            $this->response->statusCode(400);
+        }
         $this->set(compact('creditCard'));
         $this->set('_serialize', ['creditCard']);
     }

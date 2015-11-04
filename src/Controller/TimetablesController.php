@@ -33,7 +33,9 @@ class TimetablesController extends AppController
 
     public function timetableBetweenFinalStations($station1, $station2)
     {
-
+        //Debugger::dump($this->request->url);
+        //Debugger::dump($this->request->params);
+        //Debugger::dump($this->request->header('email'));
         $routes = TableRegistry::get('Routes');
         $query = $routes->find()->where(['name_station1 =' => $station1, 'name_station2 =' => $station2])->toArray();
         $routeArray = unserialize($query[0]['route']);

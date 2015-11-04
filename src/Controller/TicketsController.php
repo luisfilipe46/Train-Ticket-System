@@ -29,10 +29,31 @@ class TicketsController extends AppController
      */
     public function index()
     {
-        parent::initialize();
+        if ($this->request->header('email') != null && $this->request->header('password') != null)
+        {
+            $users = TableRegistry::get('Users');
+            $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->header('email'), 'password =' => $this->request->header('password')])->toArray();
+            if (!empty($queryResultsInArray))
+            {
+
+                $tickets = $this->Tickets->find()->where(['id_users =' => $queryResultsInArray[0]['id']])->toArray();
+                $this->set('tickets', $tickets);
+                $this->set('_serialize', ['tickets']);
+            }
+            else {
+                $this->response->statusCode(400);
+            }
+
+            return;
+        }
+        /*else
+        {
+
+            $this->response->statusCode(401);
+        }*/
+
         $this->set('tickets', $this->paginate($this->Tickets));
         $this->set('_serialize', ['tickets']);
-        //debug($_COOKIE);
     }
 
     /**
@@ -52,14 +73,14 @@ class TicketsController extends AppController
     }
 
 
-    public function fromUser($userId)
+    public function fromUser()
     {
         $users = TableRegistry::get('Users');
         $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->data['email'], 'password =' => $this->request->data['password']])->toArray();
         if (!empty($queryResultsInArray))
         {
 
-            $tickets = $this->Tickets->find()->where(['id_users =' => $userId])->toArray();
+            $tickets = $this->Tickets->find()->where(['id_users =' => $queryResultsInArray[0]['id']])->toArray();
             $this->set('tickets', $tickets);
             $this->set('_serialize', ['tickets']);
         }
