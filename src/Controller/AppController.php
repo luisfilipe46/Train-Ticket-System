@@ -52,17 +52,16 @@ class AppController extends Controller
     				]
 	    		]
 		    ],
+            'authError' => 'Did you really think you are allowed to see that?',
 		    'loginAction' => [
     			'controller' => 'Users',
     			'action' => 'login'
 
     		]
     	]);
-        //debug(gettype($this->Auth));
-        //$this->Auth->config('authenticate', ['Basic']);
     }
 
-    /*public function isCliente($user)
+    public function isCliente($user)
     {
         // Admin can access every action
         if (isset($user['role']) && $user['role'] === 'cliente') {
@@ -81,7 +80,7 @@ class AppController extends Controller
     
         // Default deny
         return false;
-    }*/
+    }
 
     public function beforeFilter(Event $event)
     {

@@ -57,22 +57,22 @@ class UsersController extends AppController
      */
     public function add()
     {
-	
+
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $this->request->data['role'] = 'cliente';
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
-		$this->response->statusCode(201);
+                $this->response->statusCode(201);
             } else {
-		$this->response->statusCode(400);
+                $this->response->statusCode(400);
             }
         }
         $this->set(compact('user'));
         $this->set('_serialize', ['']);
     }
 
-    /*public function login()
+    public function login()
     {
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
@@ -84,10 +84,10 @@ class UsersController extends AppController
         }
     }
 
-public function logout()
-{
-    return $this->redirect($this->Auth->logout());
-}*/
+    public function logout()
+    {
+        return $this->redirect($this->Auth->logout());
+    }
 
     /**
      * Edit method

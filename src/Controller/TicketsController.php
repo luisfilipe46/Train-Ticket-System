@@ -53,19 +53,19 @@ class TicketsController extends AppController
 
     public function fromUser($userId)
     {
-	$users = TableRegistry::get('Users');
-	$queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->data['email'], 'password =' => $this->request->data['password']])->toArray();
-	if (!empty($queryResultsInArray))
-	{
-	    
-	    $tickets = $this->Tickets->find()->where(['id_users =' => $userId])->toArray();
+        $users = TableRegistry::get('Users');
+        $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->data['email'], 'password =' => $this->request->data['password']])->toArray();
+        if (!empty($queryResultsInArray))
+        {
+
+            $tickets = $this->Tickets->find()->where(['id_users =' => $userId])->toArray();
             $this->set('tickets', $tickets);
             $this->set('_serialize', ['tickets']);
         }
-	else
-	{
-	    $this->response->statusCode(400);
-	}
+        else
+        {
+            $this->response->statusCode(400);
+        }
     }
 
     /**
