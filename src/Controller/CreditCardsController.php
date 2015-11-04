@@ -14,6 +14,7 @@ class CreditCardsController extends AppController
 {
     public function initialize()
     {
+        parent::initialize();
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
     }

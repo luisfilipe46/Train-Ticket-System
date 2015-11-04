@@ -17,6 +17,7 @@ class TicketsController extends AppController
     }
     public function initialize()
     {
+        parent::initialize();
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
     }
@@ -28,6 +29,7 @@ class TicketsController extends AppController
      */
     public function index()
     {
+        parent::initialize();
         $this->set('tickets', $this->paginate($this->Tickets));
         $this->set('_serialize', ['tickets']);
     }

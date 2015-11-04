@@ -58,6 +58,8 @@ class AppController extends Controller
 
     		]
     	]);
+        //debug(gettype($this->Auth));
+        //$this->Auth->config('authenticate', ['Basic']);
     }
 
     /*public function isCliente($user)
@@ -84,7 +86,7 @@ class AppController extends Controller
     public function beforeFilter(Event $event)
     {
 	    //debug(gettype($this->Auth));
-        //$this->Auth->allow(/*['index', 'view']*/);
+        $this->Auth->allow([/*'index', */'view']);
     }
 
     /**

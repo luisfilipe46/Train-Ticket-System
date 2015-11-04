@@ -14,7 +14,7 @@ class StationsController extends AppController
 
     public function initialize()
     {
-	parent::initialize();
+	    parent::initialize();
         $this->loadComponent('RequestHandler');
     }
     /**

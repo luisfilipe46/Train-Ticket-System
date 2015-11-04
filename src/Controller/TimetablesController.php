@@ -15,6 +15,7 @@ class TimetablesController extends AppController
 
     public function initialize()
     {
+        parent::initialize();
         $this->loadComponent('RequestHandler');
     }
 
