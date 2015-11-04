@@ -72,24 +72,6 @@ class TicketsController extends AppController
         $this->set('_serialize', ['ticket']);
     }
 
-
-    public function fromUser()
-    {
-        $users = TableRegistry::get('Users');
-        $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->data['email'], 'password =' => $this->request->data['password']])->toArray();
-        if (!empty($queryResultsInArray))
-        {
-
-            $tickets = $this->Tickets->find()->where(['id_users =' => $queryResultsInArray[0]['id']])->toArray();
-            $this->set('tickets', $tickets);
-            $this->set('_serialize', ['tickets']);
-        }
-        else
-        {
-            $this->response->statusCode(400);
-        }
-    }
-
     /**
      * Add method
      *
