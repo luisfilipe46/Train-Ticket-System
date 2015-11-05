@@ -38,6 +38,7 @@ class TimetablesController extends AppController
         //Debugger::dump($this->request->params);
         //Debugger::dump($this->request->header('email'));
         parent::getRouteBetweenStations($station1, $station2, $routeArray);
+        $routeArrayInResponse = $routeArray;
         for ($a = 0; $a < sizeof($routeArray)-1; ) {
             $origin_station = $routeArray[$a];
             $destiny_station = $routeArray[$a+1];
@@ -85,7 +86,7 @@ class TimetablesController extends AppController
 
         }
 
-
+        $timetables[] = $routeArrayInResponse;
         $this->set('timetables', $timetables);
         $this->set('_serialize', ['timetables']);
 
