@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // bypass login, for test purposes
-        //bypassLogin();
+        bypassLogin();
     }
 
     private Context getContext()

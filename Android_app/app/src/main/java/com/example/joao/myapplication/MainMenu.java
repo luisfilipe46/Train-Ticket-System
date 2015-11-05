@@ -1,26 +1,24 @@
 package com.example.joao.myapplication;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -28,11 +26,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Vector;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainMenu extends AppCompatActivity {
 
@@ -50,11 +51,13 @@ public class MainMenu extends AppCompatActivity {
    // private TextView restResult;
     private RelativeLayout progressBar;
     private TableLayout availableTravels;
+    HashMap<String, String> stationsMap = new HashMap<String, String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        initializeStationsMap();
 
         try {
             restClient = RestClient.getInstance();
@@ -112,6 +115,15 @@ public class MainMenu extends AppCompatActivity {
         // Apply the adapter to the spinner
         spinnerStart.setAdapter(adapter);
         spinnerEnd.setAdapter(adapter);
+    }
+
+    private void initializeStationsMap() {
+        stationsMap.put("11","Station 11");
+        stationsMap.put("12","Station 12");
+        stationsMap.put("01","Station 01");
+        stationsMap.put("32","Station 32");
+
+
     }
 
     private void addDrawerItems() {
@@ -202,17 +214,22 @@ public class MainMenu extends AppCompatActivity {
         Toast.makeText(MainMenu.this, str, Toast.LENGTH_SHORT).show();
     }
 
-    private void updateAvailableTravels()
-    {
+    private void updateAvailableTravels(JSONArray arr) throws JSONException {
+        availableTravels.removeAllViews();
+        String originStation = "11";
+        String destinyStation = "32";
         progressBar.setVisibility(View.GONE);
 
 
-        for (int i = 0; i <2; i++) {
+        for (int i = 0; i < arr.length(); i++)
+        {
 
-            String station1 = "Station 1";
-            String station2 = "Station 2";
-            String hour1 = "14:15";
-            String hour2 = "15:30";
+
+
+            String station1 = arr.getJSONObject(i).getString("origin_station");;
+            String station2 = arr.getJSONObject(i).getString("destiny_station");;
+            String hour1 = arr.getJSONObject(i).getString("departure_time");;
+            String hour2 = arr.getJSONObject(i).getString("arrival_time");;
 
             TableRow row= new TableRow(this);
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
@@ -288,22 +305,15 @@ public class MainMenu extends AppCompatActivity {
         {
             progressBar.setVisibility(View.VISIBLE);
 
-            new Thread(new Runnable() {
-                public void run() {
-                    try {
+            String idStartStation = (String) getKeyFromValue(stationsMap, spinnerStart.getSelectedItem().toString());
+            String idEndStation = (String) getKeyFromValue(stationsMap, spinnerEnd.getSelectedItem().toString());
+            restClient.setMethod("GET");
+            restClient.setUrl("https://testcake3333.herokuapp.com/api/timetables_with_final_stations/" + idStartStation + "/" + idEndStation + ".json");
+            Log.i("URL GENERATED", "https://testcake3333.herokuapp.com/api/timetables_with_final_stations/" + idStartStation + "/" + idEndStation + ".json");
 
-                        Thread.sleep(500);
-                        //restClient.execute();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    availableTravels.post(new Runnable() {
-                        public void run() {
-                            updateAvailableTravels();
-                        }
-                    });
-                }
-            }).start();
+            new GetTravelsTask().execute();
+
+
 
 
 
@@ -331,6 +341,60 @@ public class MainMenu extends AppCompatActivity {
         alertDialog.show();
 
 
+    }
+
+    private class GetTravelsTask extends AsyncTask<Void,Void,String> {
+        /** The system calls this to perform work in a worker thread and
+         * delivers it the parameters given to AsyncTask.execute() */
+        @Override
+        protected String doInBackground(Void... params) {
+
+            try {
+                return restClient.execute();
+            } catch (IOException | JSONException | InterruptedException e) {
+                return "fail";
+                //e.printStackTrace();
+            }
+        }
+
+
+
+        /** The system calls this to perform work in the UI thread and delivers
+         * the result from doInBackground() */
+        protected void onPostExecute(String result) {
+             JSONArray arr = null;
+            try {
+                JSONObject json = new JSONObject(result);
+                arr = json.getJSONArray("timetables");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if(arr == null)
+            {
+                Toast.makeText(MainMenu.this,"can't form json from server response", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                try {
+                    updateAvailableTravels(arr);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+        }
+    }
+
+    public static Object getKeyFromValue(Map hm, String value) {
+        for (Object o : hm.keySet()) {
+            if (hm.get(o).equals(value)) {
+                return o;
+            }
+        }
+        return null;
     }
 
 
