@@ -114,6 +114,14 @@ class TicketsController extends AppController
                     $idTravelTrains = $queryTravelTrainsResultsInArray[0]['id'];
                     if ($lotation > $passengers) {
 
+                        $randomInt = rand(1, 100);
+                        if ($randomInt >= 96)
+                        {
+                            $this->response->statusCode(400);
+                            $this->set('error', 'credit card rejected');
+                            return;
+                        }
+
                         $query = $this->TravelTrains->query();
                         $result = $query
                             ->update()
@@ -156,6 +164,13 @@ class TicketsController extends AppController
                     $idTravelTrains2 = $queryTravelTrainsResultsInArray2[0]['id'];
 
                     if ($lotation1 > $passengers1 && $lotation2 > $passengers2) {
+                        $randomInt = rand(1, 100);
+                        if ($randomInt >= 96)
+                        {
+                            $this->response->statusCode(400);
+                            $this->set('error', 'credit card rejected');
+                            return;
+                        }
 
                         $query1 = $this->TravelTrains->query();
                         $result1 = $query1
