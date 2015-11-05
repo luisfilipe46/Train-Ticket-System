@@ -13,6 +13,7 @@ use Cake\Error\Debugger;
 class TimetablesController extends AppController
 {
 
+
     public function initialize()
     {
         parent::initialize();
@@ -36,9 +37,7 @@ class TimetablesController extends AppController
         //Debugger::dump($this->request->url);
         //Debugger::dump($this->request->params);
         //Debugger::dump($this->request->header('email'));
-        $routes = TableRegistry::get('Routes');
-        $query = $routes->find()->where(['name_station1 =' => $station1, 'name_station2 =' => $station2])->toArray();
-        $routeArray = unserialize($query[0]['route']);
+        parent::getRouteBetweenStations($station1, $station2, $routeArray);
         for ($a = 0; $a < sizeof($routeArray)-1; ) {
             $origin_station = $routeArray[$a];
             $destiny_station = $routeArray[$a+1];
@@ -94,9 +93,7 @@ class TimetablesController extends AppController
 
     public function timetableBetweenStations($station1, $station2)
     {
-        $routes = TableRegistry::get('Routes');
-        $query = $routes->find()->where(['name_station1 =' => $station1, 'name_station2 =' => $station2])->toArray();
-        $routeArray = unserialize($query[0]['route']);
+        parent::getRouteBetweenStations($station1, $station2, $routeArray);
         for($i = 0; $i < sizeof($routeArray)-1; $i++)
         {
             $timetables[] = $this->Timetables->find()->where(['origin_station =' => $routeArray[$i], 'destiny_station =' => $routeArray[$i+1]]);

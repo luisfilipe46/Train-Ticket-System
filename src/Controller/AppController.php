@@ -16,6 +16,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
 
 /**
  * Application Controller
@@ -43,24 +44,24 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
-	    /*$this->loadComponent('Auth', [
-		    'authenticate' => [
-			    'Basic' => [
-    				'fields' => [
-    					'username' => 'email',
-	    				'password' => 'password'
-    				]
-	    		]
-		    ],
+        /*$this->loadComponent('Auth', [
+            'authenticate' => [
+                'Basic' => [
+                    'fields' => [
+                        'username' => 'email',
+                        'password' => 'password'
+                    ]
+                ]
+            ],
             'unauthorizedRedirect' => false,
             'storage' => 'Memory',
 
-		    'loginAction' => [
-    			'controller' => 'Users',
-    			'action' => 'login'
+            'loginAction' => [
+                'controller' => 'Users',
+                'action' => 'login'
 
-    		]
-    	]);*/
+            ]
+        ]);*/
     }
 
     /*public function isCliente($user)
@@ -84,9 +85,16 @@ class AppController extends Controller
         return false;
     }*/
 
+    protected static function getRouteBetweenStations($station1, $station2, &$routeArray)
+    {
+        $routes = TableRegistry::get('Routes');
+        $query = $routes->find()->where(['name_station1 =' => $station1, 'name_station2 =' => $station2])->toArray();
+        $routeArray = unserialize($query[0]['route']);
+    }
+
     public function beforeFilter(Event $event)
     {
-	    //debug(gettype($this->Auth));
+        //debug(gettype($this->Auth));
         //$this->Auth->allow(['index', 'view']);
         //$this->Auth->allow();
     }

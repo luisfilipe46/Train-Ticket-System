@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Error\Debugger;
 use Cake\ORM\TableRegistry;
 use Cake\Event\Event;
 
@@ -79,18 +80,120 @@ class TicketsController extends AppController
      */
     public function add()
     {
-        $ticket = $this->Tickets->newEntity();
-        if ($this->request->is('post')) {
-            $ticket = $this->Tickets->patchEntity($ticket, $this->request->data);
-            if ($this->Tickets->save($ticket)) {
-                $this->Flash->success(__('The ticket has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The ticket could not be saved. Please, try again.'));
+
+        if ($this->request->header('email') != null && $this->request->header('password') != null && $this->request->is('post')) {
+            $users = TableRegistry::get('Users');
+            $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->header('email'), 'password =' => $this->request->header('password')])->toArray();
+            $idUser = $queryResultsInArray[0]['id'];
+            if (!empty($queryResultsInArray)) {
+
+                $this->loadModel('TravelTrains');
+
+                $travelTrains = TableRegistry::get('TravelTrains');
+                $timetables = TableRegistry::get('Timetables');
+                $day = $this->request->data('day');
+                $arrival_time = $this->request->data('arrival_time');
+                $departure_time = $this->request->data('departure_time');
+                $origin_station = $this->request->data('origin_station');
+                $destiny_station = $this->request->data('destiny_station');
+
+
+                parent::getRouteBetweenStations($origin_station, $destiny_station, $routeArray);
+
+
+                if (sizeof($routeArray) == 2) {
+
+                    $queryTimetablesResultsInArray = $timetables->find()->select(['id', 'lotation'])->where(['departure_time =' => $departure_time, 'arrival_time =' => $arrival_time,
+                        'origin_station =' => $origin_station, 'destiny_station =' => $destiny_station
+                    ])->toArray();
+                    $idTimetable = $queryTimetablesResultsInArray[0]['id'];
+                    $lotation = $queryTimetablesResultsInArray[0]['lotation'];
+
+                    $queryTravelTrainsResultsInArray = $travelTrains->find()->select(['id', 'passengers'])->where(['timetable_id =' => $idTimetable, 'date =' => $day])->toArray();
+                    $passengers = $queryTravelTrainsResultsInArray[0]['passengers'];
+                    $idTravelTrains = $queryTravelTrainsResultsInArray[0]['id'];
+                    if ($lotation > $passengers) {
+
+                        $query = $this->TravelTrains->query();
+                        $result = $query
+                            ->update()
+                            ->set(
+                                $query->newExpr('passengers = passengers + 1')
+                            )
+                            ->where([
+                                'id' => $idTravelTrains
+                            ])
+                            ->execute();
+
+
+                        $this->insertTicketInDatabase($origin_station, $dataForTicket, $destiny_station, $day, $departure_time, $arrival_time, $idUser);
+                        return;
+                    }
+                    else {
+                        $this->response->statusCode(400);
+                        $this->set('error', 'no more tickets available');
+                        return;
+                    }
+                } elseif (sizeof($routeArray) == 3) {
+                    $queryTimetablesResultsInArray1 = $timetables->find()->select(['id', 'lotation'])->where(['departure_time =' => $departure_time,
+                        'origin_station =' => $origin_station, 'destiny_station =' => $routeArray[1]
+                    ])->toArray();
+                    $queryTimetablesResultsInArray2 = $timetables->find()->select(['id', 'lotation'])->where(['arrival_time =' => $arrival_time,
+                        'origin_station =' => $routeArray[1], 'destiny_station =' => $destiny_station
+                    ])->toArray();
+                    $idTimetable1 = $queryTimetablesResultsInArray1[0]['id'];
+                    $lotation1 = $queryTimetablesResultsInArray1[0]['lotation'];
+
+                    $idTimetable2 = $queryTimetablesResultsInArray2[0]['id'];
+                    $lotation2 = $queryTimetablesResultsInArray2[0]['lotation'];
+
+                    $queryTravelTrainsResultsInArray1 = $travelTrains->find()->select(['id', 'passengers'])->where(['timetable_id =' => $idTimetable1, 'date =' => $day])->toArray();
+                    $passengers1 = $queryTravelTrainsResultsInArray1[0]['passengers'];
+                    $idTravelTrains1 = $queryTravelTrainsResultsInArray1[0]['id'];
+
+                    $queryTravelTrainsResultsInArray2 = $travelTrains->find()->select(['id', 'passengers'])->where(['timetable_id =' => $idTimetable2, 'date =' => $day])->toArray();
+                    $passengers2 = $queryTravelTrainsResultsInArray2[0]['passengers'];
+                    $idTravelTrains2 = $queryTravelTrainsResultsInArray2[0]['id'];
+
+                    if ($lotation1 > $passengers1 && $lotation2 > $passengers2) {
+
+                        $query1 = $this->TravelTrains->query();
+                        $result1 = $query1
+                            ->update()
+                            ->set(
+                                $query1->newExpr('passengers = passengers + 1')
+                            )
+                            ->where([
+                                'id' => $idTravelTrains1
+                            ])
+                            ->execute();
+
+                        $query2 = $this->TravelTrains->query();
+                        $result2 = $query2
+                            ->update()
+                            ->set(
+                                $query2->newExpr('passengers = passengers + 1')
+                            )
+                            ->where([
+                                'id' => $idTravelTrains2
+                            ])
+                            ->execute();
+
+
+                        $this->insertTicketInDatabase($origin_station, $dataForTicket, $destiny_station, $day, $departure_time, $arrival_time, $idUser);
+                        return;
+                    }
+                    else {
+                        $this->response->statusCode(400);
+                        $this->set('error', 'no more tickets available');
+                        return;
+                    }
+                }
             }
+            $this->response->statusCode(401);
+            return;
         }
-        $this->set(compact('ticket'));
-        $this->set('_serialize', ['ticket']);
+        $this->response->statusCode(400);
     }
 
     /**
@@ -135,5 +238,24 @@ class TicketsController extends AppController
             $this->Flash->error(__('The ticket could not be deleted. Please, try again.'));
         }
         return $this->redirect(['action' => 'index']);
+    }
+
+    private function insertTicketInDatabase($origin_station, &$dataForTicket, $destiny_station, $day, $departure_time, $arrival_time, $idUser)
+    {
+        $dataForTicket['origin_station'] = $origin_station;
+        $dataForTicket['destiny_station'] = $destiny_station;
+        $dataForTicket['qr_code'] = 'TESTE' . rand(1, 100000);
+        $dataForTicket['used'] = false;
+        $dataForTicket['departure_time'] = new \DateTime($day . ' ' . $departure_time);
+        $dataForTicket['arrival_time'] = new \DateTime($day . ' ' . $arrival_time);
+        $dataForTicket['id_users'] = $idUser;
+        $ticket = $this->Tickets->newEntity();
+        $ticket = $this->Tickets->patchEntity($ticket, $dataForTicket);
+        if (!$this->Tickets->save($ticket)) {
+            $this->response->statusCode(400);
+        }
+
+        $this->set(compact('ticket'));
+        $this->set('_serialize', ['ticket']);
     }
 }
