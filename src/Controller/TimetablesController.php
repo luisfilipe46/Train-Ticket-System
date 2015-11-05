@@ -34,9 +34,6 @@ class TimetablesController extends AppController
 
     public function timetableBetweenFinalStations($station1, $station2)
     {
-        //Debugger::dump($this->request->url);
-        //Debugger::dump($this->request->params);
-        //Debugger::dump($this->request->header('email'));
         parent::getRouteBetweenStations($station1, $station2, $routeArray);
         $routeArrayInResponse = $routeArray;
         for ($a = 0; $a < sizeof($routeArray)-1; ) {
@@ -48,17 +45,11 @@ class TimetablesController extends AppController
                 $departure_time = array();
             $arrival_time = array();
 
-            //Debugger::dump($timetable_aux);
-            //die;
-
             for ($i = 0; $i < sizeof($timetable_aux); $i++) {
                 $arrival_time[] = $timetable_aux[$i]['arrival_time'];
                 if ($a == 0)
                     $departure_time[] = $timetable_aux[$i]['departure_time'];
             }
-            //Debugger::dump($departure_time);
-            //Debugger::dump($arrival_time);
-
             $a++;
 
 
@@ -71,8 +62,6 @@ class TimetablesController extends AppController
             {
                 $this->addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $arrival_time, $timetables, $ii);
 
-                //Debugger::dump($timetables);
-
                 for($aa = $a; $aa < sizeof($routeArray); $aa++)
                 {
                     $routeArrayAux[] = $routeArray[$aa];
@@ -80,15 +69,15 @@ class TimetablesController extends AppController
 
                 $a = 0;
                 $routeArray = $routeArrayAux;
-                //Debugger::dump($routeArray);
-
             }
-
         }
 
-        $timetables[] = $routeArrayInResponse;
+        //$timetablesWithRoutes=array([$routeArrayInResponse, $timetables]);
         $this->set('timetables', $timetables);
-        $this->set('_serialize', ['timetables']);
+        $this->set('routes', $routeArrayInResponse);
+        //$this->set('_serialize', ['timetables']);
+        //$this->set('_serialize', ['routes']);
+        $this->set(['timetables', 'routes'], [$timetables, $routeArrayInResponse]);
 
     }
 
