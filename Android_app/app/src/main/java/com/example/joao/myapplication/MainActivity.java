@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // bypass login, for test purposes
-        bypassLogin();
+        //bypassLogin();
     }
 
     private Context getContext()
@@ -186,8 +186,9 @@ public class MainActivity extends AppCompatActivity {
             try {
                 return restClient.execute();
             } catch (IOException | JSONException | InterruptedException e) {
+                e.printStackTrace();
                 return "fail";
-                //e.printStackTrace();
+
             }
         }
 
@@ -209,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
 
                 startActivity(intent);
             }
-            else if(result.equals("Code: 400"))
+            else if(result.equals("400"))
             {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -222,6 +223,17 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show();
 
                // Toast.makeText(MainActivity.this,"Your email/password are incorrect", Toast.LENGTH_SHORT).show();
+            }
+            else if(result.equals("fail"))
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+                builder.setMessage("Error connecting to server")
+                        .setTitle("Failed login");
+
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         }
     }
@@ -247,11 +259,11 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
 
 
-            if(result.equals("Code: 201"))
+            if(result.equals("201"))
             {
                 Toast.makeText(MainActivity.this,"User account registed", Toast.LENGTH_SHORT).show();
             }
-            else if(result.equals("Code: 400"))
+            else if(result.equals("400"))
             {
                 Toast.makeText(MainActivity.this,"Error creating User", Toast.LENGTH_SHORT).show();
             }
@@ -262,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(this, MainMenu.class);
         Bundle info = new Bundle();
-        info.putString("username","user");
+        info.putString("email","luminosity@cs.com");
         info.putString("password", "pass");
 
         intent.putExtras(info);

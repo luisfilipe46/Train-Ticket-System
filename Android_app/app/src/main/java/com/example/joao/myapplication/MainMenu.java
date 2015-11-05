@@ -229,7 +229,9 @@ public class MainMenu extends AppCompatActivity {
             String station1 = arr.getJSONObject(i).getString("origin_station");;
             String station2 = arr.getJSONObject(i).getString("destiny_station");;
             String hour1 = arr.getJSONObject(i).getString("departure_time");;
+            hour1 = hour1.substring(11,16);
             String hour2 = arr.getJSONObject(i).getString("arrival_time");;
+            hour2 = hour2.substring(11,16);
 
             TableRow row= new TableRow(this);
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
@@ -238,12 +240,7 @@ public class MainMenu extends AppCompatActivity {
             row.setLayoutParams(lp);
             Button addBtn = new Button(this);
             addBtn.setText("Buy");
-            addBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    buyTicket();
-                }
-            });
+            addBtn.setOnClickListener(new BuyButtonOnClickListener(hour1,hour2,station1,station2));
 
             TableLayout innerTable = new TableLayout(this);
             TableRow innerRow1 = new TableRow(this);
@@ -324,7 +321,7 @@ public class MainMenu extends AppCompatActivity {
 
     }
 
-    private void buyTicket() {
+    private void buyTicket(String station1, String station2, String hour1, String hour2) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
 
@@ -339,6 +336,21 @@ public class MainMenu extends AppCompatActivity {
 
         // show it
         alertDialog.show();
+
+        restClient.setMethod("POST");
+        restClient.addParam("origin_station", station1);
+        restClient.addParam("destiny_station",station2);
+        restClient.addParam("arrival_time",hour1);
+        restClient.addParam("departure_time",hour2);
+        String day = "2015-11-06";
+        restClient.addParam("day",day);
+        restClient.addParam("email",email);
+        restClient.addParam("password",pass);
+
+        new BuyTicketTask().execute();
+
+
+
 
 
     }
@@ -362,31 +374,95 @@ public class MainMenu extends AppCompatActivity {
         /** The system calls this to perform work in the UI thread and delivers
          * the result from doInBackground() */
         protected void onPostExecute(String result) {
-             JSONArray arr = null;
-            try {
-                JSONObject json = new JSONObject(result);
-                arr = json.getJSONArray("timetables");
+             if(result.equals("200")) {
+                 JSONArray arr = null;
+                 try {
+                     JSONObject json = new JSONObject(restClient.getReturn());
+                     arr = json.getJSONArray("timetables");
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+                 } catch (JSONException e) {
+                     e.printStackTrace();
+                 }
 
-            if(arr == null)
-            {
-                Toast.makeText(MainMenu.this,"can't form json from server response", Toast.LENGTH_SHORT).show();
-            }
+                 if (arr == null) {
+                     Toast.makeText(MainMenu.this, "can't form json from server response", Toast.LENGTH_SHORT).show();
+                 } else {
+                     try {
+                         updateAvailableTravels(arr);
+                     } catch (JSONException e) {
+                         e.printStackTrace();
+                     }
+
+                 }
+             }
             else {
-                try {
-                    updateAvailableTravels(arr);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
+                 Toast.makeText(MainMenu.this, "Error getting Travels", Toast.LENGTH_SHORT).show();
+             }
 
 
         }
     }
+
+    private class BuyTicketTask extends AsyncTask<Void,Void,String> {
+        /** The system calls this to perform work in a worker thread and
+         * delivers it the parameters given to AsyncTask.execute() */
+        @Override
+        protected String doInBackground(Void... params) {
+
+            try {
+                return restClient.execute();
+            } catch (IOException | JSONException | InterruptedException e) {
+                e.printStackTrace();
+                return "fail";
+
+            }
+        }
+
+
+
+        /** The system calls this to perform work in the UI thread and delivers
+         * the result from doInBackground() */
+        protected void onPostExecute(String result) {
+
+            if(result.equals("200"))
+            {
+
+            }
+            else if(result.equals("401"))
+            {
+
+            }
+            else if(result.equals("400"))
+            {
+
+            }
+
+
+
+
+
+        }
+    }
+
+    public class BuyButtonOnClickListener implements View.OnClickListener
+    {
+
+        String hour1,hour2,startStation,endStation;
+
+        public BuyButtonOnClickListener(String h1,String h2, String startStation,String endStation) {
+            this.startStation = startStation;
+            this.endStation = endStation;
+            hour1 = h1;
+            hour2 = h2;
+        }
+
+        @Override
+        public void onClick(View v)
+        {
+            buyTicket(startStation,endStation,hour1,hour2);
+        }
+
+    };
 
     public static Object getKeyFromValue(Map hm, String value) {
         for (Object o : hm.keySet()) {

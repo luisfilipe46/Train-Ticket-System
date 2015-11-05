@@ -106,12 +106,22 @@ public class RestClient {
             addParams(urlConnection);
         }
         int responseCode = urlConnection.getResponseCode();
-        String ret;
+        String ret = "";
+
+        try {
+            in = new BufferedInputStream(urlConnection.getInputStream());
+            ret = readStream(in);
+        }
+        catch (IOException e)
+        {
+
+        }
 
 
 
 
-        if(responseCode == 200) {
+
+        /*if(responseCode == 200) {
             in = new BufferedInputStream(urlConnection.getInputStream());
             ret = readStream(in);
             Log.i("RESTCLIENT", "VAlor retorno: " + ret);
@@ -125,7 +135,12 @@ public class RestClient {
             //Log.i("JSON",json.toString());
         }
         else
+        {
+            if()
             ret =  "Code: " + responseCode;
+
+        }*/
+
 
 
         urlConnection.disconnect();
@@ -135,7 +150,7 @@ public class RestClient {
 
         this.ret = ret;
 
-        return ret;
+        return Integer.toString(responseCode);
 
 
 
