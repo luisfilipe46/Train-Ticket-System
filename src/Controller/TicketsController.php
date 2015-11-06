@@ -220,23 +220,32 @@ class TicketsController extends AppController
      */
     public function edit($id = null)
     {
-        $ticket = $this->Tickets->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $ticket = $this->Tickets->patchEntity($ticket, $this->request->data);
-            if ($this->Tickets->save($ticket)) {
-                $this->Flash->success(__('The ticket has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The ticket could not be saved. Please, try again.'));
+        if ($this->request->header('email') != null && $this->request->header('password') != null) {
+            $users = TableRegistry::get('Users');
+            $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->header('email'),
+                'password =' => $this->request->header('password'), 'role =' => 'pica'])->toArray();
+
+            if (!empty($queryResultsInArray)) {
+
+                if ($this->request->is(['put'])) {
+                    $query = $this->Tickets->query();
+                    $result = $query
+                        ->update()
+                        ->set(
+                            $query->newExpr('used = true')
+                        )
+                        ->where([
+                            'id' => $id
+                        ])
+                        ->execute();
+                }
+                return;
             }
         }
-        $this->set(compact('ticket'));
-        $this->set('_serialize', ['ticket']);
+        $this->response->statusCode(401);
     }
 
-    /**
+/**
      * Delete method
      *
      * @param string|null $id Ticket id.
