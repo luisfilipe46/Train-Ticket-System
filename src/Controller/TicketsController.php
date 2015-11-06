@@ -91,7 +91,6 @@ class TicketsController extends AppController
                 $travelTrains = TableRegistry::get('TravelTrains');
                 $timetables = TableRegistry::get('Timetables');
                 $day = $this->request->data('day');
-                $arrival_time = $this->request->data('arrival_time');
                 $departure_time = $this->request->data('departure_time');
                 $origin_station = $this->request->data('origin_station');
                 $destiny_station = $this->request->data('destiny_station');
@@ -100,112 +99,71 @@ class TicketsController extends AppController
                 parent::getRouteBetweenStations($origin_station, $destiny_station, $routeArray, $stationsWithChangeOfTrain);
 
 
-                if (sizeof($routeArray) == 2) {
+                $lastArrivalTime = $departure_time;
+                for ($i = 0; $i < sizeof($routeArray)-1; $i++)
+                {
 
-                    $queryTimetablesResultsInArray = $timetables->find()->select(['id', 'lotation', 'price'])->where(['departure_time =' => $departure_time, 'arrival_time =' => $arrival_time,
-                        'origin_station =' => $origin_station, 'destiny_station =' => $destiny_station
+                    $queryTimetablesResultsInArray = $timetables->find()->select(['id', 'lotation', 'price', 'arrival_time'])->where(['departure_time =' => $lastArrivalTime,
+                        'origin_station =' => $routeArray[$i], 'destiny_station =' => $routeArray[$i+1]
                     ])->toArray();
-                    $idTimetable = $queryTimetablesResultsInArray[0]['id'];
-                    $lotation = $queryTimetablesResultsInArray[0]['lotation'];
-                    $price = $queryTimetablesResultsInArray[0]['price'];
-
-                    $queryTravelTrainsResultsInArray = $travelTrains->find()->select(['id', 'passengers'])->where(['timetable_id =' => $idTimetable, 'date =' => $day])->toArray();
-                    $passengers = $queryTravelTrainsResultsInArray[0]['passengers'];
-                    $idTravelTrains = $queryTravelTrainsResultsInArray[0]['id'];
-                    if ($lotation > $passengers) {
-
-                        $randomInt = rand(1, 100);
-                        if ($randomInt >= 96)
-                        {
-                            $this->response->statusCode(400);
-                            $this->set('error', 'credit card rejected');
-                            return;
-                        }
-
-                        $query = $this->TravelTrains->query();
-                        $result = $query
-                            ->update()
-                            ->set(
-                                $query->newExpr('passengers = passengers + 1')
-                            )
-                            ->where([
-                                'id' => $idTravelTrains
-                            ])
-                            ->execute();
-
-
-                        $this->insertTicketInDatabase($origin_station, $dataForTicket, $destiny_station, $day, $departure_time, $arrival_time, $idUser, $price);
-                        return;
-                    }
-                    else {
+                    if (empty($queryTimetablesResultsInArray))
+                    {
                         $this->response->statusCode(400);
-                        $this->set('error', 'no more tickets available');
+                        $this->set('error', 'departure hour is wrong');
                         return;
                     }
-                } elseif (sizeof($routeArray) == 3) {
-                    $queryTimetablesResultsInArray1 = $timetables->find()->select(['id', 'lotation', 'price'])->where(['departure_time =' => $departure_time,
-                        'origin_station =' => $origin_station, 'destiny_station =' => $routeArray[1]
-                    ])->toArray();
-                    $queryTimetablesResultsInArray2 = $timetables->find()->select(['id', 'lotation', 'price'])->where(['arrival_time =' => $arrival_time,
-                        'origin_station =' => $routeArray[1], 'destiny_station =' => $destiny_station
-                    ])->toArray();
-                    $idTimetable1 = $queryTimetablesResultsInArray1[0]['id'];
-                    $lotation1 = $queryTimetablesResultsInArray1[0]['lotation'];
-                    $price1 = $queryTimetablesResultsInArray1[0]['price'];
-
-                    $idTimetable2 = $queryTimetablesResultsInArray2[0]['id'];
-                    $lotation2 = $queryTimetablesResultsInArray2[0]['lotation'];
-                    $price2 = $queryTimetablesResultsInArray2[0]['price'];
-
-                    $queryTravelTrainsResultsInArray1 = $travelTrains->find()->select(['id', 'passengers'])->where(['timetable_id =' => $idTimetable1, 'date =' => $day])->toArray();
-                    $passengers1 = $queryTravelTrainsResultsInArray1[0]['passengers'];
-                    $idTravelTrains1 = $queryTravelTrainsResultsInArray1[0]['id'];
-
-                    $queryTravelTrainsResultsInArray2 = $travelTrains->find()->select(['id', 'passengers'])->where(['timetable_id =' => $idTimetable2, 'date =' => $day])->toArray();
-                    $passengers2 = $queryTravelTrainsResultsInArray2[0]['passengers'];
-                    $idTravelTrains2 = $queryTravelTrainsResultsInArray2[0]['id'];
-
-                    if ($lotation1 > $passengers1 && $lotation2 > $passengers2) {
-                        $randomInt = rand(1, 100);
-                        if ($randomInt >= 96)
-                        {
-                            $this->response->statusCode(400);
-                            $this->set('error', 'credit card rejected');
-                            return;
-                        }
-
-                        $query1 = $this->TravelTrains->query();
-                        $result1 = $query1
-                            ->update()
-                            ->set(
-                                $query1->newExpr('passengers = passengers + 1')
-                            )
-                            ->where([
-                                'id' => $idTravelTrains1
-                            ])
-                            ->execute();
-
-                        $query2 = $this->TravelTrains->query();
-                        $result2 = $query2
-                            ->update()
-                            ->set(
-                                $query2->newExpr('passengers = passengers + 1')
-                            )
-                            ->where([
-                                'id' => $idTravelTrains2
-                            ])
-                            ->execute();
+                    $idTimetable[] = $queryTimetablesResultsInArray[0]['id'];
+                    $lotation[] = $queryTimetablesResultsInArray[0]['lotation'];
+                    $price[] = $queryTimetablesResultsInArray[0]['price'];
+                    $lastArrivalTime = $queryTimetablesResultsInArray[0]['arrival_time'];
 
 
-                        $this->insertTicketInDatabase($origin_station, $dataForTicket, $destiny_station, $day, $departure_time, $arrival_time, $idUser, $price1+$price2);
+                    $queryTravelTrainsResultsInArray = $travelTrains->find()->select(['id', 'passengers'])->where(['timetable_id =' => $idTimetable[$i], 'date =' => $day])->toArray();
+                    if (empty($queryTravelTrainsResultsInArray))
+                    {
+                        $this->response->statusCode(400);
+                        $this->set('error', 'day is wrong');
                         return;
                     }
-                    else {
+                    $passengers[] = $queryTravelTrainsResultsInArray[0]['passengers'];
+                    $idTravelTrains[] = $queryTravelTrainsResultsInArray[0]['id'];
+
+                    if($lotation[$i] <= $passengers[$i])
+                    {
                         $this->response->statusCode(400);
                         $this->set('error', 'no more tickets available');
                         return;
                     }
                 }
+
+                $randomInt = rand(1, 100);
+                if ($randomInt >= 96)
+                {
+                    $this->response->statusCode(400);
+                    $this->set('error', 'credit card rejected');
+                    return;
+                }
+                for($i = 0; $i < sizeof($routeArray)-1; $i++) {
+                    $query = $this->TravelTrains->query();
+                    $result = $query
+                        ->update()
+                        ->set(
+                            $query->newExpr('passengers = passengers + 1')
+                        )
+                        ->where([
+                            'id' => $idTravelTrains[$i]
+                        ])
+                        ->execute();
+                }
+                $finalPrice = array_sum($price);
+
+                $lastArrivalTime = $lastArrivalTime->i18nFormat('HH:mm:ss');
+
+                $this->insertTicketInDatabase($origin_station, $dataForTicket, $destiny_station, $day, $departure_time, $lastArrivalTime, $idUser, $finalPrice, $ticket);
+
+                $this->set(compact('ticket'));
+                $this->set('_serialize', ['ticket']);
+                return;
             }
             $this->response->statusCode(401);
             return;
@@ -271,7 +229,7 @@ class TicketsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    private function insertTicketInDatabase($origin_station, &$dataForTicket, $destiny_station, $day, $departure_time, $arrival_time, $idUser, $price)
+    private function insertTicketInDatabase($origin_station, &$dataForTicket, $destiny_station, $day, $departure_time, $arrival_time, $idUser, $price, &$ticket)
     {
         $dataForTicket['origin_station'] = $origin_station;
         $dataForTicket['destiny_station'] = $destiny_station;
@@ -286,8 +244,5 @@ class TicketsController extends AppController
         if (!$this->Tickets->save($ticket)) {
             $this->response->statusCode(400);
         }
-
-        $this->set(compact('ticket'));
-        $this->set('_serialize', ['ticket']);
     }
 }
