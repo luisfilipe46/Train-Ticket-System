@@ -205,9 +205,51 @@ class TicketsController extends AppController
         $this->response->statusCode(401);
     }
 
-    public function ticketsOfTravel($station1, $station2, $day, $departure_time) {
+    public function ticketsOfTravel($origin_station, $destiny_station, $day, $departure_time) {
+
+        $timetables = TableRegistry::get('Timetables');
+
+        if ($this->request->header('email') != null && $this->request->header('password') != null) {
+            $users = TableRegistry::get('Users');
+            $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->header('email'),
+                'password =' => $this->request->header('password'), 'role =' => 'pica'])->toArray();
+
+            if (!empty($queryResultsInArray)) {
+                parent::getRouteBetweenStations($origin_station, $destiny_station, $routeArray, $stationsWithChangeOfTrain);
+
+                $lastArrivalTime = $departure_time;
+                $tickets = array();
+                for ($i = 0; $i < sizeof($routeArray)-1; $i++)
+                {
+
+                    $queryTimetablesResultsInArray = $timetables->find()->select(['id', 'arrival_time', 'departure_time'])->where(['departure_time =' => $lastArrivalTime,
+                        'origin_station =' => $routeArray[$i], 'destiny_station =' => $routeArray[$i+1]
+                    ])->toArray();
+                    if (empty($queryTimetablesResultsInArray))
+                    {
+                        $this->response->statusCode(400);
+                        $this->set('error', 'departure hour is wrong');
+                        return;
+                    }
+                    $lastArrivalTime = $queryTimetablesResultsInArray[0]['arrival_time'];
+                    $lastDepartureTime = $queryTimetablesResultsInArray[0]['departure_time'];
 
 
+                    $hour = $lastDepartureTime->i18nFormat('HH:mm:ss');
+                    $datetime = new \DateTime($day . ' ' . $hour);
+
+                    $ticket = $this->Tickets->find()->where(['origin_station =' => $routeArray[$i], 'departure_time =' => $datetime])->toArray();
+                    if (!empty($ticket))
+                        $tickets[] = $ticket;
+
+                }
+
+                $this->set('tickets', $tickets);
+                $this->set('_serialize',['tickets']);
+                return;
+            }
+        }
+        $this->response->statusCode(401);
     }
 
 /**

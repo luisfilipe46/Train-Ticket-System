@@ -66,6 +66,12 @@ Router::scope('/api', function ($routes) {
             'pass' => ['station1', 'station2']
         ]
     );
+    $routes->connect('/tickets/:origin_station/:destiny_station/:day/:departure_time',
+        ['controller' => 'Tickets', 'action' => 'ticketsOfTravel', '_method' => 'GET'],
+        [
+            'pass' => ['origin_station', 'destiny_station', 'day', 'departure_time']
+        ]
+    );
 
 });
 
