@@ -36,10 +36,12 @@ class TimetablesController extends AppController
     {
         parent::getRouteBetweenStations($station1, $station2, $routeArray);
         $routeArrayInResponse = $routeArray;
+        $price = 0.0;
         for ($a = 0; $a < sizeof($routeArray)-1; ) {
             $origin_station = $routeArray[$a];
             $destiny_station = $routeArray[$a+1];
             $timetable_aux = $this->Timetables->find()->where(['origin_station =' => $origin_station, 'destiny_station =' => $destiny_station])->toArray();
+            $price = $price + $timetable_aux[0]['price'];
 
             if ($a == 0)
                 $departure_time = array();
@@ -55,12 +57,13 @@ class TimetablesController extends AppController
 
             if (($a+1) == sizeof($routeArray))
             {
-                $this->addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $arrival_time, $timetables, $ii);
-
+                $this->addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $arrival_time, $price, $timetables, $ii);
+                $price = 0.0;
             }
             elseif ($destiny_station == '01')
             {
-                $this->addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $arrival_time, $timetables, $ii);
+                $this->addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $arrival_time, $price, $timetables, $ii);
+                $price = 0.0;
 
                 for($aa = $a; $aa < sizeof($routeArray); $aa++)
                 {
@@ -72,13 +75,8 @@ class TimetablesController extends AppController
             }
         }
 
-        //$timetablesWithRoutes=array([$routeArrayInResponse, $timetables]);
-        $this->set('timetables', $timetables);
-        $this->set('routes', $routeArrayInResponse);
-        //$this->set('_serialize', ['timetables']);
-        //$this->set('_serialize', ['routes']);
         $this->set(['timetables', 'routes'], [$timetables, $routeArrayInResponse]);
-
+        $this->set('_serialize', ['timetables', 'routes']);
     }
 
     public function timetableBetweenStations($station1, $station2)
@@ -183,14 +181,15 @@ class TimetablesController extends AppController
      * @param $timetables
      * @param $ii
      */
-    private function addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $arrival_time, &$timetables, &$ii)
+    private function addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $arrival_time, $price, &$timetables, &$ii)
     {
         for ($ii = 0; $ii < sizeof($departure_time); $ii++) {
             $timetables[] = [
                 'origin_station' => $routeArray[0],
                 'destiny_station' => $destiny_station,
                 'departure_time' => $departure_time[$ii],
-                'arrival_time' => $arrival_time[$ii]
+                'arrival_time' => $arrival_time[$ii],
+                'price' => $price
             ];
         }
     }

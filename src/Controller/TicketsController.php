@@ -103,11 +103,12 @@ class TicketsController extends AppController
 
                 if (sizeof($routeArray) == 2) {
 
-                    $queryTimetablesResultsInArray = $timetables->find()->select(['id', 'lotation'])->where(['departure_time =' => $departure_time, 'arrival_time =' => $arrival_time,
+                    $queryTimetablesResultsInArray = $timetables->find()->select(['id', 'lotation', 'price'])->where(['departure_time =' => $departure_time, 'arrival_time =' => $arrival_time,
                         'origin_station =' => $origin_station, 'destiny_station =' => $destiny_station
                     ])->toArray();
                     $idTimetable = $queryTimetablesResultsInArray[0]['id'];
                     $lotation = $queryTimetablesResultsInArray[0]['lotation'];
+                    $price = $queryTimetablesResultsInArray[0]['price'];
 
                     $queryTravelTrainsResultsInArray = $travelTrains->find()->select(['id', 'passengers'])->where(['timetable_id =' => $idTimetable, 'date =' => $day])->toArray();
                     $passengers = $queryTravelTrainsResultsInArray[0]['passengers'];
@@ -134,7 +135,7 @@ class TicketsController extends AppController
                             ->execute();
 
 
-                        $this->insertTicketInDatabase($origin_station, $dataForTicket, $destiny_station, $day, $departure_time, $arrival_time, $idUser);
+                        $this->insertTicketInDatabase($origin_station, $dataForTicket, $destiny_station, $day, $departure_time, $arrival_time, $idUser, $price);
                         return;
                     }
                     else {
@@ -143,17 +144,19 @@ class TicketsController extends AppController
                         return;
                     }
                 } elseif (sizeof($routeArray) == 3) {
-                    $queryTimetablesResultsInArray1 = $timetables->find()->select(['id', 'lotation'])->where(['departure_time =' => $departure_time,
+                    $queryTimetablesResultsInArray1 = $timetables->find()->select(['id', 'lotation', 'price'])->where(['departure_time =' => $departure_time,
                         'origin_station =' => $origin_station, 'destiny_station =' => $routeArray[1]
                     ])->toArray();
-                    $queryTimetablesResultsInArray2 = $timetables->find()->select(['id', 'lotation'])->where(['arrival_time =' => $arrival_time,
+                    $queryTimetablesResultsInArray2 = $timetables->find()->select(['id', 'lotation', 'price'])->where(['arrival_time =' => $arrival_time,
                         'origin_station =' => $routeArray[1], 'destiny_station =' => $destiny_station
                     ])->toArray();
                     $idTimetable1 = $queryTimetablesResultsInArray1[0]['id'];
                     $lotation1 = $queryTimetablesResultsInArray1[0]['lotation'];
+                    $price1 = $queryTimetablesResultsInArray1[0]['price'];
 
                     $idTimetable2 = $queryTimetablesResultsInArray2[0]['id'];
                     $lotation2 = $queryTimetablesResultsInArray2[0]['lotation'];
+                    $price2 = $queryTimetablesResultsInArray2[0]['price'];
 
                     $queryTravelTrainsResultsInArray1 = $travelTrains->find()->select(['id', 'passengers'])->where(['timetable_id =' => $idTimetable1, 'date =' => $day])->toArray();
                     $passengers1 = $queryTravelTrainsResultsInArray1[0]['passengers'];
@@ -195,7 +198,7 @@ class TicketsController extends AppController
                             ->execute();
 
 
-                        $this->insertTicketInDatabase($origin_station, $dataForTicket, $destiny_station, $day, $departure_time, $arrival_time, $idUser);
+                        $this->insertTicketInDatabase($origin_station, $dataForTicket, $destiny_station, $day, $departure_time, $arrival_time, $idUser, $price1+$price2);
                         return;
                     }
                     else {
@@ -264,7 +267,7 @@ class TicketsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    private function insertTicketInDatabase($origin_station, &$dataForTicket, $destiny_station, $day, $departure_time, $arrival_time, $idUser)
+    private function insertTicketInDatabase($origin_station, &$dataForTicket, $destiny_station, $day, $departure_time, $arrival_time, $idUser, $price)
     {
         $dataForTicket['origin_station'] = $origin_station;
         $dataForTicket['destiny_station'] = $destiny_station;
@@ -273,6 +276,7 @@ class TicketsController extends AppController
         $dataForTicket['departure_time'] = new \DateTime($day . ' ' . $departure_time);
         $dataForTicket['arrival_time'] = new \DateTime($day . ' ' . $arrival_time);
         $dataForTicket['id_users'] = $idUser;
+        $dataForTicket['price'] = $price;
         $ticket = $this->Tickets->newEntity();
         $ticket = $this->Tickets->patchEntity($ticket, $dataForTicket);
         if (!$this->Tickets->save($ticket)) {
