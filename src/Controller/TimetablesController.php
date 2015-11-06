@@ -34,7 +34,7 @@ class TimetablesController extends AppController
 
     public function timetableBetweenFinalStations($station1, $station2)
     {
-        parent::getRouteBetweenStations($station1, $station2, $routeArray);
+        parent::getRouteBetweenStations($station1, $station2, $routeArray, $stationsWithChangeOfTrain);
         $routeArrayInResponse = $routeArray;
         $price = 0.0;
         for ($a = 0; $a < sizeof($routeArray)-1; ) {
@@ -60,7 +60,7 @@ class TimetablesController extends AppController
                 $this->addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $arrival_time, $price, $timetables, $ii);
                 $price = 0.0;
             }
-            elseif ($destiny_station == '01')
+            elseif (!empty($stationsWithChangeOfTrain) && $destiny_station == $stationsWithChangeOfTrain[0])
             {
                 $this->addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $arrival_time, $price, $timetables, $ii);
                 $price = 0.0;
@@ -72,6 +72,7 @@ class TimetablesController extends AppController
 
                 $a = 0;
                 $routeArray = $routeArrayAux;
+                array_shift($stationsWithChangeOfTrain);
             }
         }
 
@@ -81,7 +82,7 @@ class TimetablesController extends AppController
 
     public function timetableBetweenStations($station1, $station2)
     {
-        parent::getRouteBetweenStations($station1, $station2, $routeArray);
+        parent::getRouteBetweenStations($station1, $station2, $routeArray, $stationsWithChangeOfTrain);
         for($i = 0; $i < sizeof($routeArray)-1; $i++)
         {
             $timetables[] = $this->Timetables->find()->where(['origin_station =' => $routeArray[$i], 'destiny_station =' => $routeArray[$i+1]]);

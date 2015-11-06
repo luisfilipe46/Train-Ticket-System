@@ -80,7 +80,6 @@ class TicketsController extends AppController
      */
     public function add()
     {
-
         if ($this->request->header('email') != null && $this->request->header('password') != null && $this->request->is('post')) {
             $users = TableRegistry::get('Users');
             $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->header('email'), 'password =' => $this->request->header('password')])->toArray();
@@ -98,7 +97,7 @@ class TicketsController extends AppController
                 $destiny_station = $this->request->data('destiny_station');
 
 
-                parent::getRouteBetweenStations($origin_station, $destiny_station, $routeArray);
+                parent::getRouteBetweenStations($origin_station, $destiny_station, $routeArray, $stationsWithChangeOfTrain);
 
 
                 if (sizeof($routeArray) == 2) {
@@ -246,6 +245,11 @@ class TicketsController extends AppController
             }
         }
         $this->response->statusCode(401);
+    }
+
+    public function ticketsOfTravel($station1, $station2, $day, $departure_time) {
+
+
     }
 
 /**

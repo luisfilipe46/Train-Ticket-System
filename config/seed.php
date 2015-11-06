@@ -325,22 +325,8 @@ $data = [
 
 
 
-		// B - C
+		// CentralStation - C
 			// first voyage
-		[
-			'origin_station' => '21',
-			'destiny_station' => '22',
-			'lotation' => 50,
-			'departure_time' => '09:00:00',
-			'arrival_time' => '09:10:00',
-		],
-		[
-			'origin_station' => '22',
-			'destiny_station' => '01',
-			'lotation' => 50,
-			'departure_time' => '09:10:00',
-			'arrival_time' => '09:20:00',
-		],
 		[
 			'origin_station' => '01',
 			'destiny_station' => '32',
@@ -357,20 +343,6 @@ $data = [
 		],
 			// second voyage
 		[
-			'origin_station' => '21',
-			'destiny_station' => '22',
-			'lotation' => 50,
-			'departure_time' => '15:00:00',
-			'arrival_time' => '15:10:00',
-		],
-		[
-			'origin_station' => '22',
-			'destiny_station' => '01',
-			'lotation' => 50,
-			'departure_time' => '15:10:00',
-			'arrival_time' => '15:20:00',
-		],
-		[
 			'origin_station' => '01',
 			'destiny_station' => '32',
 			'lotation' => 50,
@@ -385,20 +357,6 @@ $data = [
 			'arrival_time' => '15:40:00',
 		],
 			// third voyage
-		[
-			'origin_station' => '21',
-			'destiny_station' => '22',
-			'lotation' => 50,
-			'departure_time' => '21:00:00',
-			'arrival_time' => '21:10:00',
-		],
-		[
-			'origin_station' => '22',
-			'destiny_station' => '01',
-			'lotation' => 50,
-			'departure_time' => '21:10:00',
-			'arrival_time' => '21:20:00',
-		],
 		[
 			'origin_station' => '01',
 			'destiny_station' => '32',
@@ -416,14 +374,7 @@ $data = [
 
 
 
-
-
-
-
-
-
-
-		// C - B
+		// C - CentralStation
 			// first voyage
 		[
 			'origin_station' => '31',
@@ -438,20 +389,6 @@ $data = [
 			'lotation' => 50,
 			'departure_time' => '10:10:00',
 			'arrival_time' => '10:20:00',
-		],
-		[
-			'origin_station' => '01',
-			'destiny_station' => '22',
-			'lotation' => 50,
-			'departure_time' => '10:20:00',
-			'arrival_time' => '10:30:00',
-		],
-		[
-			'origin_station' => '22',
-			'destiny_station' => '21',
-			'lotation' => 50,
-			'departure_time' => '10:30:00',
-			'arrival_time' => '10:40:00',
 		],
 			// second voyage
 		[
@@ -468,20 +405,6 @@ $data = [
 			'departure_time' => '16:10:00',
 			'arrival_time' => '16:20:00',
 		],
-		[
-			'origin_station' => '01',
-			'destiny_station' => '22',
-			'lotation' => 50,
-			'departure_time' => '16:20:00',
-			'arrival_time' => '16:30:00',
-		],
-		[
-			'origin_station' => '22',
-			'destiny_station' => '21',
-			'lotation' => 50,
-			'departure_time' => '16:30:00',
-			'arrival_time' => '16:40:00',
-		],
 			// third voyage
 		[
 			'origin_station' => '31',
@@ -496,209 +419,6 @@ $data = [
 			'lotation' => 50,
 			'departure_time' => '22:10:00',
 			'arrival_time' => '22:20:00',
-		],
-		[
-			'origin_station' => '01',
-			'destiny_station' => '22',
-			'lotation' => 50,
-			'departure_time' => '22:20:00',
-			'arrival_time' => '22:30:00',
-		],
-		[
-			'origin_station' => '22',
-			'destiny_station' => '21',
-			'lotation' => 50,
-			'departure_time' => '22:30:00',
-			'arrival_time' => '22:40:00',
-		],
-
-
-
-
-
-
-		// C - A
-			// first voyage
-		[
-			'origin_station' => '31',
-			'destiny_station' => '32',
-			'lotation' => 50,
-			'departure_time' => '09:00:00',
-			'arrival_time' => '09:10:00',
-		],
-		[
-			'origin_station' => '32',
-			'destiny_station' => '01',
-			'lotation' => 50,
-			'departure_time' => '09:10:00',
-			'arrival_time' => '09:20:00',
-		],
-		[
-			'origin_station' => '01',
-			'destiny_station' => '12',
-			'lotation' => 50,
-			'departure_time' => '09:20:00',
-			'arrival_time' => '09:30:00',
-		],
-		[
-			'origin_station' => '12',
-			'destiny_station' => '11',
-			'lotation' => 50,
-			'departure_time' => '09:30:00',
-			'arrival_time' => '09:40:00',
-		],
-			// second voyage
-		[
-			'origin_station' => '31',
-			'destiny_station' => '32',
-			'lotation' => 50,
-			'departure_time' => '15:00:00',
-			'arrival_time' => '15:10:00',
-		],
-		[
-			'origin_station' => '32',
-			'destiny_station' => '01',
-			'lotation' => 50,
-			'departure_time' => '15:10:00',
-			'arrival_time' => '15:20:00',
-		],
-		[
-			'origin_station' => '01',
-			'destiny_station' => '12',
-			'lotation' => 50,
-			'departure_time' => '15:20:00',
-			'arrival_time' => '15:30:00',
-		],
-		[
-			'origin_station' => '12',
-			'destiny_station' => '11',
-			'lotation' => 50,
-			'departure_time' => '15:30:00',
-			'arrival_time' => '15:40:00',
-		],
-			// third voyage
-		[
-			'origin_station' => '31',
-			'destiny_station' => '32',
-			'lotation' => 50,
-			'departure_time' => '21:00:00',
-			'arrival_time' => '21:10:00',
-		],
-		[
-			'origin_station' => '32',
-			'destiny_station' => '01',
-			'lotation' => 50,
-			'departure_time' => '21:10:00',
-			'arrival_time' => '21:20:00',
-		],
-		[
-			'origin_station' => '01',
-			'destiny_station' => '12',
-			'lotation' => 50,
-			'departure_time' => '21:20:00',
-			'arrival_time' => '21:30:00',
-		],
-		[
-			'origin_station' => '12',
-			'destiny_station' => '11',
-			'lotation' => 50,
-			'departure_time' => '21:30:00',
-			'arrival_time' => '21:40:00',
-		],
-
-
-
-
-
-		// A - C
-			// first voyage
-		[
-			'origin_station' => '11',
-			'destiny_station' => '12',
-			'lotation' => 50,
-			'departure_time' => '10:00:00',
-			'arrival_time' => '10:10:00',
-		],
-		[
-			'origin_station' => '12',
-			'destiny_station' => '01',
-			'lotation' => 50,
-			'departure_time' => '10:10:00',
-			'arrival_time' => '10:20:00',
-		],
-		[
-			'origin_station' => '01',
-			'destiny_station' => '32',
-			'lotation' => 50,
-			'departure_time' => '10:20:00',
-			'arrival_time' => '10:30:00',
-		],
-		[
-			'origin_station' => '32',
-			'destiny_station' => '31',
-			'lotation' => 50,
-			'departure_time' => '10:30:00',
-			'arrival_time' => '10:40:00',
-		],
-
-			// second voyage
-		[
-			'origin_station' => '11',
-			'destiny_station' => '12',
-			'lotation' => 50,
-			'departure_time' => '16:00:00',
-			'arrival_time' => '16:10:00',
-		],
-		[
-			'origin_station' => '12',
-			'destiny_station' => '01',
-			'lotation' => 50,
-			'departure_time' => '16:10:00',
-			'arrival_time' => '16:20:00',
-		],
-		[
-			'origin_station' => '01',
-			'destiny_station' => '32',
-			'lotation' => 50,
-			'departure_time' => '16:20:00',
-			'arrival_time' => '16:30:00',
-		],
-		[
-			'origin_station' => '32',
-			'destiny_station' => '31',
-			'lotation' => 50,
-			'departure_time' => '16:30:00',
-			'arrival_time' => '16:40:00',
-		],
-		
-			// third voyage
-		[
-			'origin_station' => '11',
-			'destiny_station' => '12',
-			'lotation' => 50,
-			'departure_time' => '22:00:00',
-			'arrival_time' => '22:10:00',
-		],
-		[
-			'origin_station' => '12',
-			'destiny_station' => '01',
-			'lotation' => 50,
-			'departure_time' => '22:10:00',
-			'arrival_time' => '22:20:00',
-		],
-		[
-			'origin_station' => '01',
-			'destiny_station' => '32',
-			'lotation' => 50,
-			'departure_time' => '22:20:00',
-			'arrival_time' => '22:30:00',
-		],
-		[
-			'origin_station' => '32',
-			'destiny_station' => '31',
-			'lotation' => 50,
-			'departure_time' => '22:30:00',
-			'arrival_time' => '22:40:00',
 		],
 	],
 	'travel_trains' => [
@@ -746,222 +466,264 @@ $data = [
 			'name_station1' => '11',
 			'name_station2' => '12',
 			'route' => serialize(['11', '12']),
+			'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '11',
 			'name_station2' => '01',
 			'route' => serialize(['11', '12', '01']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '11',
 			'name_station2' => '32',
 			'route' => serialize(['11', '12', '01', '32']),
+            'change_train_stations' => serialize(['01'])
 		],
 		[
 			'name_station1' => '11',
 			'name_station2' => '31',
 			'route' => serialize(['11', '12', '01', '32', '31']),
+            'change_train_stations' => serialize(['01'])
 		],
 		[
 			'name_station1' => '11',
 			'name_station2' => '22',
 			'route' => serialize(['11', '12', '01', '22']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '11',
 			'name_station2' => '21',
 			'route' => serialize(['11', '12', '01', '22', '21']),
+            'change_train_stations' => serialize([])
 		],
 			// station 21 to anothers
 		[
 			'name_station1' => '21',
 			'name_station2' => '22',
 			'route' => serialize(['21', '22']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '21',
 			'name_station2' => '01',
 			'route' => serialize(['21', '22', '01']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '21',
 			'name_station2' => '32',
 			'route' => serialize(['21', '22', '01', '32']),
+            'change_train_stations' => serialize(['01'])
 		],
 		[
 			'name_station1' => '21',
 			'name_station2' => '31',
 			'route' => serialize(['21', '22', '01', '32', '31']),
+            'change_train_stations' => serialize(['01'])
 		],
 		[
 			'name_station1' => '21',
 			'name_station2' => '12',
 			'route' => serialize(['21', '22', '01', '12']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '21',
 			'name_station2' => '11',
 			'route' => serialize(['21', '22', '01', '12', '11']),
+            'change_train_stations' => serialize([])
 		],
 			// station 31 to anothers
 		[
 			'name_station1' => '31',
 			'name_station2' => '32',
 			'route' => serialize(['31', '32']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '31',
 			'name_station2' => '01',
 			'route' => serialize(['31', '32', '01']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '31',
 			'name_station2' => '22',
 			'route' => serialize(['31', '32', '01', '22']),
+            'change_train_stations' => serialize(['01'])
 		],
 		[
 			'name_station1' => '31',
 			'name_station2' => '21',
 			'route' => serialize(['31', '32', '01', '22', '21']),
+            'change_train_stations' => serialize(['01'])
 		],
 		[
 			'name_station1' => '31',
 			'name_station2' => '12',
 			'route' => serialize(['31', '32', '01', '12']),
+            'change_train_stations' => serialize(['01'])
 		],
 		[
 			'name_station1' => '31',
 			'name_station2' => '11',
 			'route' => serialize(['31', '32', '01', '12', '11']),
+            'change_train_stations' => serialize(['01'])
 		],
 			// station 12 to anothers
 		[
 			'name_station1' => '12',
 			'name_station2' => '11',
 			'route' => serialize(['12', '11']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '12',
 			'name_station2' => '01',
 			'route' => serialize(['12', '01']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '12',
 			'name_station2' => '32',
 			'route' => serialize(['12', '01', '32']),
+            'change_train_stations' => serialize(['01'])
 		],
 		[
 			'name_station1' => '12',
 			'name_station2' => '31',
 			'route' => serialize(['12', '01', '32', '31']),
+            'change_train_stations' => serialize(['01'])
 		],
 		[
 			'name_station1' => '12',
 			'name_station2' => '22',
 			'route' => serialize(['12', '01', '22']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '12',
 			'name_station2' => '21',
 			'route' => serialize(['12', '01', '22', '21']),
+            'change_train_stations' => serialize([])
 		],
 			// station 22 to anothers
 		[
 			'name_station1' => '22',
 			'name_station2' => '21',
 			'route' => serialize(['22', '21']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '22',
 			'name_station2' => '01',
 			'route' => serialize(['22', '01']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '22',
 			'name_station2' => '32',
 			'route' => serialize(['22', '01', '32']),
+            'change_train_stations' => serialize(['01'])
 		],
 		[
 			'name_station1' => '22',
 			'name_station2' => '31',
 			'route' => serialize(['22', '01', '32', '31']),
+            'change_train_stations' => serialize(['01'])
 		],
 		[
 			'name_station1' => '22',
 			'name_station2' => '12',
 			'route' => serialize(['22', '01', '12']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '22',
 			'name_station2' => '11',
 			'route' => serialize(['22', '01', '12', '11']),
+            'change_train_stations' => serialize([])
 		],
 			// station 32 to anothers
 		[
 			'name_station1' => '32',
 			'name_station2' => '31',
 			'route' => serialize(['32', '31']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '32',
 			'name_station2' => '01',
 			'route' => serialize(['32', '01']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '32',
 			'name_station2' => '22',
 			'route' => serialize(['32', '01', '22']),
+            'change_train_stations' => serialize(['01'])
 		],
 		[
 			'name_station1' => '32',
 			'name_station2' => '21',
 			'route' => serialize(['32', '01', '22', '21']),
+            'change_train_stations' => serialize(['01'])
 		],
 		[
 			'name_station1' => '32',
 			'name_station2' => '12',
 			'route' => serialize(['32', '01', '12']),
+            'change_train_stations' => serialize(['01'])
 		],
 		[
 			'name_station1' => '32',
 			'name_station2' => '11',
 			'route' => serialize(['32', '01', '12', '11']),
+            'change_train_stations' => serialize(['01'])
 		],
 			// station 01 to anothers
 		[
 			'name_station1' => '01',
 			'name_station2' => '12',
 			'route' => serialize(['01', '12']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '01',
 			'name_station2' => '22',
 			'route' => serialize(['01', '22']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '01',
 			'name_station2' => '32',
 			'route' => serialize(['01', '32']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '01',
 			'name_station2' => '11',
 			'route' => serialize(['01', '12', '11']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '01',
 			'name_station2' => '21',
 			'route' => serialize(['01', '22', '21']),
+            'change_train_stations' => serialize([])
 		],
 		[
 			'name_station1' => '01',
 			'name_station2' => '31',
 			'route' => serialize(['01', '32', '31']),
+            'change_train_stations' => serialize([])
 		],
 	],
 ];
 
-for ($i = 1; $i < 73; $i++) {
+for ($i = 1; $i <= 36; $i++) {
 	for ($a = 1; $a < 31; $a++) {
 		if ($a < 10)
 			$newA = '0'+(string)$a;

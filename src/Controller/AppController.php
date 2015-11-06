@@ -85,11 +85,12 @@ class AppController extends Controller
         return false;
     }*/
 
-    protected static function getRouteBetweenStations($station1, $station2, &$routeArray)
+    protected static function getRouteBetweenStations($station1, $station2, &$routeArray, &$stationsWithChangeOfTrain)
     {
         $routes = TableRegistry::get('Routes');
         $query = $routes->find()->where(['name_station1 =' => $station1, 'name_station2 =' => $station2])->toArray();
         $routeArray = unserialize($query[0]['route']);
+        $stationsWithChangeOfTrain = unserialize($query[0]['change_train_stations']);
     }
 
     public function beforeFilter(Event $event)
