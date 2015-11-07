@@ -47,14 +47,16 @@ class TicketsController extends AppController
 
             return;
         }
-        /*else
+        else
         {
 
             $this->response->statusCode(401);
-        }*/
+        }
 
-        $this->set('tickets', $this->paginate($this->Tickets));
+        /*
+        $this->set('tickets', $this->Tickets->find('all'));
         $this->set('_serialize', ['tickets']);
+        */
     }
 
     /**
