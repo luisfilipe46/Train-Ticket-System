@@ -34,7 +34,7 @@ public class RestClient {
     private InputStream in;
     private String method;
     private boolean paramsBool;
-    private List<Pair<String, String>> params;
+    private List<Pair<String, String>> params,headers;
     private String ret;
     private String defaultUrl = "https://testcake3333.herokuapp.com/";
     private static RestClient restClient = null;
@@ -44,6 +44,7 @@ public class RestClient {
         method = "GET";
         paramsBool = false;
         params = new ArrayList<>();
+        headers = new ArrayList<>();
         ret = null;
     }
 
@@ -78,6 +79,12 @@ public class RestClient {
         params.add(new Pair<String, String>(name,value));
     }
 
+    public void addHeader(String name,String value)
+    {
+       // paramsBool= true;
+        headers.add(new Pair<String, String>(name,value));
+    }
+
 
 
     public void setUrl(String url)
@@ -100,6 +107,7 @@ public class RestClient {
 
 
         HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+        setHeaders(urlConnection);
         urlConnection.setRequestMethod(method);
         if(params.size()>0)
         {
@@ -154,6 +162,16 @@ public class RestClient {
 
 
 
+    }
+
+    private void setHeaders(HttpsURLConnection urlConnection) {
+        if(headers.size()>0)
+        {
+            for( int i =0;i<headers.size();i++)
+            {
+                urlConnection.setRequestProperty(headers.get(i).first,headers.get(i).second);
+            }
+        }
     }
 
     private void addParams(HttpsURLConnection conn) throws IOException {

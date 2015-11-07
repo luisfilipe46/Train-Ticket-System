@@ -19,8 +19,6 @@ import java.net.MalformedURLException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         username = (EditText) findViewById(R.id.name);
-        password= (EditText) findViewById(R.id.password);
+        password= (EditText) findViewById(R.id.type);
         email = (EditText) findViewById(R.id.email);
         selectionGroup = (RadioGroup) findViewById(R.id.radioGroup);
 

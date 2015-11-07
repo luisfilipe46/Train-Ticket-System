@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -35,7 +37,12 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
 public class MainMenu extends AppCompatActivity {
+
+    static String buyTicketsURL = "https://testcake3333.herokuapp.com/api/tickets.json";
+    static String getTravelsURL = "https://testcake3333.herokuapp.com/api/timetables_with_final_stations/";
 
     final Context context = this;
     public String name, pass,email;
@@ -48,6 +55,7 @@ public class MainMenu extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private String mActivityTitle;
     private RestClient restClient;
+    private TextView courseInfo;
    // private TextView restResult;
     private RelativeLayout progressBar;
     private TableLayout availableTravels;
@@ -90,6 +98,7 @@ public class MainMenu extends AppCompatActivity {
         progressBar = (RelativeLayout)findViewById(R.id.loadingPanel);
         mActivityTitle = getTitle().toString();
         setTitle("Choose Travel");
+        courseInfo = (TextView) findViewById(R.id.course_info);
 
         availableTravels = (TableLayout) findViewById(R.id.available_trains);
 
@@ -121,13 +130,13 @@ public class MainMenu extends AppCompatActivity {
         stationsMap.put("11","Station 11");
         stationsMap.put("12","Station 12");
         stationsMap.put("01","Station 01");
-        stationsMap.put("32","Station 32");
+        stationsMap.put("32", "Station 32");
 
 
     }
 
     private void addDrawerItems() {
-        String[] osArray = { "My Tickets", "REST Test GET", "REST Client POST", "Clear Text", "Linux" };
+        String[] osArray = { "My Tickets", "REST Test GET", "REST Client POST", "Add Credit Card", "Linux" };
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);
     }
@@ -182,7 +191,7 @@ public class MainMenu extends AppCompatActivity {
                                 e.printStackTrace();
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                            }catch (InterruptedException e) {
+                            } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                             availableTravels.post(new Runnable() {
@@ -197,7 +206,23 @@ public class MainMenu extends AppCompatActivity {
 
                     // restResult.setText(result);
 
-                } else if (position == 3) {
+                } else if (position == 3) { //Add credit card
+                    DialogAddCard dialogCard = null;
+                    try {
+
+                        dialogCard = new DialogAddCard();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("email", email);
+                        bundle.putString("pass", pass);
+                        dialogCard.setArguments(bundle);
+                        dialogCard.show(getFragmentManager(), "Cenas");
+
+                       // dialogCard.setListeners();
+
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+
 
                 } else {
                     Toast.makeText(MainMenu.this, "Nothing to do", Toast.LENGTH_SHORT).show();
@@ -214,10 +239,27 @@ public class MainMenu extends AppCompatActivity {
         Toast.makeText(MainMenu.this, str, Toast.LENGTH_SHORT).show();
     }
 
-    private void updateAvailableTravels(JSONArray arr) throws JSONException {
+    private void updateAvailableTravels(JSONArray arr, JSONArray arrCourse) throws JSONException {
         availableTravels.removeAllViews();
-        String originStation = "11";
-        String destinyStation = "32";
+        String course= "";
+        for (int i = 0; i < arrCourse.length(); i++)
+        {
+            if(i!=0)
+            {
+                course = course + " - ";
+            }
+
+            course = course + arrCourse.get(i).toString();
+        }
+
+        courseInfo.setText("Travel route: " + course);
+
+        String originStation = arrCourse.get(0).toString();
+        originStation = stationsMap.get(originStation);
+
+        String destinyStation = arrCourse.get(arrCourse.length()-1).toString();
+        destinyStation = stationsMap.get(destinyStation);
+
         progressBar.setVisibility(View.GONE);
 
 
@@ -226,12 +268,23 @@ public class MainMenu extends AppCompatActivity {
 
 
 
-            String station1 = arr.getJSONObject(i).getString("origin_station");;
-            String station2 = arr.getJSONObject(i).getString("destiny_station");;
-            String hour1 = arr.getJSONObject(i).getString("departure_time");;
-            hour1 = hour1.substring(11,16);
-            String hour2 = arr.getJSONObject(i).getString("arrival_time");;
-            hour2 = hour2.substring(11,16);
+            String station1 = arr.getJSONObject(i).getString("origin_station");
+            String station1Name = stationsMap.get(station1);
+            String station2 = arr.getJSONObject(i).getString("destiny_station");
+            String station2Name  = stationsMap.get(station2);
+            String hour1 = arr.getJSONObject(i).getString("departure_time");
+            hour1 = hour1.substring(11,19);
+            String hour2 = arr.getJSONObject(i).getString("arrival_time");
+            hour2 = hour2.substring(11,19);
+            String line = "";
+            if(station1.equals(originStation))
+            {
+                line = "Line 1";
+            }
+            else {
+                line = "Line 2";
+            }
+
 
             TableRow row= new TableRow(this);
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
@@ -248,14 +301,14 @@ public class MainMenu extends AppCompatActivity {
 
 
             TextView station1Text = new TextView(this);
-            station1Text.setText(Html.fromHtml(station1 + "(" + hour1 + ")"));
+            station1Text.setText(Html.fromHtml(station1Name + "(" + hour1 + ")"));
 
             TextView toText = new TextView(this);
             toText.setText(" to ");
             toText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
 
             TextView station2Text = new TextView(this);
-            station2Text.setText(Html.fromHtml(station2 + "(" + hour2 + ")"));
+            station2Text.setText(Html.fromHtml(station2Name + "(" + hour2 + ")"));
 
             innerRow1.addView(station1Text);
             innerRow2.addView(station2Text);
@@ -269,10 +322,48 @@ public class MainMenu extends AppCompatActivity {
 
             innerTable.setLayoutParams(param);
 
+            TextView lineText = new TextView(this);
+            lineText.setText(line);
+
+
+
+            // Black line on end
+            View endLine = new View(this);
+            LinearLayout.LayoutParams lineParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,5);
+            endLine.setLayoutParams(lineParams);
+            if(line.equals("Line 1"))
+            {
+                endLine.setBackgroundColor(Color.BLACK);
+            }
+            else {
+                endLine.setBackgroundColor(Color.BLUE);
+            }
+
+            // White line on end
+            View whiteLine = new View(this);
+            LinearLayout.LayoutParams whiteParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,15);
+            whiteLine.setLayoutParams(whiteParams);
+            whiteLine.setBackgroundColor(Color.WHITE);
+
+
+
             row.addView(innerTable);
+            row.addView(lineText);
             row.addView(addBtn);
-            row.setBackgroundResource(R.drawable.table);
-            availableTravels.addView(row, i);
+            if(line.equals("Line 1"))
+                {
+                    row.setBackgroundResource(R.drawable.table_line1);
+                }
+                else
+                {
+                    row.setBackgroundResource(R.drawable.table_line2);
+                }
+
+
+            availableTravels.addView(row);
+            //availableTravels.addView(endLine);
+            //availableTravels.addView(whiteLine);
+
 
 
         }
@@ -305,7 +396,7 @@ public class MainMenu extends AppCompatActivity {
             String idStartStation = (String) getKeyFromValue(stationsMap, spinnerStart.getSelectedItem().toString());
             String idEndStation = (String) getKeyFromValue(stationsMap, spinnerEnd.getSelectedItem().toString());
             restClient.setMethod("GET");
-            restClient.setUrl("https://testcake3333.herokuapp.com/api/timetables_with_final_stations/" + idStartStation + "/" + idEndStation + ".json");
+            restClient.setUrl(getTravelsURL + idStartStation + "/" + idEndStation + ".json");
             Log.i("URL GENERATED", "https://testcake3333.herokuapp.com/api/timetables_with_final_stations/" + idStartStation + "/" + idEndStation + ".json");
 
             new GetTravelsTask().execute();
@@ -325,27 +416,18 @@ public class MainMenu extends AppCompatActivity {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
 
-        // set title
-        alertDialogBuilder.setTitle("Buying");
 
-        // set dialog message
-        alertDialogBuilder.setMessage("Ticket sad sadas 10 pm" );
-
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        // show it
-        alertDialog.show();
-
+        //restClient.setUrl("https://httpbin.org/post");
+        restClient.setUrl(buyTicketsURL);
         restClient.setMethod("POST");
         restClient.addParam("origin_station", station1);
         restClient.addParam("destiny_station",station2);
-        restClient.addParam("arrival_time",hour1);
-        restClient.addParam("departure_time",hour2);
-        String day = "2015-11-06";
+        //restClient.addParam("arrival_time",hour1);
+        restClient.addParam("departure_time",hour1);
+        String day = "2015-10-06";
         restClient.addParam("day",day);
-        restClient.addParam("email",email);
-        restClient.addParam("password",pass);
+        restClient.addHeader("email",email);
+        restClient.addHeader("password",pass);
 
         new BuyTicketTask().execute();
 
@@ -376,10 +458,11 @@ public class MainMenu extends AppCompatActivity {
         protected void onPostExecute(String result) {
              if(result.equals("200")) {
                  JSONArray arr = null;
+                 JSONArray arrCourse = null;
                  try {
                      JSONObject json = new JSONObject(restClient.getReturn());
                      arr = json.getJSONArray("timetables");
-
+                     arrCourse = json.getJSONArray("routes");
                  } catch (JSONException e) {
                      e.printStackTrace();
                  }
@@ -388,7 +471,7 @@ public class MainMenu extends AppCompatActivity {
                      Toast.makeText(MainMenu.this, "can't form json from server response", Toast.LENGTH_SHORT).show();
                  } else {
                      try {
-                         updateAvailableTravels(arr);
+                         updateAvailableTravels(arr,arrCourse);
                      } catch (JSONException e) {
                          e.printStackTrace();
                      }
@@ -426,14 +509,29 @@ public class MainMenu extends AppCompatActivity {
 
             if(result.equals("200"))
             {
-
+                Toast.makeText(MainMenu.this, "Bilhete Comprado", Toast.LENGTH_SHORT).show();
+                Log.i("Retorno: ","cenas 200: "+  restClient.getReturn());
             }
             else if(result.equals("401"))
             {
-
+                Log.e("COMPRA BILHETE", "Email/pass errados");
             }
             else if(result.equals("400"))
             {
+                Log.i("Retorno: ","cenas 400: "+  restClient.getReturn());
+                /*try {
+
+                    JSONObject json = new JSONObject(restClient.getReturn());
+                    String erro = json.get("error").toString();
+                    Toast.makeText(MainMenu.this, erro, Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }*/
+
+            }
+            else
+            {
+                Log.e("COMPRA BILHETE", "Retorno nao esperado: " + result);
 
             }
 
