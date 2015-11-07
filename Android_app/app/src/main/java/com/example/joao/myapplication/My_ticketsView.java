@@ -1,9 +1,13 @@
 package com.example.joao.myapplication;
 
 import android.app.ActionBar;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +16,8 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -20,6 +26,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.android.Contents;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -249,14 +260,40 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
         @Override
         public void onClick(View v)
         {
-            Intent intent = new Intent(
-                    "com.google.zxing.client.android.ENCODE");
+            //new IntentIntegrator(My_ticketsView.this).initiateScan();
+            //Encode with a QR Code image
 
-            intent.putExtra("ENCODE_TYPE", "TEXT_TYPE");
-            intent.putExtra("ENCODE_DATA", qrCode);
-            intent.putExtra("ENCODE_FORMAT", "QR_CODE");
-            intent.putExtra("ENCODE_SHOW_CONTENTS", false);
-            startActivityForResult(intent, 0);
+            int qrCodeDimention = 256;
+
+            QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(qrCode, null,
+                    Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(), qrCodeDimention);
+
+            try {
+                Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
+
+
+                Dialog builder = new Dialog(My_ticketsView.this);
+                builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                builder.getWindow().setBackgroundDrawable(
+                        new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        //nothing;
+                    }
+                });
+
+                ImageView imageView = new ImageView(My_ticketsView.this);
+                imageView.setImageBitmap(bitmap);
+                builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+                builder.show();
+
+
+            } catch (WriterException e) {
+                e.printStackTrace();
+            }
         }
 
     };
