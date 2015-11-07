@@ -54,31 +54,31 @@ class CreditCardsController extends AppController
      */
     public function add()
     {
-        $users = TableRegistry::get('Users');
-        $queryResultsInArray = $users->find()->select(['id'])->where(['token =' => $this->request->header('token'), 'role =' => 'cliente'])->toArray();
-        if (!empty($queryResultsInArray))
-        {
-            $data['id_user'] = $queryResultsInArray[0]['id'];
-            $data['validity'] = new \DateTime($this->request->data['validity']);
-            $data['number'] = $this->request->data['number'];
-            $data['type'] = $this->request->data['type'];
-            $creditCard = $this->CreditCards->newEntity();
-            if ($this->request->is('post')) {
+        if ($this->request->header('token') != null && $this->request->is('post')) {
+            $users = TableRegistry::get('Users');
+            $queryResultsInArray = $users->find()->select(['id'])->where(['token =' => $this->request->header('token'), 'role =' => 'cliente'])->toArray();
+            if (!empty($queryResultsInArray)) {
+                $data['id_user'] = $queryResultsInArray[0]['id'];
+                $data['validity'] = new \DateTime($this->request->data['validity']);
+                $data['number'] = $this->request->data['number'];
+                $data['type'] = $this->request->data['type'];
+                $creditCard = $this->CreditCards->newEntity();
                 $creditCard = $this->CreditCards->patchEntity($creditCard, $data);
                 if ($this->CreditCards->save($creditCard)) {
                     $this->response->statusCode(201);
                 } else {
                     $this->response->statusCode(400);
                 }
+
+            } else {
+                $this->response->statusCode(400);
             }
+            $this->set(compact('creditCard'));
+            $this->set('_serialize', ['creditCard']);
         }
-        else
-        {
-            $this->response->statusCode(400);
-        }
-        $this->set(compact('creditCard'));
-        $this->set('_serialize', ['creditCard']);
+        $this->response->statusCode(401);
     }
+
 
     /**
      * Edit method
