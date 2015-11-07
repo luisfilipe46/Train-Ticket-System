@@ -75,6 +75,7 @@ class CreditCardsController extends AppController
             }
             $this->set(compact('creditCard'));
             $this->set('_serialize', ['creditCard']);
+            return;
         }
         $this->response->statusCode(401);
     }
