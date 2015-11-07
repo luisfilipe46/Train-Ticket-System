@@ -724,15 +724,41 @@ $data = [
 ];
 
 for ($i = 1; $i <= 36; $i++) {
+	for ($a = 1; $a < 32; $a++) {
+		if ($a < 10)
+			$newA = '0'+(string)$a;
+		else
+			$newA = (string)$a;
+		$data['travel_trains'][] = [
+				'timetable_id' => $i,
+				'passengers' => 0,
+				'date' => new \DateTime("2015-10-".$newA)
+		];
+	}
+}
+for ($i = 1; $i <= 36; $i++) {
 	for ($a = 1; $a < 31; $a++) {
 		if ($a < 10)
 			$newA = '0'+(string)$a;
-		else 
+		else
 			$newA = (string)$a;
 		$data['travel_trains'][] = [
-			'timetable_id' => $i,
-			'passengers' => 0,
-			'date' => new \DateTime("2015-10-".$newA)
+				'timetable_id' => $i,
+				'passengers' => 0,
+				'date' => new \DateTime("2015-11-".$newA)
+		];
+	}
+}
+for ($i = 1; $i <= 36; $i++) {
+	for ($a = 1; $a < 32; $a++) {
+		if ($a < 10)
+			$newA = '0'+(string)$a;
+		else
+			$newA = (string)$a;
+		$data['travel_trains'][] = [
+				'timetable_id' => $i,
+				'passengers' => 0,
+				'date' => new \DateTime("2015-12-".$newA)
 		];
 	}
 }
