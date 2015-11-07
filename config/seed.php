@@ -28,7 +28,7 @@ $data = [
 		[
 			'email' => 'fnatic@cs.com',
 			'name' => 'suissinhos',
-			'password' => 'test',
+			'password' => '[105, -115, -63, -99, 72, -100, 78, 77, -73, 62, 40, -89, 19, -22, -80, 123]',
 			'role' => 'pica',
 		],
 	],
