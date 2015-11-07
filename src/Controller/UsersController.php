@@ -75,10 +75,10 @@ class UsersController extends AppController
         $this->set('_serialize', ['']);
     }
 
-    public function login()
+    private function login($tipoUser)
     {
         if ($this->request->is('post')) {
-            $users = $this->Users->find()->select(['id'])->where(['email =' => $this->request->data('email'), 'password =' => $this->request->data('password'), 'role =' => 'cliente'])->toArray();
+            $users = $this->Users->find()->select(['id'])->where(['email =' => $this->request->data('email'), 'password =' => $this->request->data('password'), 'role =' => $tipoUser])->toArray();
 
             if (!empty($users)) {
                 $token = Text::uuid();
@@ -96,6 +96,17 @@ class UsersController extends AppController
             }
         }
     }
+
+    public function loginRevisor()
+    {
+        self::login('pica');
+    }
+
+    public function loginUser()
+    {
+        self::login('cliente');
+    }
+
 
     /**
      * Edit method

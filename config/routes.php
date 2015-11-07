@@ -52,7 +52,10 @@ Router::scope('/api', function ($routes) {
     $routes->resources('Users');
 
     $routes->connect('/login',
-        ['controller' => 'Users', 'action' => 'login', '_method' => 'POST']
+        ['controller' => 'Users', 'action' => 'loginUser', '_method' => 'POST']
+    );
+    $routes->connect('/login_revisor',
+        ['controller' => 'Users', 'action' => 'loginRevisor', '_method' => 'POST']
     );
     $routes->connect('/timetables/:station1/:station2',
         ['controller' => 'Timetables', 'action' => 'timetableBetweenStations', '_method' => 'GET'],
