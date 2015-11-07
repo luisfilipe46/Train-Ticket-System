@@ -254,7 +254,7 @@ class TicketsController extends AppController
         $this->response->statusCode(401);
     }
 
-/**
+    /**
      * Delete method
      *
      * @param string|null $id Ticket id.
@@ -273,11 +273,55 @@ class TicketsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
+    public function pubkey() {
+
+        if ($this->request->header('email') != null && $this->request->header('password') != null) {
+            $users = TableRegistry::get('Users');
+            $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->header('email'),
+                'password =' => $this->request->header('password'), 'role =' => 'pica'])->toArray();
+
+            if (!empty($queryResultsInArray)) {
+                $fp = fopen("pubkey.pem", "r");
+                $public_key = fread($fp, 10000);
+                fclose($fp);
+                $this->set(['public_key'], [$public_key]);
+                $this->set(['_serialize'], ['public_key']);
+                return;
+            }
+            $this->response->statusCode(400);
+        }
+        $this->response->statusCode(401);
+    }
+
     private function insertTicketInDatabase($origin_station, &$dataForTicket, $destiny_station, $day, $departure_time, $arrival_time, $idUser, $price, &$ticket)
     {
         $dataForTicket['origin_station'] = $origin_station;
         $dataForTicket['destiny_station'] = $destiny_station;
-        $dataForTicket['qr_code'] = 'TESTE' . rand(1, 100000);
+
+        $signature = null;
+        $toSign = $origin_station . " " . $destiny_station . " " . $day . " " . $departure_time . " " . $arrival_time . " " . $price . " " . $idUser . " " . rand(1, 99999999);
+
+        // Read the private key from the file.
+        $fp = fopen("privatekey.pem", "r");
+        $priv_key = fread($fp, 10000);
+        fclose($fp);
+        $pkeyid = openssl_get_privatekey($priv_key);
+
+        // Compute the signature using OPENSSL_ALGO_SHA1
+        // by default.
+        openssl_sign($toSign, $signature, $pkeyid, "sha1WithRSAEncryption");
+
+        // Free the key.
+        openssl_free_key($pkeyid);
+
+        // At this point, you've got $signature which
+        // contains the digital signature as a series of bytes.
+        // If you need to include the signature on a URL
+        // for a request to be sent to a REST API, use
+        // PHP's bin2hex() function.
+
+        $hex = bin2hex( $signature );
+        $dataForTicket['qr_code'] = $hex;
         $dataForTicket['used'] = false;
         $dataForTicket['departure_time'] = new \DateTime($day . ' ' . $departure_time);
         $dataForTicket['arrival_time'] = new \DateTime($day . ' ' . $arrival_time);
