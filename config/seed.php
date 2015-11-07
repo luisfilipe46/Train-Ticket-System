@@ -26,7 +26,7 @@ $data = [
 			'role' => 'cliente',
 		],
 		[
-			'email' => 'fnatic@cs.com',
+			'email' => 'revisor@r.com',
 			'name' => 'suissinhos',
 			'password' => '[105, -115, -63, -99, 72, -100, 78, 77, -73, 62, 40, -89, 19, -22, -80, 123]',
 			'role' => 'pica',
