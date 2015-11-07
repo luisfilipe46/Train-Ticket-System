@@ -22,13 +22,13 @@ class UsersFixture extends TestFixture
         'name' => ['type' => 'string', 'length' => 255, 'default' => null, 'null' => false, 'comment' => null, 'precision' => null, 'fixed' => null],
         'password' => ['type' => 'string', 'length' => 255, 'default' => null, 'null' => false, 'comment' => null, 'precision' => null, 'fixed' => null],
         'role' => ['type' => 'string', 'length' => 255, 'default' => null, 'null' => false, 'comment' => null, 'precision' => null, 'fixed' => null],
-        'id_credit_card' => ['type' => 'integer', 'length' => 10, 'default' => null, 'null' => true, 'comment' => null, 'precision' => null, 'unsigned' => null, 'autoIncrement' => null],
         'created' => ['type' => 'timestamp', 'length' => null, 'default' => null, 'null' => false, 'comment' => null, 'precision' => null],
         'modified' => ['type' => 'timestamp', 'length' => null, 'default' => null, 'null' => false, 'comment' => null, 'precision' => null],
+        'token' => ['type' => 'string', 'length' => 255, 'default' => null, 'null' => true, 'comment' => null, 'precision' => null, 'fixed' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
             'unique_email' => ['type' => 'unique', 'columns' => ['email'], 'length' => []],
-            'users_id_credit_card' => ['type' => 'foreign', 'columns' => ['id_credit_card'], 'references' => ['credit_cards', 'id'], 'update' => 'cascade', 'delete' => 'setNull', 'length' => []],
+            'unique_token' => ['type' => 'unique', 'columns' => ['token'], 'length' => []],
         ],
     ];
     // @codingStandardsIgnoreEnd
@@ -45,9 +45,9 @@ class UsersFixture extends TestFixture
             'name' => 'Lorem ipsum dolor sit amet',
             'password' => 'Lorem ipsum dolor sit amet',
             'role' => 'Lorem ipsum dolor sit amet',
-            'id_credit_card' => 1,
-            'created' => 1446485339,
-            'modified' => 1446485339
+            'created' => 1446928101,
+            'modified' => 1446928101,
+            'token' => 'Lorem ipsum dolor sit amet'
         ],
     ];
 }

@@ -30,13 +30,12 @@ class TicketsController extends AppController
      */
     public function index()
     {
-        if ($this->request->header('email') != null && $this->request->header('password') != null)
+        if ($this->request->header('token') != null)
         {
             $users = TableRegistry::get('Users');
-            $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->header('email'), 'password =' => $this->request->header('password')])->toArray();
+            $queryResultsInArray = $users->find()->select(['id'])->where(['token =' => $this->request->header('token'), 'role =' => 'cliente'])->toArray();
             if (!empty($queryResultsInArray))
             {
-
                 $tickets = $this->Tickets->find()->where(['id_users =' => $queryResultsInArray[0]['id']])->toArray();
                 $this->set('tickets', $tickets);
                 $this->set('_serialize', ['tickets']);
@@ -49,14 +48,8 @@ class TicketsController extends AppController
         }
         else
         {
-
             $this->response->statusCode(401);
         }
-
-        /*
-        $this->set('tickets', $this->Tickets->find('all'));
-        $this->set('_serialize', ['tickets']);
-        */
     }
 
     /**
@@ -82,9 +75,9 @@ class TicketsController extends AppController
      */
     public function add()
     {
-        if ($this->request->header('email') != null && $this->request->header('password') != null && $this->request->is('post')) {
+        if ($this->request->header('token') != null && $this->request->is('post')) {
             $users = TableRegistry::get('Users');
-            $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->header('email'), 'password =' => $this->request->header('password')])->toArray();
+            $queryResultsInArray = $users->find()->select(['id'])->where(['token =' => $this->request->header('token'), 'role =' => 'cliente'])->toArray();
             $idUser = $queryResultsInArray[0]['id'];
             if (!empty($queryResultsInArray)) {
 
@@ -182,10 +175,9 @@ class TicketsController extends AppController
      */
     public function edit($id = null)
     {
-        if ($this->request->header('email') != null && $this->request->header('password') != null) {
+        if ($this->request->header('token') != null) {
             $users = TableRegistry::get('Users');
-            $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->header('email'),
-                'password =' => $this->request->header('password'), 'role =' => 'pica'])->toArray();
+            $queryResultsInArray = $users->find()->select(['id'])->where(['token =' => $this->request->header('token'), 'role =' => 'pica'])->toArray();
 
             if (!empty($queryResultsInArray)) {
 
@@ -211,10 +203,9 @@ class TicketsController extends AppController
 
         $timetables = TableRegistry::get('Timetables');
 
-        if ($this->request->header('email') != null && $this->request->header('password') != null) {
+        if ($this->request->header('token') != null) {
             $users = TableRegistry::get('Users');
-            $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->header('email'),
-                'password =' => $this->request->header('password'), 'role =' => 'pica'])->toArray();
+            $queryResultsInArray = $users->find()->select(['id'])->where(['token =' => $this->request->header('token'), 'role =' => 'pica'])->toArray();
 
             if (!empty($queryResultsInArray)) {
                 parent::getRouteBetweenStations($origin_station, $destiny_station, $routeArray, $stationsWithChangeOfTrain);
@@ -275,10 +266,9 @@ class TicketsController extends AppController
 
     public function pubkey() {
 
-        if ($this->request->header('email') != null && $this->request->header('password') != null) {
+        if ($this->request->header('token') != null) {
             $users = TableRegistry::get('Users');
-            $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->header('email'),
-                'password =' => $this->request->header('password'), 'role =' => 'pica'])->toArray();
+            $queryResultsInArray = $users->find()->select(['id'])->where(['token =' => $this->request->header('token'), 'role =' => 'pica'])->toArray();
 
             if (!empty($queryResultsInArray)) {
                 $fp = fopen("pubkey.pem", "r");

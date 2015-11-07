@@ -11,9 +11,9 @@ use Cake\ORM\Entity;
  * @property string $name
  * @property string $password
  * @property string $role
- * @property int $id_credit_card
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ * @property string $token
  */
 class User extends Entity
 {

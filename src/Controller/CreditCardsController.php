@@ -55,7 +55,7 @@ class CreditCardsController extends AppController
     public function add()
     {
         $users = TableRegistry::get('Users');
-        $queryResultsInArray = $users->find()->select(['id'])->where(['email =' => $this->request->header('email'), 'password =' => $this->request->header('password')])->toArray();
+        $queryResultsInArray = $users->find()->select(['id'])->where(['token =' => $this->request->header('token'), 'role =' => 'cliente'])->toArray();
         if (!empty($queryResultsInArray))
         {
             $data['id_user'] = $queryResultsInArray[0]['id'];

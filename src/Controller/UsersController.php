@@ -2,7 +2,9 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Error\Debugger;
 use Cake\Event\Event;
+use Cake\Utility\Text;
 
 /**
  * Users Controller
@@ -76,35 +78,25 @@ class UsersController extends AppController
     public function login()
     {
         if ($this->request->is('post')) {
-            $user = $this->Users->exists(['email =' => $this->request->data('email'), 'password =' => $this->request->data('password')]);
-            if ($user)
-                $this->response->statusCode(200);
-            else
+            $users = $this->Users->find()->select(['id'])->where(['email =' => $this->request->data('email'), 'password =' => $this->request->data('password'), 'role =' => 'cliente'])->toArray();
+
+            if (!empty($users)) {
+                $token = Text::uuid();
+                $query = $this->Users->query();
+
+                $users[0]->token = $token;
+                $result = $this->Users->save($users[0]);
+
+                $this->set('token', $token);
+                $this->set('_serialize', ['token']);
+            }
+            else {
                 $this->response->statusCode(400);
-
-            $this->set('_serialize', ['']);
-
+                $this->set('_serialize', ['']);
+            }
         }
     }
 
-    /*
-        public function login()
-        {
-            if ($this->request->is('post')) {
-                $user = $this->Auth->identify();
-                if ($user) {
-                    $this->Auth->setUser($user);
-                    return $this->redirect($this->Auth->redirectUrl());
-                }
-                $this->Flash->error(__('Invalid username or password, try again'));
-            }
-        }
-
-        public function logout()
-        {
-            return $this->redirect($this->Auth->logout());
-        }
-    */
     /**
      * Edit method
      *

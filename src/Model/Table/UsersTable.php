@@ -29,7 +29,6 @@ class UsersTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
-	//$this->hasOne('CreditCards');
 
     }
 
@@ -64,8 +63,8 @@ class UsersTable extends Table
             ->notEmpty('role');
 
         $validator
-            ->add('id_credit_card', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id_credit_card');
+            ->allowEmpty('token')
+            ->add('token', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         return $validator;
     }
