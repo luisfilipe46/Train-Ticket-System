@@ -9,11 +9,12 @@ public class Ticket implements Serializable
 
 {
     public String QrCodeText,date, hourStart, hourEnd;
-    public int startStation,endStation, trainNr;
+    public String startStation,endStation, trainNr;
+    public double price;
     boolean used;
 
 
-    public Ticket(String QrCodeText, int startStation, int endStation,String date, String hourStart, String hourEnd, int trainNr,boolean used)
+    public Ticket(String QrCodeText, String startStation, String endStation,String date, String hourStart, String hourEnd, String trainNr,boolean used,double price)
 
     {
         this.endStation = endStation;
@@ -24,6 +25,7 @@ public class Ticket implements Serializable
         this.date = date;
         this.trainNr = trainNr;
         this.used = used;
+        this.price = price;
 
     }
 }

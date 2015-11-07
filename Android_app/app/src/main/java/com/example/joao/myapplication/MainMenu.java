@@ -56,6 +56,7 @@ public class MainMenu extends AppCompatActivity {
     private String mActivityTitle;
     private RestClient restClient;
     private TextView courseInfo;
+    private Button btnGetTrains;
    // private TextView restResult;
     private RelativeLayout progressBar;
     private TableLayout availableTravels;
@@ -99,6 +100,7 @@ public class MainMenu extends AppCompatActivity {
         mActivityTitle = getTitle().toString();
         setTitle("Choose Travel");
         courseInfo = (TextView) findViewById(R.id.course_info);
+        btnGetTrains = (Button) findViewById(R.id.button_getTrains);
 
         availableTravels = (TableLayout) findViewById(R.id.available_trains);
 
@@ -155,7 +157,11 @@ public class MainMenu extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) // My tickets
                 {
-                    Intent intent = new Intent(getBaseContext(), My_tickets.class);
+                    Intent intent = new Intent(getBaseContext(), My_ticketsView.class);
+                    Bundle info = new Bundle();
+                    info.putString("email",email);
+                    info.putString("password", pass);
+                    intent.putExtras(info);
                     startActivity(intent);
                 } else if (position == 1) { //REST GET TEST
 
@@ -255,12 +261,14 @@ public class MainMenu extends AppCompatActivity {
         courseInfo.setText("Travel route: " + course);
 
         String originStation = arrCourse.get(0).toString();
-        originStation = stationsMap.get(originStation);
+        //originStation = stationsMap.get(originStation);
 
         String destinyStation = arrCourse.get(arrCourse.length()-1).toString();
-        destinyStation = stationsMap.get(destinyStation);
+        //destinyStation = stationsMap.get(destinyStation);
 
         progressBar.setVisibility(View.GONE);
+        btnGetTrains.setEnabled(true);
+
 
 
         for (int i = 0; i < arr.length(); i++)
@@ -392,6 +400,7 @@ public class MainMenu extends AppCompatActivity {
         else // make request To DB and show available options
         {
             progressBar.setVisibility(View.VISIBLE);
+            btnGetTrains.setEnabled(false);
 
             String idStartStation = (String) getKeyFromValue(stationsMap, spinnerStart.getSelectedItem().toString());
             String idEndStation = (String) getKeyFromValue(stationsMap, spinnerEnd.getSelectedItem().toString());
