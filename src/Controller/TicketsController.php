@@ -232,8 +232,12 @@ class TicketsController extends AppController
                     $datetime = new \DateTime($day . ' ' . $hour);
 
                     $ticket = $this->Tickets->find()->where(['origin_station =' => $routeArray[$i], 'departure_time =' => $datetime])->toArray();
-                    if (!empty($ticket))
-                        $tickets[] = $ticket;
+                    if (!empty($ticket)) {
+                        for($a = 0; $a < sizeof($ticket); $a++)
+                        {
+                            $tickets[] = $ticket[$a];
+                        }
+                    }
 
                 }
 
