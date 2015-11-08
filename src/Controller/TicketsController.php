@@ -311,7 +311,7 @@ class TicketsController extends AppController
         // PHP's bin2hex() function.
 
         $hex = bin2hex( $signature );
-        $dataForTicket['qr_code'] = $hex;
+        $dataForTicket['qr_code'] = $toSign.' '.$hex;
         $dataForTicket['used'] = false;
         $dataForTicket['departure_time'] = new \DateTime($day . ' ' . $departure_time);
         $dataForTicket['arrival_time'] = new \DateTime($day . ' ' . $arrival_time);
