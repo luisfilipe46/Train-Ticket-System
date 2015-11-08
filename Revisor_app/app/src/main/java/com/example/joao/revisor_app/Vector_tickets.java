@@ -21,4 +21,17 @@ public class Vector_tickets {
     {
         return tickets;
     }
+
+    public Ticket existsTicket(String qrCode)
+    {
+        for (int i =0;i< tickets.size();i++)
+        {
+            Ticket t = tickets.get(i);
+            if(t.QrCodeText.equals(qrCode))
+            {
+                return t;
+            }
+        }
+        return null;
+    }
 }

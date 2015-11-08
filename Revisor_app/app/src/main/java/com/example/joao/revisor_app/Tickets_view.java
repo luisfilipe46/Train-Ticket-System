@@ -53,7 +53,7 @@ public class Tickets_view extends AppCompatActivity {
 
             LinearLayout LL = new LinearLayout(this);
             LL.setOrientation(LinearLayout.VERTICAL);
-            LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150);
+            LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             LL.setLayoutParams(LLParams);
 
 
@@ -80,7 +80,7 @@ public class Tickets_view extends AppCompatActivity {
             //origin station
             TextView originStation = new TextView(this);
             originStation.setText("Station " + ticket.startStation + " " + ticket.hourStart);
-            LinearLayout.LayoutParams originStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams originStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             originStationParams.weight = 3f;
             originStation.setLayoutParams(originStationParams);
 
@@ -92,7 +92,7 @@ public class Tickets_view extends AppCompatActivity {
             //end station
             TextView endStation = new TextView(this);
             endStation.setText("Station " + ticket.endStation + " " + ticket.hourEnd);
-            LinearLayout.LayoutParams endStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams endStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             endStationParams.weight = 3f;
             endStation.setLayoutParams(endStationParams);
 
@@ -110,7 +110,7 @@ public class Tickets_view extends AppCompatActivity {
                 qrcodeBtn.setBackgroundColor(Color.GRAY);
                 qrcodeBtn.setClickable(false);
             }
-            LinearLayout.LayoutParams qrcodeBtnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams qrcodeBtnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             qrcodeBtnParams.weight = 1f;
             qrcodeBtn.setLayoutParams(qrcodeBtnParams);
 

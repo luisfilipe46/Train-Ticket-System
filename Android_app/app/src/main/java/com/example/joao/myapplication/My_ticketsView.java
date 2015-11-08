@@ -150,7 +150,7 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
 
             LinearLayout LL = new LinearLayout(this);
             LL.setOrientation(LinearLayout.VERTICAL);
-            LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150);
+            LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             LL.setLayoutParams(LLParams);
 
 
@@ -177,7 +177,7 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
             //origin station
             TextView originStation = new TextView(this);
             originStation.setText("Station " + ticket.startStation + " " + ticket.hourStart);
-            LinearLayout.LayoutParams originStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams originStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             originStationParams.weight = 3f;
             originStation.setLayoutParams(originStationParams);
 
@@ -189,7 +189,7 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
             //end station
             TextView endStation = new TextView(this);
             endStation.setText("Station " + ticket.endStation + " " + ticket.hourEnd);
-            LinearLayout.LayoutParams endStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams endStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             endStationParams.weight = 3f;
             endStation.setLayoutParams(endStationParams);
 
@@ -206,7 +206,7 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
                 qrcodeBtn.setBackgroundColor(Color.GRAY);
                 qrcodeBtn.setClickable(false);
             }
-            LinearLayout.LayoutParams qrcodeBtnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams qrcodeBtnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             qrcodeBtnParams.weight = 1f;
             qrcodeBtn.setLayoutParams(qrcodeBtnParams);
 
@@ -284,7 +284,7 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
                 });
 
                 ImageView imageView = new ImageView(My_ticketsView.this);
-                imageView.setImageBitmap(bitmap);
+                imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap,600,600,false));
                 builder.addContentView(imageView, new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT));
