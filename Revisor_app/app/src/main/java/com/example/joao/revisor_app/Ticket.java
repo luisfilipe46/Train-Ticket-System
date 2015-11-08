@@ -7,12 +7,13 @@ public class Ticket
 
 {
     public String QrCodeText,date, hourStart, hourEnd;
-    public String startStation,endStation, trainNr,id;
+    public String startStation,endStation, trainNr;
+    public int id,idUser;
     public double price;
     boolean used;
 
 
-    public Ticket(String QrCodeText, String startStation, String endStation,String date, String hourStart, String hourEnd, String trainNr,boolean used,double price,String id)
+    public Ticket(String QrCodeText, String startStation, String endStation,String date, String hourStart, String hourEnd, String trainNr,boolean used,double price, int id,int idUser)
 
     {
         this.endStation = endStation;
@@ -25,6 +26,7 @@ public class Ticket
         this.used = used;
         this.price = price;
         this.id = id;
+        this.idUser = idUser;
 
     }
 }

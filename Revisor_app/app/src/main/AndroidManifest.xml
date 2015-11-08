@@ -3,8 +3,10 @@
     package="com.example.joao.revisor_app" >
 
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -23,6 +25,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainMenu" >
+        </activity>
+        <activity android:name=".Tickets_view" >
         </activity>
     </application>
 

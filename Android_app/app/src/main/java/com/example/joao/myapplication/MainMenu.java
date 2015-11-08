@@ -131,10 +131,14 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void initializeStationsMap() {
-        stationsMap.put("11","Station 11");
-        stationsMap.put("12","Station 12");
-        stationsMap.put("01","Station 01");
-        stationsMap.put("32", "Station 32");
+        stationsMap.put("11","S. Joao");
+        stationsMap.put("12","IPO");
+        stationsMap.put("21","Aliados");
+        stationsMap.put("22","Faria Guimaraes");
+        stationsMap.put("31", "Azurara");
+        stationsMap.put("32", "Vila do Conde");
+        stationsMap.put("01","Trindade");
+
 
 
     }
@@ -456,6 +460,70 @@ public class MainMenu extends AppCompatActivity {
         restClient.addHeader("token",token);
     }
 
+    public class BuyButtonOnClickListener implements View.OnClickListener
+    {
+
+        String hour1,hour2,startStation,endStation;
+
+        public BuyButtonOnClickListener(String h1,String h2, String startStation,String endStation) {
+            this.startStation = startStation;
+            this.endStation = endStation;
+            hour1 = h1;
+            hour2 = h2;
+        }
+
+        @Override
+        public void onClick(View v)
+        {
+            buyTicket(startStation,endStation,hour1,hour2);
+        }
+
+    };
+
+    public static Object getKeyFromValue(Map hm, String value) {
+        for (Object o : hm.keySet()) {
+            if (hm.get(o).equals(value)) {
+                return o;
+            }
+        }
+        return null;
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    // ------------------------------------------------------------------- REST TASKS ---------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     private class GetTravelsTask extends AsyncTask<Void,Void,String> {
         /** The system calls this to perform work in a worker thread and
          * delivers it the parameters given to AsyncTask.execute() */
@@ -488,6 +556,7 @@ public class MainMenu extends AppCompatActivity {
 
                  if (arr == null) {
                      Toast.makeText(MainMenu.this, "can't form json from server response", Toast.LENGTH_SHORT).show();
+                     Log.e("GET_TRAVELS", "response: " + restClient.getReturn());
                  } else {
                      try {
                          updateAvailableTravels(arr,arrCourse);
@@ -561,55 +630,5 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
-    public class BuyButtonOnClickListener implements View.OnClickListener
-    {
 
-        String hour1,hour2,startStation,endStation;
-
-        public BuyButtonOnClickListener(String h1,String h2, String startStation,String endStation) {
-            this.startStation = startStation;
-            this.endStation = endStation;
-            hour1 = h1;
-            hour2 = h2;
-        }
-
-        @Override
-        public void onClick(View v)
-        {
-            buyTicket(startStation,endStation,hour1,hour2);
-        }
-
-    };
-
-    public static Object getKeyFromValue(Map hm, String value) {
-        for (Object o : hm.keySet()) {
-            if (hm.get(o).equals(value)) {
-                return o;
-            }
-        }
-        return null;
-    }
-
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
 }

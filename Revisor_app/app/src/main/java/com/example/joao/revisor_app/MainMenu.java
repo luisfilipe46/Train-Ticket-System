@@ -2,18 +2,29 @@ package com.example.joao.revisor_app;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,20 +40,28 @@ import java.util.Vector;
 
 public class MainMenu extends AppCompatActivity {
 
+    private ListView mDrawerList;
+    private ArrayAdapter<String> mAdapter;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout mDrawerLayout;
+
     Spinner spinnerStart,spinnerEnd;
     String token,email,pass;
     HashMap<String, String> stationsMap = new HashMap<String, String>();
-    Vector<Ticket> tickets;
+    Vector_tickets vecTickets;
     Button btnUpdateTickets;
     private RestClient restClient;
     private TextView date,departureTime;
     private String updateTicketsURL = "https://testcake3333.herokuapp.com/api/tickets";
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-
+        vecTickets = Vector_tickets.getInstance();
 
         initializeStationsMap();
 
@@ -53,13 +72,24 @@ public class MainMenu extends AppCompatActivity {
         pass = info.getString("password");
         token = info.getString("token");
 
-        tickets = new Vector<>();
+
 
         spinnerStart = (Spinner) findViewById(R.id.spinnerStart);
         spinnerEnd = (Spinner) findViewById(R.id.spinnerEnd);
         btnUpdateTickets = (Button) findViewById(R.id.btnUpdateTickets);
         date = (TextView) findViewById(R.id.date);
         departureTime = (TextView) findViewById(R.id.departureTime);
+
+
+
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView)findViewById(R.id.navList);
+
 
         try {
             restClient = RestClient.getInstance();
@@ -78,15 +108,56 @@ public class MainMenu extends AppCompatActivity {
         // Apply the adapter to the spinner
         spinnerStart.setAdapter(adapter);
         spinnerEnd.setAdapter(adapter);
+
+        // add side menu items
+        addDrawerItems();
+
+        //set handler
+        setHandlerDrawer();
+
+    }
+
+    private void setHandlerDrawer()
+    {
+        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) // View tickets
+                {
+                    startTicketActivity();
+                } else if (position == 1) //Qr code Launch
+                {
+
+                } else {
+                    Toast.makeText(MainMenu.this, "Nothing to do", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+    }
+
+    private void addDrawerItems() {
+        String[] osArray = { "View Tickets",  "Launch QrCode Validator"};
+
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, osArray));;
     }
 
     private void initializeStationsMap() {
-        stationsMap.put("11", "Station 11");
-        stationsMap.put("12", "Station 12");
-        stationsMap.put("01", "Station 01");
-        stationsMap.put("32", "Station 32");
-        stationsMap.put("31", "Station 31");
-        stationsMap.put("21", "Station 21");
+        stationsMap.put("01","Trindade");
+        stationsMap.put("11","S. Joao");
+        stationsMap.put("12","IPO");
+        stationsMap.put("21","Aliados");
+        stationsMap.put("22","Faria Guimaraes");
+        stationsMap.put("31", "Azurara");
+        stationsMap.put("32", "Vila do Conde");
+
+
 
 
     }
@@ -169,6 +240,79 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
+    private void addTickets(JSONArray arr) throws JSONException {
+
+        vecTickets.tickets.clear();
+
+        for (int i =0; i< arr.length();i++)
+        {
+            Ticket t;
+            JSONObject ticketJson = arr.getJSONArray(i).getJSONObject(0);
+            int id = ticketJson.getInt("id");
+            int idUser = ticketJson.getInt("id_users");
+
+            String origin = ticketJson.getString("origin_station");
+            String destiny = ticketJson.getString("destiny_station");
+            String qrCode = ticketJson.getString("qr_code");
+
+            String hourStart = ticketJson.getString("departure_time");
+            String date = hourStart.substring(0, 10);
+            hourStart = hourStart.substring(11,19);
+
+            String hourEnd = ticketJson.getString("arrival_time");
+            hourEnd = hourEnd.substring(11,19);
+
+            boolean used = ticketJson.getBoolean("used");
+            double price = ticketJson.getDouble("price");
+
+
+            t = new Ticket(qrCode,origin,destiny,date,hourStart,hourEnd,"1",used,price,id,idUser);
+
+            vecTickets.tickets.add(t);
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //Log.i("ITEM CLIQUED","Clicado id: " + item.getItemId() + " Home id: " + android.R.id.home);
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+
+
+
+
+    // ------------------------------------------------------------------- REST TASKS ---------------------------------------------------------------------------------
+    //
+    //
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     private class updateTicketsTask extends AsyncTask<Void,Void,String> {
 
         @Override
@@ -190,14 +334,31 @@ public class MainMenu extends AppCompatActivity {
             if(result.equals("200"))
             {
                 JSONObject json = null;
+                JSONArray arr = null;
                 try {
 
                     Log.i("UPDATETickets", "resposta : " + restClient.getReturn());
                     json = new JSONObject(restClient.getReturn());
+                    arr = json.getJSONArray("tickets");
 
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+
+                if(arr == null)
+                {
+                    Log.i("UPDATETickets", "Array de bilhetes nao formado");
+                }
+                else{
+                    try {
+                        addTickets(arr);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    startTicketActivity();
+
                 }
 
             }
@@ -231,4 +392,14 @@ public class MainMenu extends AppCompatActivity {
             }
         }
     }
+
+    private void startTicketActivity() {
+
+
+        Intent intent = new Intent(getBaseContext(), Tickets_view.class);
+
+        startActivity(intent);
+    }
+
+
 }

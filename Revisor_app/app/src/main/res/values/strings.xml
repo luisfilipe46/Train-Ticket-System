@@ -1,12 +1,15 @@
 <resources>
-    <string name="app_name">Revisor_app</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="app_name">Ticket Validator</string>
     <string name="error_field_required">Field Required</string>
     <string-array name="stations_array">
-        <item>Station 11</item>
-        <item>Station 12</item>
-        <item>Station 01</item>
-        <item>Station 32</item>
-        <item>Station 31</item>
-        <item>Station 21</item>
+        <item>Trindade</item>
+        <item>S. Joao</item>
+        <item>IPO</item>
+        <item>Aliados</item>
+        <item>Faria Guimaraes</item>
+        <item>Azurara</item>
+        <item>Vila do Conde</item>
     </string-array>
 </resources>
