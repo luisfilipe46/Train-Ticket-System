@@ -52,7 +52,7 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
 
     AllTickets tickets;
     LinearLayout allTickets;
-    String email, pass;
+    String email, pass,token;
     RestClient restClient;
     Button btnUpdate;
     private String URL = "https://testcake3333.herokuapp.com/api/tickets.json";
@@ -74,6 +74,7 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
         Bundle info = intent.getExtras();
         email = info.getString("email");
         pass = info.getString("password");
+        token = info.getString("token");
 
 
         btnUpdate = (Button) findViewById(R.id.updateTickets);
@@ -238,8 +239,7 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
     {
         restClient.setUrl(URL);
         restClient.setMethod("GET");
-        restClient.addHeader("email", email);
-        restClient.addHeader("password",pass);
+        restClient.addHeader("token", token);
 
         btnUpdate.setEnabled(false);
         new updateTicketsTask().execute();

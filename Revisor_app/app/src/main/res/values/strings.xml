@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Revisor_app</string>
+    <string name="error_field_required">Field Required</string>
+    <string-array name="stations_array">
+        <item>Station 11</item>
+        <item>Station 12</item>
+        <item>Station 01</item>
+        <item>Station 32</item>
+        <item>Station 31</item>
+        <item>Station 21</item>
+    </string-array>
 </resources>

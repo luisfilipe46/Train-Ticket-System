@@ -61,6 +61,7 @@ public class MainMenu extends AppCompatActivity {
     private RelativeLayout progressBar;
     private TableLayout availableTravels;
     HashMap<String, String> stationsMap = new HashMap<String, String>();
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class MainMenu extends AppCompatActivity {
 
         email = info.getString("email");
         pass = info.getString("password");
+        token = info.getString("token");
 
 
 
@@ -159,8 +161,9 @@ public class MainMenu extends AppCompatActivity {
                 {
                     Intent intent = new Intent(getBaseContext(), My_ticketsView.class);
                     Bundle info = new Bundle();
-                    info.putString("email",email);
+                    info.putString("email", email);
                     info.putString("password", pass);
+                    info.putString("token",token);
                     intent.putExtras(info);
                     startActivity(intent);
                 } else if (position == 1) { //REST GET TEST
@@ -220,10 +223,11 @@ public class MainMenu extends AppCompatActivity {
                         Bundle bundle = new Bundle();
                         bundle.putString("email", email);
                         bundle.putString("pass", pass);
+                        bundle.putString("token",token);
                         dialogCard.setArguments(bundle);
                         dialogCard.show(getFragmentManager(), "Cenas");
 
-                       // dialogCard.setListeners();
+                        // dialogCard.setListeners();
 
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
@@ -435,8 +439,9 @@ public class MainMenu extends AppCompatActivity {
         restClient.addParam("departure_time",hour1);
         String day = "2015-10-06";
         restClient.addParam("day",day);
-        restClient.addHeader("email",email);
-        restClient.addHeader("password",pass);
+        addtoken();
+        /*restClient.addHeader("email",email);
+        restClient.addHeader("password",pass);*/
 
         new BuyTicketTask().execute();
 
@@ -444,6 +449,11 @@ public class MainMenu extends AppCompatActivity {
 
 
 
+    }
+
+    private void addtoken() {
+
+        restClient.addHeader("token",token);
     }
 
     private class GetTravelsTask extends AsyncTask<Void,Void,String> {

@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -199,14 +200,23 @@ public class MainActivity extends AppCompatActivity {
 
             if(result.equals("200"))
             {
-                Intent intent = new Intent(getBaseContext(), MainMenu.class);
-                Bundle info = new Bundle();
-                info.putString("email", email.getText().toString());
-                info.putString("password", Arrays.toString(passEncrypted));
+                JSONObject json = null;
+                try {
+                    json = new JSONObject(restClient.getReturn());
+                    String token = json.get("token").toString();
+                    Intent intent = new Intent(getBaseContext(), MainMenu.class);
+                    Bundle info = new Bundle();
+                    info.putString("email", email.getText().toString());
+                    info.putString("password", Arrays.toString(passEncrypted));
+                    info.putString("token", token);
 
-                intent.putExtras(info);
+                    intent.putExtras(info);
 
-                startActivity(intent);
+                    startActivity(intent);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
             else if(result.equals("400"))
             {

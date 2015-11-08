@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat;
  */
 public class DialogAddCard extends DialogFragment {
     RestClient restClient;
-    String email,pass,URL = "https://testcake3333.herokuapp.com/api/credit_cards.json";
+    String email,pass,token,URL = "https://testcake3333.herokuapp.com/api/credit_cards.json";
     EditText number,validity,type;
 
 
@@ -45,6 +45,7 @@ public class DialogAddCard extends DialogFragment {
         Bundle bundle = this.getArguments();
         this.email = bundle.getString("email");
         this.pass = bundle.getString("pass");
+        this.token = bundle.getString("token");
 
 
 
@@ -130,8 +131,7 @@ public class DialogAddCard extends DialogFragment {
                     restClient.addParam("number", number.getText().toString());
                     restClient.addParam("type", type.getText().toString());
                     restClient.addParam("validity", validity.getText().toString());
-                    restClient.addHeader("email", email);
-                    restClient.addHeader("password", pass);
+                    restClient.addHeader("token", token);
                     Log.i("Peddido ADDCARD: " , "feito");
                     new AddCardTask().execute();
 
