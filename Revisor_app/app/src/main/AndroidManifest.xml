@@ -28,6 +28,11 @@
         </activity>
         <activity android:name=".Tickets_view" >
         </activity>
+        <activity android:name=".QRCodeScan_Activity"
+            android:screenOrientation="portrait" >
+
+
+        </activity>
     </application>
 
 </manifest>

@@ -84,7 +84,7 @@
                 android:ems="10"
                 android:id="@+id/departureTime"
                 android:layout_weight="1"
-                android:hint="Departure Time" />
+                android:hint="Departure Time (hh:mm:ss)" />
         </LinearLayout>
 
         <LinearLayout

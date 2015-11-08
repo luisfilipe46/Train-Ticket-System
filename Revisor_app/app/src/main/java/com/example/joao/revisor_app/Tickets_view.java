@@ -1,8 +1,12 @@
 package com.example.joao.revisor_app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,13 +14,16 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 import java.util.Vector;
 
 public class Tickets_view extends AppCompatActivity {
     Vector_tickets vecTickets;
     TextView percentageInfo,numberOfTicketsInfo;
     LinearLayout allTickets;
-
+    private String token;
 
 
     @Override
@@ -25,6 +32,12 @@ public class Tickets_view extends AppCompatActivity {
         setContentView(R.layout.activity_tickets_view);
 
         vecTickets = Vector_tickets.getInstance();
+
+        Intent intent = getIntent();
+        Bundle info = intent.getExtras();
+
+
+        token = info.getString("token");
 
         percentageInfo = (TextView) findViewById(R.id.percentageInfo);
         numberOfTicketsInfo = (TextView) findViewById(R.id.numberOfTicketsInfo);
@@ -144,6 +157,19 @@ public class Tickets_view extends AppCompatActivity {
 
     }
 
+    public void lauchQrScan(View view) {
+        Intent intent = new Intent(getBaseContext(), QRCodeScan_Activity.class);
+        Bundle info = new Bundle();
+        info.putString("token", token);
+
+        intent.putExtras(info);
+
+        startActivity(intent);
+    }
+
+
+
+
 
     private class MarkUsedOnClickListener implements View.OnClickListener {
 
@@ -169,5 +195,7 @@ public class Tickets_view extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 
 }

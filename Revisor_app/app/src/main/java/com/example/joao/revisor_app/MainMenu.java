@@ -1,5 +1,6 @@
 package com.example.joao.revisor_app;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -135,8 +136,7 @@ public class MainMenu extends AppCompatActivity {
                     startTicketActivity();
                 } else if (position == 1) //Qr code Launch
                 {
-                    IntentIntegrator scanIntegrator = new IntentIntegrator(MainMenu.this);
-                    scanIntegrator.initiateScan();
+                        launchQrCodeScan(MainMenu.this);
                 } else {
                     Toast.makeText(MainMenu.this, "Nothing to do", Toast.LENGTH_SHORT).show();
                 }
@@ -144,6 +144,19 @@ public class MainMenu extends AppCompatActivity {
         });
 
 
+    }
+
+    public void launchQrCodeScan(Activity activity)
+    {
+        Intent intent = new Intent(getBaseContext(), QRCodeScan_Activity.class);
+        Bundle info = new Bundle();
+        info.putString("email", email);
+        info.putString("password", pass);
+        info.putString("token", token);
+
+        intent.putExtras(info);
+
+        startActivity(intent);
     }
 
     private void addDrawerItems() {
@@ -278,147 +291,9 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult != null) {
-            Log.i("SCAN RESULT", scanResult.getContents().toString());
-            validateTicket(scanResult.getContents().toString());
-        }
-    }
-
-    private void validateTicket(String qrCode) {
-        final Ticket t = vecTickets.existsTicket(qrCode);
-
-        if(t==null)
-        {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
-
-            builder.setMessage("Ticket does not exist")
-                    .setTitle("Error");
-
-
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }
-        else if(t.used)
-        {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
-
-            builder.setMessage("Ticket already used")
-                    .setTitle("Error");
-
-
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }
-        else {
-            Log.i("TICKET", "Ticket OK");
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 
 
-
-            builder.setPositiveButton("validate", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-
-                    restClient.setMethod("PUT");
-                    restClient.setUrl(updateTicketsURL + "/" + t.id + ".json");
-                    restClient.addHeader("token", token);
-
-                    new validateTicketTask().execute();
-
-                }
-            });
-            builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-
-                }
-            });
-
-            LinearLayout LL = generateTicketView(t);
-
-
-            builder.setView(LL);
-
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
-
-
-
-        }
-    }
-
-    private LinearLayout generateTicketView(Ticket ticket) {
-
-
-
-        LinearLayout LL = new LinearLayout(this);
-        LL.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        LLParams.setMargins(15,15,15,0);
-        LL.setLayoutParams(LLParams);
-
-
-        LinearLayout date = new LinearLayout(this);
-        date.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams dateParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
-        dateParams.setMargins(15,15,15,0);
-        dateParams.weight = 5f;
-        date.setLayoutParams(dateParams);
-
-
-        TextView dateText = new TextView(this);
-        dateText.setText(ticket.date);
-        date.addView(dateText);
-
-
-        LinearLayout ticketInfo = new LinearLayout(this);
-        ticketInfo.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams ticketInfoParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
-        ticketInfoParams.setMargins(15,0,15,0);
-        ticketInfoParams.weight = 9f;
-        ticketInfo.setLayoutParams(ticketInfoParams);
-        //ticketInfo.setBackgroundColor(Color.GREEN);
-
-
-        //origin station
-        TextView originStation = new TextView(this);
-        originStation.setText("Station " + ticket.startStation + " " + ticket.hourStart);
-        LinearLayout.LayoutParams originStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        originStationParams.weight = 3f;
-        originStation.setLayoutParams(originStationParams);
-
-        // "to" text
-        TextView toText = new TextView(this);
-        toText.setText(" to ");
-        toText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
-
-        //end station
-        TextView endStation = new TextView(this);
-        endStation.setText("Station " + ticket.endStation + " " + ticket.hourEnd);
-        LinearLayout.LayoutParams endStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        endStationParams.weight = 3f;
-        endStation.setLayoutParams(endStationParams);
-
-        ticketInfo.addView(originStation);
-        ticketInfo.addView(toText);
-        ticketInfo.addView(endStation);
-
-        // Black line on end
-        View blackLine = new View(this);
-        LinearLayout.LayoutParams blackParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,5);
-        blackLine.setLayoutParams(blackParams);
-        blackLine.setBackgroundColor(Color.BLACK);
-
-
-
-        LL.addView(date);
-        LL.addView(ticketInfo);
-        LL.addView(blackLine);
-        return LL;
-    }
 
 
     @Override
@@ -533,49 +408,18 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
-    private class validateTicketTask extends AsyncTask<Void,Void,String> {
 
-        @Override
-        protected String doInBackground(Void... params) {
-
-            try {
-                return restClient.execute();
-            } catch (IOException | JSONException | InterruptedException e) {
-                e.printStackTrace();
-                return "fail";
-
-            }
-        }
-
-
-        protected void onPostExecute(String result) {
-
-
-            if(result.equals("200"))
-            {
-                Toast.makeText(MainMenu.this, "Ticket Validated", Toast.LENGTH_SHORT).show();
-            }
-            else if(result.equals("fail"))
-            {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
-
-                builder.setMessage("Error connecting to server")
-                        .setTitle("Error");
-
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-            else {
-                Toast.makeText(MainMenu.this, "Code: " + result + " (fail)", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     private void startTicketActivity() {
 
 
         Intent intent = new Intent(getBaseContext(), Tickets_view.class);
+        Bundle info = new Bundle();
+        info.putString("email", email);
+        info.putString("password", pass);
+        info.putString("token", token);
+
+        intent.putExtras(info);
 
         startActivity(intent);
     }
