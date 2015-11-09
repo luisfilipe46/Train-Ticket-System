@@ -53,11 +53,20 @@ public class Tickets_view extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        showTickets();
+        //showTickets();
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+
+
+        showTickets();
+    }
+
     private void showTickets() {
+        Log.i("TICKETS VIEW", "Show tickets()");
 
         int usedTickets = 0;
 

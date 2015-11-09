@@ -131,7 +131,7 @@ public class QRCodeScan_Activity extends AppCompatActivity {
                     restClient.setUrl(updateTicketsURL + "/" + t.id + ".json");
                     restClient.addHeader("token", token);
 
-                    new validateTicketTask().execute();
+                    new validateTicketTask(t).execute();
 
                     progressBar.setVisibility(View.VISIBLE);
 
@@ -244,6 +244,11 @@ public class QRCodeScan_Activity extends AppCompatActivity {
 
     private class validateTicketTask extends AsyncTask<Void,Void,String> {
 
+        Ticket t;
+        public validateTicketTask(Ticket t) {
+            this.t = t;
+        }
+
         @Override
         protected String doInBackground(Void... params) {
 
@@ -273,7 +278,7 @@ public class QRCodeScan_Activity extends AppCompatActivity {
                 if(result.equals("200"))
                 {
                     Toast.makeText(QRCodeScan_Activity.this, "Ticket Validated", Toast.LENGTH_SHORT).show();
-
+                    t.used = true;
                 }
                 else if(result.equals("fail"))
                 {
