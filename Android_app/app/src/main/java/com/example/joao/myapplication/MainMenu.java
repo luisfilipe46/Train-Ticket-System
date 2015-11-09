@@ -256,6 +256,8 @@ public class MainMenu extends AppCompatActivity {
             hour2 = hour2.substring(11,19);
             String price = arr.getJSONObject(i).getString("price");
             String line = arr.getJSONObject(i).getString("line");
+            int lotationMax = arr.getJSONObject(i).getInt("lotation");
+            int passagers = arr.getJSONObject(i).getInt("passagers");
 
             if(previousLine=="")
             {
@@ -400,7 +402,7 @@ public class MainMenu extends AppCompatActivity {
             String idEndStation = (String) getKeyFromValue(stationsMap, spinnerEnd.getSelectedItem().toString());
             restClient.setMethod("GET");
             restClient.setUrl(getTravelsURL + idStartStation + "/" + idEndStation + ".json");
-            Log.i("URL GENERATED", "https://testcake3333.herokuapp.com/api/timetables_with_final_stations/" + idStartStation + "/" + idEndStation + ".json");
+            Log.i("URL GENERATED", "https://testcake3333.herokuapp.com/api/timetables_with_final_stations/" + idStartStation + "/" + idEndStation +"/" + dateText.getText().toString() + ".json");
 
             new GetTravelsTask().execute();
 
@@ -560,7 +562,9 @@ public class MainMenu extends AppCompatActivity {
         /** The system calls this to perform work in the UI thread and delivers
          * the result from doInBackground() */
         protected void onPostExecute(String result) {
+
             progressBar.setVisibility(View.GONE);
+            btnGetTrains.setEnabled(true);
 
             if (result.equals("No Connection"))
             {

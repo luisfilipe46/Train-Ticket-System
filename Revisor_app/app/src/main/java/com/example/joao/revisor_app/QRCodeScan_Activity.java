@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,7 @@ public class QRCodeScan_Activity extends AppCompatActivity {
     private String token;
     private ProgressBar progressBar;
     private CheckInternetConnection connection = CheckInternetConnection.getInstance();
+    private StationsMap stationsMap = StationsMap.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,25 +190,29 @@ public class QRCodeScan_Activity extends AppCompatActivity {
         ticketInfo.setLayoutParams(ticketInfoParams);
         //ticketInfo.setBackgroundColor(Color.GREEN);
 
-
-        //origin station
+//origin station
         TextView originStation = new TextView(this);
-        originStation.setText("Station " + ticket.startStation + " " + ticket.hourStart);
+        originStation.setText(stationsMap.getStationRealName(ticket.startStation) + " " + ticket.hourStart.substring(0,5));
         LinearLayout.LayoutParams originStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         originStationParams.weight = 3f;
         originStation.setLayoutParams(originStationParams);
 
+
         // "to" text
         TextView toText = new TextView(this);
         toText.setText(" to ");
+
         toText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
 
         //end station
         TextView endStation = new TextView(this);
-        endStation.setText("Station " + ticket.endStation + " " + ticket.hourEnd);
+        endStation.setText(stationsMap.getStationRealName(ticket.endStation) + " " + ticket.hourEnd.substring(0,5));
         LinearLayout.LayoutParams endStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         endStationParams.weight = 3f;
         endStation.setLayoutParams(endStationParams);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            endStation.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        }
 
         ticketInfo.addView(originStation);
         ticketInfo.addView(toText);
@@ -266,6 +272,7 @@ public class QRCodeScan_Activity extends AppCompatActivity {
                 if(result.equals("200"))
                 {
                     Toast.makeText(QRCodeScan_Activity.this, "Ticket Validated", Toast.LENGTH_SHORT).show();
+
                 }
                 else if(result.equals("fail"))
                 {

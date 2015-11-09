@@ -126,7 +126,8 @@ public class MainMenu extends AppCompatActivity {
                 {
                     launchQrCodeScan(MainMenu.this);
                 } else {
-                    Toast.makeText(MainMenu.this, "Nothing to do", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainMenu.this, "Quitting", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }
         });
@@ -148,7 +149,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void addDrawerItems() {
-        String[] osArray = { "View Tickets",  "Launch QrCode Validator"};
+        String[] osArray = { "View Tickets",  "Launch QrCode Validator", "Quit"};
 
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, osArray));;
