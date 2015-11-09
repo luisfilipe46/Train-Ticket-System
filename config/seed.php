@@ -83,58 +83,6 @@ $data = [
 			'real_name' => 'Vila do Conde',
 		],
 	],
-	'neighbor_stations' => [
-		'_truncate' => true,
-		'_defaults' => [],
-		[
-			'name1' => '11',
-			'name2' => '12',
-		],
-		[
-			'name1' => '12',
-			'name2' => '11',
-		],
-		[
-			'name1' => '01',
-			'name2' => '12',
-		],
-		[
-			'name1' => '12',
-			'name2' => '01',
-		],
-		[
-			'name1' => '01',
-			'name2' => '22',
-		],
-		[
-			'name1' => '22',
-			'name2' => '01',
-		],
-		[
-			'name1' => '01',
-			'name2' => '32',
-		],
-		[
-			'name1' => '32',
-			'name2' => '01',
-		],
-		[
-			'name1' => '22',
-			'name2' => '21',
-		],
-		[
-			'name1' => '21',
-			'name2' => '22',
-		],
-		[
-			'name1' => '32',
-			'name2' => '31',
-		],
-		[
-			'name1' => '31',
-			'name2' => '32',
-		],
-	],
 	'timetables' => [
 		'_truncate' => true,
 		'_defaults' => ['created' => '2016-06-06 01:00:00',
