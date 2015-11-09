@@ -57,12 +57,14 @@ class TimetablesController extends AppController
 
             if (($a+1) == sizeof($routeArray))
             {
-                $this->addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $arrival_time, $price, $timetables, $ii);
+                $this->getLine($routeArray, $line);
+                $this->addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $line, $arrival_time, $price, $timetables);
                 $price = 0.0;
             }
             elseif (!empty($stationsWithChangeOfTrain) && $destiny_station == $stationsWithChangeOfTrain[0])
             {
-                $this->addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $arrival_time, $price, $timetables, $ii);
+                $this->getLine($routeArray, $line);
+                $this->addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $line, $arrival_time, $price, $timetables);
                 $price = 0.0;
 
                 for($aa = $a; $aa < sizeof($routeArray); $aa++)
@@ -182,7 +184,7 @@ class TimetablesController extends AppController
      * @param $timetables
      * @param $ii
      */
-    private function addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $arrival_time, $price, &$timetables, &$ii)
+    private function addElementsToTimetablesArray($departure_time, $routeArray, $destiny_station, $line, $arrival_time, $price, &$timetables)
     {
         for ($ii = 0; $ii < sizeof($departure_time); $ii++) {
             $timetables[] = [
@@ -190,8 +192,25 @@ class TimetablesController extends AppController
                 'destiny_station' => $destiny_station,
                 'departure_time' => $departure_time[$ii],
                 'arrival_time' => $arrival_time[$ii],
-                'price' => $price
+                'price' => $price,
+                'line' => $line
             ];
+        }
+    }
+    private function getLine($routeArray, &$line)
+    {
+        for ($ii = 0; $ii < sizeof($routeArray); $ii++)
+        {
+            $this->loadModel('Stations');
+
+            $station = $this->Stations->get($routeArray[$ii], [
+                'contain' => []
+            ]);
+            if ($station['line'] != '0')
+            {
+                $line = $station['line'];
+                return;
+            }
         }
     }
 }

@@ -64,12 +64,12 @@ $data = [
 		],
 		[
 			'name' => '21', // 2 = B
-			'line' => 'B',
+			'line' => 'A',
 			'real_name' => 'Aliados'
 		],
 		[
 			'name' => '22', // 2 = B
-			'line' => 'B',
+			'line' => 'A',
 			'real_name' => 'Faria Guimaraes',
 		],
 		[
