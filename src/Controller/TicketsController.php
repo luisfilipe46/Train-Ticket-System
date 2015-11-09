@@ -33,10 +33,16 @@ class TicketsController extends AppController
         if ($this->request->header('token') != null)
         {
             $users = TableRegistry::get('Users');
-            $queryResultsInArray = $users->find()->select(['id'])->where(['token =' => $this->request->header('token'), 'role =' => 'cliente'])->toArray();
+            $queryResultsInArray = $users->find()
+                ->select(['id'])
+                ->where(['token =' => $this->request->header('token'), 'role =' => 'cliente'])
+                ->toArray();
             if (!empty($queryResultsInArray))
             {
-                $tickets = $this->Tickets->find()->where(['id_users =' => $queryResultsInArray[0]['id']])->toArray();
+                $tickets = $this->Tickets->find()
+                    ->where(['id_users =' => $queryResultsInArray[0]['id']])
+                    ->order(['departure_time' => 'ASC', 'arrival_time' => 'ASC'])
+                    ->toArray();
                 $this->set('tickets', $tickets);
                 $this->set('_serialize', ['tickets']);
             }
