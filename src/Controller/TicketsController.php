@@ -41,7 +41,7 @@ class TicketsController extends AppController
             {
                 $tickets = $this->Tickets->find()
                     ->where(['id_users =' => $queryResultsInArray[0]['id']])
-                    ->order(['departure_time' => 'ASC', 'arrival_time' => 'ASC'])
+                    ->order(['departure_time' => 'DESC', 'arrival_time' => 'DESC'])
                     ->toArray();
                 $this->set('tickets', $tickets);
                 $this->set('_serialize', ['tickets']);
