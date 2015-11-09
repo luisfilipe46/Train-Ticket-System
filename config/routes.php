@@ -75,6 +75,9 @@ Router::scope('/api', function ($routes) {
             'pass' => ['origin_station', 'destiny_station', 'day', 'departure_time']
         ]
     );
+    $routes->connect('/tickets_use',
+        ['controller' => 'Tickets', 'action' => 'editArray', '_method' => 'PUT'], []
+    );
     $routes->connect('/publickey',
         ['controller' => 'Tickets', 'action' => 'pubkey', '_method' => 'GET'],[]
     );
