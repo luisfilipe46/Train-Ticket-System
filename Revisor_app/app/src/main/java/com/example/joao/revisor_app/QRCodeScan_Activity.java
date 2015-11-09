@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -22,7 +23,17 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 
 public class QRCodeScan_Activity extends AppCompatActivity {
 
@@ -73,8 +84,67 @@ public class QRCodeScan_Activity extends AppCompatActivity {
 
     }
 
-    private void validateTicket(String qrCode) {
+    private static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
+    }
 
+    private void validateTicket(String qrCode) {
+        String[] parts = qrCode.split(" ");
+
+        String data = new String();
+        String signature = new String();
+
+        for (int i= 0; i < 8; i++)
+            data += parts[i] + " ";
+
+        for (int i = 8; i < parts.length; i++)
+            signature = parts[i] + " ";
+
+        data = data.substring(0, data.length()-1);
+        signature = signature.substring(0, signature.length()-1);
+
+        byte [] dataByteArray = data.getBytes();
+        byte [] signatureByteArray = QRCodeScan_Activity.hexStringToByteArray(signature);
+
+
+        Signature sig = null;
+        boolean verifiesSignature = false;
+        String publicK = "MEowDQYJKoZIhvcNAQEBBQADOQAwNgIvAKp9Su+TSBa8PMpsoSMzq9ohkykfe/bm GU9MGo+h0p8bHSooLN5NUYyD+ShpGZ0CAwEAAQ==";
+        //String publicK2 = "MEowDQYJKoZIhvcNAQEBBQADOQAwNgIvAKp9Su+TSBa8PMpsoSMzq9ohkykfe/bm\nGU9MGo+h0p8bHSooLN5NUYyD+ShpGZ0CAwEAAQ==";
+
+        try {
+
+            byte[] keyBytes = Base64.decode(publicK.getBytes("utf-8"), Base64.DEFAULT);
+            X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+            KeyFactory keyFactory = null;
+            keyFactory = KeyFactory.getInstance("RSA");
+
+
+            PublicKey pubKey = keyFactory.generatePublic(spec);
+            sig = Signature.getInstance("SHA1withRSA");
+            sig.initVerify(pubKey);
+            sig.update(dataByteArray);
+            verifiesSignature = sig.verify(signatureByteArray);
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (SignatureException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        int i = 0;
         final Ticket t = vecTickets.existsTicket(qrCode);
 
         if(t==null)
