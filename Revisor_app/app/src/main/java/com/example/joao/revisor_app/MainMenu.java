@@ -2,6 +2,8 @@ package com.example.joao.revisor_app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -16,10 +18,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -30,8 +34,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
-public class MainMenu extends AppCompatActivity {
+public class MainMenu extends AppCompatActivity implements View.OnClickListener {
 
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
@@ -71,6 +76,8 @@ public class MainMenu extends AppCompatActivity {
         btnUpdateTickets = (Button) findViewById(R.id.btnUpdateTickets);
         date = (TextView) findViewById(R.id.date);
         departureTime = (TextView) findViewById(R.id.departureTime);
+        date.setOnClickListener(this);
+        departureTime.setOnClickListener(this);
 
 
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
@@ -107,6 +114,64 @@ public class MainMenu extends AppCompatActivity {
 
         //set handler
         setHandlerDrawer();
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == date) {
+
+            // Process to get Current Date
+            final Calendar c = Calendar.getInstance();
+            int mYear = c.get(Calendar.YEAR);
+            int mMonth = c.get(Calendar.MONTH);
+            int mDay = c.get(Calendar.DAY_OF_MONTH);
+
+            // Launch Date Picker Dialog
+            DatePickerDialog dpd = new DatePickerDialog(this,
+                    new DatePickerDialog.OnDateSetListener() {
+
+                        @Override
+                        public void onDateSet(DatePicker view, int year,
+                                              int monthOfYear, int dayOfMonth) {
+                            // Display Selected date in textbox
+                            if(dayOfMonth<10)
+                                date.setText(year + "-" + (monthOfYear + 1) + "-0" + dayOfMonth);
+                            else
+                                date.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+
+                        }
+                    }, mYear, mMonth, mDay);
+            dpd.show();
+        }
+
+        if(v == departureTime)
+        {
+            // Process to get Current Time
+            final Calendar c = Calendar.getInstance();
+            int mHour = c.get(Calendar.HOUR_OF_DAY);
+            int mMinute = c.get(Calendar.MINUTE);
+
+            // Launch Time Picker Dialog
+            TimePickerDialog tpd = new TimePickerDialog(this,
+                    new TimePickerDialog.OnTimeSetListener() {
+
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay,
+                                              int minute) {
+                            // Display Selected time in textbox
+                            String hoursString = Integer.toString(hourOfDay);
+                            String minuteString = Integer.toString(minute);
+                            if(minute<10)
+                                minuteString = "0"+minute;
+                            if(hourOfDay<10)
+                                hoursString = "0"+ hourOfDay;
+
+                            departureTime.setText(hoursString + ":" + minuteString);
+                        }
+                    }, mHour, mMinute, false);
+            tpd.show();
+        }
 
     }
 
@@ -229,7 +294,7 @@ public class MainMenu extends AppCompatActivity {
 
                 }
 
-                String timePattern = "\\d{2}:\\d{2}:\\d{2}";
+                String timePattern = "\\d{2}:\\d{2}";
                 if(! departureString.matches(timePattern))
                 {
                     departureTime.setError("Invalid Time");

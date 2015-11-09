@@ -15,25 +15,71 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.20">
+            android:layout_weight="0.1">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Select Travel"
-                android:id="@+id/textView" />
+                android:id="@+id/textView"
+                android:textStyle="bold"/>
 
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/spinnerRoute"
-
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textAlignment="textEnd"
                 android:gravity="end" />
         </LinearLayout>
 
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Date"
+                android:id="@+id/textView2"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:layout_marginBottom="20dp">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:ems="10"
+                android:id="@+id/date"
+                android:hint="Date (aaaa-mm-dd)"
+                android:focusable="false"
+                android:editable="false"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Departure Time"
+                android:id="@+id/textView5"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -44,26 +90,12 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="date"
-                android:ems="10"
-                android:id="@+id/date"
-                android:hint="Date (aaaa-mm-dd)" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="74dp"
-            android:gravity="bottom">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:inputType="time"
                 android:ems="10"
                 android:id="@+id/departureTime"
-
-                android:hint="Departure Time (hh:mm:ss)" />
+                android:focusable="false"
+                android:editable="false"
+                android:hint="Departure Time (hh:mm)" />
         </LinearLayout>
 
         <LinearLayout
@@ -71,7 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:gravity="bottom"
-            android:layout_weight="0.8"
+            android:layout_weight="0.9"
             android:layout_margin="0dp">
 
             <Button
