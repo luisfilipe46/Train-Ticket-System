@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -34,6 +35,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,10 +61,11 @@ public class MainMenu extends AppCompatActivity {
     private TextView courseInfo;
     private Button btnGetTrains;
    // private TextView restResult;
-    private RelativeLayout progressBar;
+    private ProgressBar progressBar;
     private TableLayout availableTravels;
     HashMap<String, String> stationsMap = new HashMap<String, String>();
     private String token;
+    private TextView dateText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,16 +102,19 @@ public class MainMenu extends AppCompatActivity {
         spinnerStart = (Spinner) findViewById(R.id.spinner_start_station);
         spinnerEnd = (Spinner) findViewById(R.id.spinner_end_station);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        progressBar = (RelativeLayout)findViewById(R.id.loadingPanel);
+
         mActivityTitle = getTitle().toString();
         setTitle("Choose Travel");
         courseInfo = (TextView) findViewById(R.id.course_info);
         btnGetTrains = (Button) findViewById(R.id.button_getTrains);
+        dateText = (TextView) findViewById(R.id.dateText);
 
         availableTravels = (TableLayout) findViewById(R.id.available_trains);
 
         //
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
+
 
         // add side menu items
         addDrawerItems();
@@ -137,14 +144,14 @@ public class MainMenu extends AppCompatActivity {
         stationsMap.put("22","Faria Guimaraes");
         stationsMap.put("31", "Azurara");
         stationsMap.put("32", "Vila do Conde");
-        stationsMap.put("01","Trindade");
+        stationsMap.put("01", "Trindade");
 
 
 
     }
 
     private void addDrawerItems() {
-        String[] osArray = { "My Tickets", "REST Test GET", "REST Client POST", "Add Credit Card", "Linux" };
+        String[] osArray = { "My Tickets",  "Add Credit Card", "Quit" };
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);
     }
@@ -167,59 +174,11 @@ public class MainMenu extends AppCompatActivity {
                     Bundle info = new Bundle();
                     info.putString("email", email);
                     info.putString("password", pass);
-                    info.putString("token",token);
+                    info.putString("token", token);
                     intent.putExtras(info);
                     startActivity(intent);
-                } else if (position == 1) { //REST GET TEST
 
-                    String result;
-                    try {
-                        restClient.setMethod("GET");
-                        restClient.setUrl("https://testcake3333.herokuapp.com/api/credit_cards/123456.json");
-                        result = restClient.execute();
-                        Toast.makeText(MainMenu.this, result, Toast.LENGTH_SHORT).show();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                } else if (position == 2) { //REST POST TEST
-
-                    restClient.setMethod("POST");
-                    restClient.setUrl("https://httpbin.org/post");
-                    restClient.addParam("testeName1", "testeValue1");
-                    restClient.addParam("testeName3", "testeValue3");
-                    progressBar.setVisibility(View.VISIBLE);
-
-                    new Thread(new Runnable() {
-                        public void run() {
-                            try {
-
-                                Thread.sleep(2000);
-                                restClient.execute();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            availableTravels.post(new Runnable() {
-                                public void run() {
-                                    progressBar.setVisibility(View.GONE);
-                                    updateText();
-                                }
-                            });
-                        }
-                    }).start();
-
-
-                    // restResult.setText(result);
-
-                } else if (position == 3) { //Add credit card
+                } else if (position == 1) { //Add credit card
                     DialogAddCard dialogCard = null;
                     try {
 
@@ -227,7 +186,7 @@ public class MainMenu extends AppCompatActivity {
                         Bundle bundle = new Bundle();
                         bundle.putString("email", email);
                         bundle.putString("pass", pass);
-                        bundle.putString("token",token);
+                        bundle.putString("token", token);
                         dialogCard.setArguments(bundle);
                         dialogCard.show(getFragmentManager(), "Cenas");
 
@@ -238,8 +197,10 @@ public class MainMenu extends AppCompatActivity {
                     }
 
 
-                } else {
-                    Toast.makeText(MainMenu.this, "Nothing to do", Toast.LENGTH_SHORT).show();
+                } else if (position == 2) {
+
+                    Toast.makeText(MainMenu.this, "Quiting", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }
         });
@@ -247,11 +208,7 @@ public class MainMenu extends AppCompatActivity {
 
     }
 
-    private void updateText() {
-        String str = restClient.getReturn();
-        //restResult.setText(str)
-        Toast.makeText(MainMenu.this, str, Toast.LENGTH_SHORT).show();
-    }
+
 
     private void updateAvailableTravels(JSONArray arr, JSONArray arrCourse) throws JSONException {
         availableTravels.removeAllViews();
@@ -260,10 +217,10 @@ public class MainMenu extends AppCompatActivity {
         {
             if(i!=0)
             {
-                course = course + " - ";
+                course = course + " -> ";
             }
 
-            course = course + arrCourse.get(i).toString();
+            course = course + stationsMap.get(arrCourse.get(i).toString());
         }
 
         courseInfo.setText("Travel route: " + course);
@@ -274,10 +231,10 @@ public class MainMenu extends AppCompatActivity {
         String destinyStation = arrCourse.get(arrCourse.length()-1).toString();
         //destinyStation = stationsMap.get(destinyStation);
 
-        progressBar.setVisibility(View.GONE);
+
         btnGetTrains.setEnabled(true);
 
-
+        boolean changeTrain = false;
 
         for (int i = 0; i < arr.length(); i++)
         {
@@ -292,12 +249,15 @@ public class MainMenu extends AppCompatActivity {
             hour1 = hour1.substring(11,19);
             String hour2 = arr.getJSONObject(i).getString("arrival_time");
             hour2 = hour2.substring(11,19);
+            String price = "2";
             String line = "";
+
             if(station1.equals(originStation))
             {
                 line = "Line 1";
             }
             else {
+                changeTrain = true;
                 line = "Line 2";
             }
 
@@ -308,7 +268,7 @@ public class MainMenu extends AppCompatActivity {
 
             row.setLayoutParams(lp);
             Button addBtn = new Button(this);
-            addBtn.setText("Buy");
+            addBtn.setText("Buy (" + price + "€)");
             addBtn.setOnClickListener(new BuyButtonOnClickListener(hour1,hour2,station1,station2));
 
             TableLayout innerTable = new TableLayout(this);
@@ -383,9 +343,28 @@ public class MainMenu extends AppCompatActivity {
 
 
         }
+
+        if(changeTrain)
+        {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    context);
+
+            // set title
+            alertDialogBuilder.setTitle("Train change");
+
+            // set dialog message
+            alertDialogBuilder.setMessage("Destiny station is not in the same line as Origin, you have to buy 2 tickets");
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+        }
     }
 
     public void getTravels(View view) throws InterruptedException {
+        boolean valid = true;
         if(spinnerEnd.getSelectedItemPosition() == spinnerStart.getSelectedItemPosition())
         {
 
@@ -403,10 +382,32 @@ public class MainMenu extends AppCompatActivity {
 
             // show it
             alertDialog.show();
+            valid = false;
 
         }
-        else // make request To DB and show available options
+        else
         {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dateFormat.setLenient(false);
+            try {
+
+                if(dateFormat.parse(dateText.getText().toString()) == null)
+                {
+                    valid = false;
+                    dateText.setError("Invalid date");
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+                valid = false;
+                dateText.setError("Invalid date");
+
+            }
+        }
+
+
+        if(valid) // make request To DB and show available options
+        {
+
             progressBar.setVisibility(View.VISIBLE);
             btnGetTrains.setEnabled(false);
 
@@ -433,22 +434,47 @@ public class MainMenu extends AppCompatActivity {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
 
+        boolean valid = true;
 
-        //restClient.setUrl("https://httpbin.org/post");
-        restClient.setUrl(buyTicketsURL);
-        restClient.setMethod("POST");
-        restClient.addParam("origin_station", station1);
-        restClient.addParam("destiny_station",station2);
-        //restClient.addParam("arrival_time",hour1);
-        restClient.addParam("departure_time",hour1);
-        String day = "2015-10-06";
-        restClient.addParam("day",day);
-        addtoken();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        try {
+
+            if(dateFormat.parse(dateText.getText().toString()) == null)
+            {
+                valid = false;
+                dateText.setError("Invalid date");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            valid = false;
+            dateText.setError("Invalid date");
+
+        }
+
+        if(valid) {
+
+            //restClient.setUrl("https://httpbin.org/post");
+            restClient.setUrl(buyTicketsURL);
+            restClient.setMethod("POST");
+            restClient.addParam("origin_station", station1);
+            restClient.addParam("destiny_station", station2);
+            //restClient.addParam("arrival_time",hour1);
+            restClient.addParam("departure_time", hour1);
+
+            String day = dateText.getText().toString();
+
+            restClient.addParam("day", day);
+            addtoken();
         /*restClient.addHeader("email",email);
         restClient.addHeader("password",pass);*/
 
-        new BuyTicketTask().execute();
 
+            progressBar.setVisibility(View.VISIBLE);
+            new BuyTicketTask().execute();
+
+
+        }
 
 
 
@@ -475,6 +501,7 @@ public class MainMenu extends AppCompatActivity {
         @Override
         public void onClick(View v)
         {
+
             buyTicket(startStation,endStation,hour1,hour2);
         }
 
@@ -559,7 +586,7 @@ public class MainMenu extends AppCompatActivity {
                      Log.e("GET_TRAVELS", "response: " + restClient.getReturn());
                  } else {
                      try {
-                         updateAvailableTravels(arr,arrCourse);
+                         updateAvailableTravels(arr, arrCourse);
                      } catch (JSONException e) {
                          e.printStackTrace();
                      }
@@ -571,6 +598,7 @@ public class MainMenu extends AppCompatActivity {
              }
 
 
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -579,7 +607,11 @@ public class MainMenu extends AppCompatActivity {
          * delivers it the parameters given to AsyncTask.execute() */
         @Override
         protected String doInBackground(Void... params) {
-
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             try {
                 return restClient.execute();
             } catch (IOException | JSONException | InterruptedException e) {
@@ -606,15 +638,16 @@ public class MainMenu extends AppCompatActivity {
             }
             else if(result.equals("400"))
             {
+
                 Log.i("Retorno: ","cenas 400: "+  restClient.getReturn());
-                /*try {
+                try {
 
                     JSONObject json = new JSONObject(restClient.getReturn());
                     String erro = json.get("error").toString();
                     Toast.makeText(MainMenu.this, erro, Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }*/
+                }
 
             }
             else
@@ -622,10 +655,7 @@ public class MainMenu extends AppCompatActivity {
                 Log.e("COMPRA BILHETE", "Retorno nao esperado: " + result);
 
             }
-
-
-
-
+            progressBar.setVisibility(View.GONE);
 
         }
     }

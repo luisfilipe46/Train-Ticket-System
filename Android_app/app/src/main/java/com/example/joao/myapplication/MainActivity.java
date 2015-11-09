@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -30,13 +31,15 @@ public class MainActivity extends AppCompatActivity {
     MessageDigest digester;
 
     byte[] passEncrypted;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
 
         try {
             restClient = RestClient.getInstance();
@@ -143,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
                 restClient.addParam("password", Arrays.toString(passEncrypted));
 
                 //execute
+                progressBar.setVisibility(View.VISIBLE);
                 new RegisterTask().execute();
 
             }
@@ -165,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
                 restClient.addParam("password", Arrays.toString(passEncrypted));
                 //restClient.addParam("password", "test");
 
+                progressBar.setVisibility(View.VISIBLE);
                 new LoginTask().execute();
 
 
@@ -192,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
          * delivers it the parameters given to AsyncTask.execute() */
         @Override
         protected String doInBackground(Void... params) {
+
 
             try {
                 return restClient.execute();
@@ -254,6 +260,8 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
+
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -286,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 Toast.makeText(MainActivity.this,"Error creating User", Toast.LENGTH_SHORT).show();
             }
+            progressBar.setVisibility(View.GONE);
         }
     }
 

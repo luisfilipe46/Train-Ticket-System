@@ -187,7 +187,7 @@ public class DialogAddCard extends DialogFragment {
                 Toast.makeText(getContext(), "Success creating card", Toast.LENGTH_SHORT).show();
 
             }
-            else if (result.equals("400")){
+            else if (result.equals("400") || result.equals("401")){
                 Toast.makeText(getContext(), "Error creating card", Toast.LENGTH_SHORT).show();
             }
             else

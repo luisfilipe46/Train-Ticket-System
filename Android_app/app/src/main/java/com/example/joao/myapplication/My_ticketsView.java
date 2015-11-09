@@ -7,8 +7,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +25,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +49,7 @@ import java.io.OptionalDataException;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.Vector;
 
 public class My_ticketsView extends AppCompatActivity implements Serializable {
@@ -56,6 +60,8 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
     RestClient restClient;
     Button btnUpdate;
     private String URL = "https://testcake3333.herokuapp.com/api/tickets.json";
+    HashMap<String, String> stationsMap = new HashMap<String, String>();
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +91,9 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
             }
         });
 
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
+
 
         allTickets = (LinearLayout) findViewById(R.id.allTickets);
         //tickets = AllTickets.getInstance();
@@ -103,8 +112,23 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
             serializeTickets();
         }
 
+        initializeStationsMap();
         //updateTickets();
         showTickets();
+
+    }
+
+    private void initializeStationsMap() {
+
+        stationsMap.put("11", "S. Joao");
+        stationsMap.put("12", "IPO");
+        stationsMap.put("21", "Aliados");
+        stationsMap.put("22","Faria Guimaraes");
+        stationsMap.put("31", "Azurara");
+        stationsMap.put("32", "Vila do Conde");
+        stationsMap.put("01", "Trindade");
+
+
 
     }
 
@@ -163,7 +187,12 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
 
             TextView dateText = new TextView(this);
             dateText.setText(ticket.date);
+            dateText.setTypeface(null, Typeface.BOLD);
             date.addView(dateText);
+
+            TextView priceText = new TextView(this);
+            priceText.setText("   Price: " + ticket.price + "€");
+            date.addView(priceText);
 
 
             LinearLayout ticketInfo = new LinearLayout(this);
@@ -176,22 +205,27 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
 
             //origin station
             TextView originStation = new TextView(this);
-            originStation.setText("Station " + ticket.startStation + " " + ticket.hourStart);
+            originStation.setText(stationsMap.get(ticket.startStation) + " " + ticket.hourStart.substring(0,5));
             LinearLayout.LayoutParams originStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             originStationParams.weight = 3f;
             originStation.setLayoutParams(originStationParams);
 
+
             // "to" text
             TextView toText = new TextView(this);
             toText.setText(" to ");
+
             toText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
 
             //end station
             TextView endStation = new TextView(this);
-            endStation.setText("Station " + ticket.endStation + " " + ticket.hourEnd);
+            endStation.setText(stationsMap.get(ticket.endStation) + " " + ticket.hourEnd.substring(0,5));
             LinearLayout.LayoutParams endStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             endStationParams.weight = 3f;
             endStation.setLayoutParams(endStationParams);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                endStation.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            }
 
             // button to see qrCode
 
@@ -242,6 +276,7 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
         restClient.addHeader("token", token);
 
         btnUpdate.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
         new updateTicketsTask().execute();
 
 
@@ -391,6 +426,8 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
             {
 
             }
+
+            progressBar.setVisibility(View.GONE);
         }
     }
 

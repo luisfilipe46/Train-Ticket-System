@@ -16,6 +16,7 @@
 
 
 
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -79,21 +80,38 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="47dp">
+            android:layout_height="47dp"
+            android:gravity="center_horizontal">
 
-            <TextView
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text=""
-                android:id="@+id/course_info" />
+                android:inputType="date"
+                android:ems="10"
+                android:id="@+id/dateText"
+                android:hint="Date (aaaa-mm-dd)"
+                android:gravity="center_horizontal" />
         </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="186dp"
-            android:layout_weight="0.81">
+            android:layout_height="47dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text=""
+                android:id="@+id/course_info" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="227dp"
+            android:layout_weight="0.63">
 
 
 
@@ -135,15 +153,17 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/loadingPanel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center" >
+        android:layout_height="match_parent">
 
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:indeterminate="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
+            android:id="@+id/progressBar"
+            android:focusable="true" />
     </RelativeLayout>
 
     <ListView
@@ -152,5 +172,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="left|start"
         android:id="@+id/navList" />
+
+
+
+
 
 </android.support.v4.widget.DrawerLayout>
