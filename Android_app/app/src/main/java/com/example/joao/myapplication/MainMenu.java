@@ -230,6 +230,7 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
                         bundle.putString("token", token);
                         dialogCard.setArguments(bundle);
                         dialogCard.show(getFragmentManager(), "Cenas");
+                        //dialogCard.addListeners();
 
                         // dialogCard.setListeners();
 

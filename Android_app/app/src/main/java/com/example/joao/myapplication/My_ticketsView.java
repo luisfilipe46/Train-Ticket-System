@@ -296,8 +296,7 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
         @Override
         public void onClick(View v)
         {
-            //new IntentIntegrator(My_ticketsView.this).initiateScan();
-            //Encode with a QR Code image
+
 
             int qrCodeDimention = 256;
 

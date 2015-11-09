@@ -39,7 +39,9 @@
         android:inputType="date"
         android:ems="10"
         android:id="@+id/dateCard"
-        android:hint="date (aaaa-mm-dd)" />
+        android:hint="date (aaaa-mm-dd)"
+        android:focusable="false"
+        android:editable="false"/>
 
     <LinearLayout
         android:orientation="horizontal"

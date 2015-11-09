@@ -1,6 +1,7 @@
 package com.example.joao.myapplication;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,11 +24,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Created by joao on 06-11-2015.
  */
-public class DialogAddCard extends DialogFragment {
+public class DialogAddCard extends DialogFragment implements View.OnClickListener {
     RestClient restClient;
     String email,pass,token,URL = "https://testcake3333.herokuapp.com/api/credit_cards.json";
     EditText number,validity,type;
@@ -66,6 +69,37 @@ public class DialogAddCard extends DialogFragment {
 
 
 
+    @Override
+    public void onClick(View v) {
+        if (v == validity) {
+
+            // Process to get Current Date
+            final Calendar c = Calendar.getInstance();
+            int mYear = c.get(Calendar.YEAR);
+            int mMonth = c.get(Calendar.MONTH);
+            int mDay = c.get(Calendar.DAY_OF_MONTH);
+
+            // Launch Date Picker Dialog
+            DatePickerDialog dpd = new DatePickerDialog(getContext(),
+                    new DatePickerDialog.OnDateSetListener() {
+
+                        @Override
+                        public void onDateSet(DatePicker view, int year,
+                                              int monthOfYear, int dayOfMonth) {
+                            // Display Selected date in textbox
+                            if(dayOfMonth<10)
+                                validity.setText(year + "-" + (monthOfYear + 1) + "-0" + dayOfMonth);
+                            else
+                                validity.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+
+                        }
+                    }, mYear, mMonth, mDay);
+            dpd.show();
+        }
+    }
+
+
+
 
     private boolean getParameters() {
         Boolean valid = true;
@@ -75,6 +109,7 @@ public class DialogAddCard extends DialogFragment {
             number = (EditText) getDialog().findViewById(R.id.numberCard);
             type = (EditText) getDialog().findViewById(R.id.typeCard);
             validity = (EditText) getDialog().findViewById(R.id.dateCard);
+
         }
 
 
@@ -121,6 +156,10 @@ public class DialogAddCard extends DialogFragment {
     public void setListeners(View view) {
         Button add = (Button) view.findViewById(R.id.addCard);
         Button cancel = (Button) view.findViewById(R.id.cancelCard);
+        number = (EditText) view.findViewById(R.id.numberCard);
+        type = (EditText) view.findViewById(R.id.typeCard);
+        validity = (EditText) view.findViewById(R.id.dateCard);
+        validity.setOnClickListener(this);
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,6 +190,9 @@ public class DialogAddCard extends DialogFragment {
 
 
     }
+
+
+
 
     // ------------------------------------------------------------------- REST TASKS ---------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
