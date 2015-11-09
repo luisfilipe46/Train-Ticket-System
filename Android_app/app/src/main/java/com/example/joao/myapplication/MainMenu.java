@@ -249,7 +249,7 @@ public class MainMenu extends AppCompatActivity {
             hour1 = hour1.substring(11,19);
             String hour2 = arr.getJSONObject(i).getString("arrival_time");
             hour2 = hour2.substring(11,19);
-            String price = "2";
+            String price = arr.getJSONObject(i).getString("price");
             String line = "";
 
             if(station1.equals(originStation))
@@ -607,11 +607,7 @@ public class MainMenu extends AppCompatActivity {
          * delivers it the parameters given to AsyncTask.execute() */
         @Override
         protected String doInBackground(Void... params) {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            
             try {
                 return restClient.execute();
             } catch (IOException | JSONException | InterruptedException e) {
@@ -647,6 +643,7 @@ public class MainMenu extends AppCompatActivity {
                     Toast.makeText(MainMenu.this, erro, Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(MainMenu.this, "Error Buying Ticket", Toast.LENGTH_SHORT).show();
                 }
 
             }
