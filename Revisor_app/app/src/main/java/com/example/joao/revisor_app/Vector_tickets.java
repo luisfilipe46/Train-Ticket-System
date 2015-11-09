@@ -7,6 +7,7 @@ import java.util.Vector;
  */
 public class Vector_tickets {
     public Vector<Ticket> tickets;
+    public Vector<Integer> ticketsForValidation;
     private static Vector_tickets ourInstance = new Vector_tickets();
 
     public static Vector_tickets getInstance() {
@@ -15,6 +16,7 @@ public class Vector_tickets {
 
     private Vector_tickets() {
         tickets = new Vector<>();
+        ticketsForValidation = new Vector<>();
     }
 
     private Vector<Ticket> getTickets()

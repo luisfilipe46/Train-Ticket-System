@@ -63,7 +63,7 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
     private String mActivityTitle;
     private RestClient restClient;
     private TextView courseInfo;
-    private Button btnGetTrains,btnSetDate;
+    private Button btnGetTrains;
    // private TextView restResult;
     private ProgressBar progressBar;
     private TableLayout availableTravels;
@@ -116,8 +116,8 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
         dateText = (TextView) findViewById(R.id.dateText);
 
         availableTravels = (TableLayout) findViewById(R.id.available_trains);
-        btnSetDate = (Button) findViewById(R.id.btnSetDate);
-        btnSetDate.setOnClickListener(this);
+
+        dateText.setOnClickListener(this);
 
 
 
@@ -149,7 +149,7 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        if (v == btnSetDate) {
+        if (v == dateText) {
 
             // Process to get Current Date
             final Calendar c = Calendar.getInstance();

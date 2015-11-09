@@ -189,7 +189,7 @@ public class QRCodeScan_Activity extends AppCompatActivity {
         ticketInfoParams.setMargins(15,0,15,0);
         ticketInfoParams.weight = 9f;
         ticketInfo.setLayoutParams(ticketInfoParams);
-        //ticketInfo.setBackgroundColor(Color.GREEN);
+
 
 //origin station
         TextView originStation = new TextView(this);
@@ -268,31 +268,31 @@ public class QRCodeScan_Activity extends AppCompatActivity {
 
         protected void onPostExecute(String result) {
 
+            if(!result.equals("200"))
+            {
+                vecTickets.ticketsForValidation.add(t.id);
+            }
+
             progressBar.setVisibility(View.GONE);
+
 
             if (result.equals("No Connection"))
             {
                 Toast.makeText(QRCodeScan_Activity.this, "Can't connect to server", Toast.LENGTH_SHORT).show();
+
             } else
             {
                 if(result.equals("200"))
                 {
-                    Toast.makeText(QRCodeScan_Activity.this, "Ticket Validated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(QRCodeScan_Activity.this, "Ticket Validated on Server", Toast.LENGTH_SHORT).show();
                     t.used = true;
                 }
                 else if(result.equals("fail"))
                 {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(QRCodeScan_Activity.this);
 
-                    builder.setMessage("Error connecting to server")
-                            .setTitle("Error");
-
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
                 }
                 else {
-                    Toast.makeText(QRCodeScan_Activity.this, "Code: " + result + " (fail)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(QRCodeScan_Activity.this, "Not validated on server, in the end of travel comunicate", Toast.LENGTH_SHORT).show();
                 }
             }
 

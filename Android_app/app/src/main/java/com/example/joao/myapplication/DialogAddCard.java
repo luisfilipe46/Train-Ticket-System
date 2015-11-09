@@ -80,7 +80,7 @@ public class DialogAddCard extends DialogFragment implements View.OnClickListene
             int mDay = c.get(Calendar.DAY_OF_MONTH);
 
             // Launch Date Picker Dialog
-            DatePickerDialog dpd = new DatePickerDialog(getContext(),
+            DatePickerDialog dpd = new DatePickerDialog(v.getContext(),
                     new DatePickerDialog.OnDateSetListener() {
 
                         @Override
@@ -235,13 +235,14 @@ public class DialogAddCard extends DialogFragment implements View.OnClickListene
             } else {
 
                 if (result.equals("201")) {
+                    Toast.makeText(getActivity(), "Success creating card", Toast.LENGTH_SHORT).show();
                     getDialog().dismiss();
-                    Toast.makeText(getContext(), "Success creating card", Toast.LENGTH_SHORT).show();
+
 
                 } else if (result.equals("400") || result.equals("401")) {
-                    Toast.makeText(getContext(), "Error creating card", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Error creating card", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), "Error code " + result, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Error code " + result, Toast.LENGTH_SHORT).show();
                     Log.i("CODE 500 ", restClient.getReturn());
                 }
             }

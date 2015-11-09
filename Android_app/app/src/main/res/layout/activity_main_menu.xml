@@ -80,7 +80,9 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="47dp">
+            android:layout_height="47dp"
+            android:layout_marginTop="10dp"
+            android:gravity="bottom|center_horizontal">
 
             <EditText
                 android:layout_width="wrap_content"
@@ -92,15 +94,11 @@
                 android:hint="Date (aaaa/mm/dd)"
                 android:gravity="center_horizontal"
                 android:editable="false"
-                android:clickable="false"
-                android:focusable="false"/>
+                android:focusable="false"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp" />
 
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Set Date"
-                android:id="@+id/btnSetDate" />
+
         </LinearLayout>
 
         <LinearLayout
