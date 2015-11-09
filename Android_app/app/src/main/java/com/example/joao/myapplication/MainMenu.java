@@ -46,6 +46,8 @@ public class MainMenu extends AppCompatActivity {
 
     static String buyTicketsURL = "https://testcake3333.herokuapp.com/api/tickets.json";
     static String getTravelsURL = "https://testcake3333.herokuapp.com/api/timetables_with_final_stations/";
+    static String line1 = "A";
+    static String line2 = "C";
 
     final Context context = this;
     public String name, pass,email;
@@ -235,6 +237,7 @@ public class MainMenu extends AppCompatActivity {
         btnGetTrains.setEnabled(true);
 
         boolean changeTrain = false;
+        String previousLine = "";
 
         for (int i = 0; i < arr.length(); i++)
         {
@@ -250,15 +253,14 @@ public class MainMenu extends AppCompatActivity {
             String hour2 = arr.getJSONObject(i).getString("arrival_time");
             hour2 = hour2.substring(11,19);
             String price = arr.getJSONObject(i).getString("price");
-            String line = "";
+            String line = arr.getJSONObject(i).getString("line");
 
-            if(station1.equals(originStation))
+            if(previousLine=="")
             {
-                line = "Line 1";
+                previousLine = line;
             }
-            else {
+            else if(changeTrain == false && !previousLine.equals(line)){ //Se a linha mudou
                 changeTrain = true;
-                line = "Line 2";
             }
 
 
@@ -299,34 +301,15 @@ public class MainMenu extends AppCompatActivity {
             innerTable.setLayoutParams(param);
 
             TextView lineText = new TextView(this);
-            lineText.setText(line);
+            lineText.setText("Line " + line);
 
-
-
-            // Black line on end
-            View endLine = new View(this);
-            LinearLayout.LayoutParams lineParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,5);
-            endLine.setLayoutParams(lineParams);
-            if(line.equals("Line 1"))
-            {
-                endLine.setBackgroundColor(Color.BLACK);
-            }
-            else {
-                endLine.setBackgroundColor(Color.BLUE);
-            }
-
-            // White line on end
-            View whiteLine = new View(this);
-            LinearLayout.LayoutParams whiteParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,15);
-            whiteLine.setLayoutParams(whiteParams);
-            whiteLine.setBackgroundColor(Color.WHITE);
 
 
 
             row.addView(innerTable);
             row.addView(lineText);
             row.addView(addBtn);
-            if(line.equals("Line 1"))
+            if(line.equals(line1))
                 {
                     row.setBackgroundResource(R.drawable.table_line1);
                 }

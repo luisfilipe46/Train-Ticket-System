@@ -241,7 +241,7 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
                 qrcodeBtn.setClickable(false);
             }
             LinearLayout.LayoutParams qrcodeBtnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            qrcodeBtnParams.weight = 1f;
+
             qrcodeBtn.setLayoutParams(qrcodeBtnParams);
 
 

@@ -2,10 +2,8 @@ package com.example.joao.revisor_app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,22 +11,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,11 +30,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SimpleTimeZone;
-import java.util.Vector;
 
 public class MainMenu extends AppCompatActivity {
 
@@ -51,7 +38,7 @@ public class MainMenu extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
 
-    Spinner spinnerStart,spinnerEnd;
+    Spinner spinnerRoute;
     String token,email,pass;
     StationsMap stationsMap = StationsMap.getInstance();
     Vector_tickets vecTickets;
@@ -60,7 +47,7 @@ public class MainMenu extends AppCompatActivity {
     private TextView date,departureTime;
     private String updateTicketsURL = "https://testcake3333.herokuapp.com/api/tickets";
     private ProgressBar progressBar;
-
+    private CheckInternetConnection connection = CheckInternetConnection.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +66,8 @@ public class MainMenu extends AppCompatActivity {
 
 
 
-        spinnerStart = (Spinner) findViewById(R.id.spinnerStart);
-        spinnerEnd = (Spinner) findViewById(R.id.spinnerEnd);
+        spinnerRoute = (Spinner) findViewById(R.id.spinnerRoute);
+
         btnUpdateTickets = (Button) findViewById(R.id.btnUpdateTickets);
         date = (TextView) findViewById(R.id.date);
         departureTime = (TextView) findViewById(R.id.departureTime);
@@ -112,8 +99,8 @@ public class MainMenu extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         // Apply the adapter to the spinner
-        spinnerStart.setAdapter(adapter);
-        spinnerEnd.setAdapter(adapter);
+        spinnerRoute.setAdapter(adapter);
+
 
         // add side menu items
         addDrawerItems();
@@ -174,9 +161,22 @@ public class MainMenu extends AppCompatActivity {
     public void updateTickets(View view) {
 
         if(getFields()){
+
+
+
+            String toSplit = spinnerRoute.getSelectedItem().toString();
+            String[] parts = toSplit.split("->");
+            String originName = parts[0];
+            String destinyName = parts[1];
+
+            String origin = stationsMap.getStationId(originName);
+            String destiny= stationsMap.getStationId(destinyName);
+
+
+
+
             restClient.setMethod("GET");
-            String origin = (String) stationsMap.getStationId(spinnerStart.getSelectedItem().toString());
-            String destiny= (String)  stationsMap.getStationId(spinnerEnd.getSelectedItem().toString());
+
             String dateText = date.getText().toString();
             String departureTimeText = this.departureTime.getText().toString();
             restClient.setUrl(updateTicketsURL + "/" + origin +"/" + destiny + "/"+ dateText + "/"+ departureTimeText + ".json");
@@ -310,86 +310,101 @@ public class MainMenu extends AppCompatActivity {
     //
     //
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     private class updateTicketsTask extends AsyncTask<Void,Void,String> {
 
         @Override
         protected String doInBackground(Void... params) {
 
-            try {
-                return restClient.execute();
-            } catch (IOException | JSONException | InterruptedException e) {
-                e.printStackTrace();
-                return "fail";
+            if (connection.checkConnection()) {
+                try {
+                    return restClient.execute();
+                } catch (IOException | JSONException | InterruptedException e) {
+                    e.printStackTrace();
+                    return "fail";
 
+                }
+            } else {
+                return "No Connection";
             }
         }
 
 
         protected void onPostExecute(String result) {
-
-
-            if(result.equals("200"))
+            progressBar.setVisibility(View.GONE);
+            if (result.equals("No Connection"))
             {
-                JSONObject json = null;
-                JSONArray arr = null;
-                try {
-
-                    Log.i("UPDATETickets", "resposta : " + restClient.getReturn());
-                    json = new JSONObject(restClient.getReturn());
-                    arr = json.getJSONArray("tickets");
+                Toast.makeText(MainMenu.this, "No internet Connection", Toast.LENGTH_SHORT).show();
+            } else
+            {
 
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                if(arr == null)
+                if(result.equals("200"))
                 {
-                    Log.i("UPDATETickets", "Array de bilhetes nao formado");
-                }
-                else{
+                    JSONObject json = null;
+                    JSONArray arr = null;
                     try {
-                        addTickets(arr);
+
+                        Log.i("UPDATETickets", "resposta : " + restClient.getReturn());
+                        json = new JSONObject(restClient.getReturn());
+                        arr = json.getJSONArray("tickets");
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                    startTicketActivity();
+                    if(arr == null)
+                    {
+                        Log.i("UPDATETickets", "Array de bilhetes nao formado");
+                    }
+                    else{
+                        try {
+                            addTickets(arr);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        startTicketActivity();
+
+                    }
 
                 }
+                else if(result.equals("401"))
+                {
 
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
+
+                    builder.setMessage("Server Errort")
+                            .setTitle("Error");
+
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    // Toast.makeText(MainActivity.this,"Your email/password are incorrect", Toast.LENGTH_SHORT).show();
+                }
+                else if(result.equals("fail"))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
+
+                    builder.setMessage("Error connecting to server")
+                            .setTitle("Error");
+
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+                else {
+                    Toast.makeText(MainMenu.this, "Code: " + result, Toast.LENGTH_SHORT).show();
+                }
             }
-            else if(result.equals("401"))
-            {
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
-
-                builder.setMessage("Server Errort")
-                        .setTitle("Error");
 
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
-
-                // Toast.makeText(MainActivity.this,"Your email/password are incorrect", Toast.LENGTH_SHORT).show();
-            }
-            else if(result.equals("fail"))
-            {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
-
-                builder.setMessage("Error connecting to server")
-                        .setTitle("Error");
-
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-            else {
-                Toast.makeText(MainMenu.this, "Code: " + result, Toast.LENGTH_SHORT).show();
-            }
-
-            progressBar.setVisibility(View.GONE);
         }
     }
 

@@ -30,6 +30,7 @@ public class QRCodeScan_Activity extends AppCompatActivity {
     private String updateTicketsURL = "https://testcake3333.herokuapp.com/api/tickets";
     private String token;
     private ProgressBar progressBar;
+    private CheckInternetConnection connection = CheckInternetConnection.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,17 +226,30 @@ public class QRCodeScan_Activity extends AppCompatActivity {
         return LL;
     }
 
+    // ------------------------------------------------------------------- REST TASKS ---------------------------------------------------------------------------------
+    //
+    //
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     private class validateTicketTask extends AsyncTask<Void,Void,String> {
 
         @Override
         protected String doInBackground(Void... params) {
 
-            try {
-                return restClient.execute();
-            } catch (IOException | JSONException | InterruptedException e) {
-                e.printStackTrace();
-                return "fail";
+            if (connection.checkConnection()) {
+                try {
+                    return restClient.execute();
+                } catch (IOException | JSONException | InterruptedException e) {
+                    e.printStackTrace();
+                    return "fail";
 
+                }
+            } else {
+                return "No Connection";
             }
         }
 
@@ -244,23 +258,29 @@ public class QRCodeScan_Activity extends AppCompatActivity {
 
             progressBar.setVisibility(View.GONE);
 
-            if(result.equals("200"))
+            if (result.equals("No Connection"))
             {
-                Toast.makeText(QRCodeScan_Activity.this, "Ticket Validated", Toast.LENGTH_SHORT).show();
-            }
-            else if(result.equals("fail"))
+                Toast.makeText(QRCodeScan_Activity.this, "No internet Connection", Toast.LENGTH_SHORT).show();
+            } else
             {
-                AlertDialog.Builder builder = new AlertDialog.Builder(QRCodeScan_Activity.this);
+                if(result.equals("200"))
+                {
+                    Toast.makeText(QRCodeScan_Activity.this, "Ticket Validated", Toast.LENGTH_SHORT).show();
+                }
+                else if(result.equals("fail"))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(QRCodeScan_Activity.this);
 
-                builder.setMessage("Error connecting to server")
-                        .setTitle("Error");
+                    builder.setMessage("Error connecting to server")
+                            .setTitle("Error");
 
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-            else {
-                Toast.makeText(QRCodeScan_Activity.this, "Code: " + result + " (fail)", Toast.LENGTH_SHORT).show();
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+                else {
+                    Toast.makeText(QRCodeScan_Activity.this, "Code: " + result + " (fail)", Toast.LENGTH_SHORT).show();
+                }
             }
 
             finish();
