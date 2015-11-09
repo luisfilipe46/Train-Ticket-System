@@ -63,10 +63,10 @@ Router::scope('/api', function ($routes) {
             'pass' => ['station1', 'station2']
         ]
     );
-    $routes->connect('/timetables_with_final_stations/:station1/:station2',
+    $routes->connect('/timetables_with_final_stations/:station1/:station2/:day',
         ['controller' => 'Timetables', 'action' => 'timetableBetweenFinalStations', '_method' => 'GET'],
         [
-            'pass' => ['station1', 'station2']
+            'pass' => ['station1', 'station2', 'day']
         ]
     );
     $routes->connect('/tickets/:origin_station/:destiny_station/:day/:departure_time',
