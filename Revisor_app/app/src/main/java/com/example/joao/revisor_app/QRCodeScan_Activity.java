@@ -74,6 +74,7 @@ public class QRCodeScan_Activity extends AppCompatActivity {
     }
 
     private void validateTicket(String qrCode) {
+
         final Ticket t = vecTickets.existsTicket(qrCode);
 
         if(t==null)

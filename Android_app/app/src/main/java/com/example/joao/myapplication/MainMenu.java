@@ -1,6 +1,7 @@
 package com.example.joao.myapplication;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -37,12 +39,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 
-
-public class MainMenu extends AppCompatActivity {
+public class MainMenu extends AppCompatActivity implements View.OnClickListener {
 
     static String buyTicketsURL = "https://testcake3333.herokuapp.com/api/tickets.json";
     static String getTravelsURL = "https://testcake3333.herokuapp.com/api/timetables_with_final_stations/";
@@ -61,7 +63,7 @@ public class MainMenu extends AppCompatActivity {
     private String mActivityTitle;
     private RestClient restClient;
     private TextView courseInfo;
-    private Button btnGetTrains;
+    private Button btnGetTrains,btnSetDate;
    // private TextView restResult;
     private ProgressBar progressBar;
     private TableLayout availableTravels;
@@ -114,6 +116,10 @@ public class MainMenu extends AppCompatActivity {
         dateText = (TextView) findViewById(R.id.dateText);
 
         availableTravels = (TableLayout) findViewById(R.id.available_trains);
+        btnSetDate = (Button) findViewById(R.id.btnSetDate);
+        btnSetDate.setOnClickListener(this);
+
+
 
         //
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
@@ -140,6 +146,37 @@ public class MainMenu extends AppCompatActivity {
         spinnerStart.setAdapter(adapter);
         spinnerEnd.setAdapter(adapter);
     }
+
+    @Override
+    public void onClick(View v) {
+        if (v == btnSetDate) {
+
+            // Process to get Current Date
+            final Calendar c = Calendar.getInstance();
+            int mYear = c.get(Calendar.YEAR);
+            int mMonth = c.get(Calendar.MONTH);
+            int mDay = c.get(Calendar.DAY_OF_MONTH);
+
+            // Launch Date Picker Dialog
+            DatePickerDialog dpd = new DatePickerDialog(this,
+                    new DatePickerDialog.OnDateSetListener() {
+
+                        @Override
+                        public void onDateSet(DatePicker view, int year,
+                                              int monthOfYear, int dayOfMonth) {
+                            // Display Selected date in textbox
+                            if(dayOfMonth<10)
+                            dateText.setText(year + "-" + (monthOfYear + 1) + "-0" + dayOfMonth);
+                            else
+                                dateText.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+
+                        }
+                    }, mYear, mMonth, mDay);
+            dpd.show();
+        }
+
+    }
+
 
     private void initializeStationsMap() {
         stationsMap.put("11","S. Joao");
@@ -257,7 +294,8 @@ public class MainMenu extends AppCompatActivity {
             String price = arr.getJSONObject(i).getString("price");
             String line = arr.getJSONObject(i).getString("line");
             int lotationMax = arr.getJSONObject(i).getInt("lotation");
-            int passagers = arr.getJSONObject(i).getInt("passagers");
+            int passagers = arr.getJSONObject(i).getInt("passengers");
+            String freeSits = "Passengers: " + passagers + " of " + lotationMax + "(max)";
 
             if(previousLine=="")
             {
@@ -307,11 +345,18 @@ public class MainMenu extends AppCompatActivity {
             TextView lineText = new TextView(this);
             lineText.setText("Line " + line);
 
+            TextView sitsText = new TextView(this);
+            sitsText.setText(freeSits);
+            sitsText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
 
+            TableLayout innerTable2 = new TableLayout(this);
 
+            innerTable2.addView(lineText);
+            innerTable2.addView(sitsText);
 
             row.addView(innerTable);
-            row.addView(lineText);
+            row.addView(innerTable2);
+
             row.addView(addBtn);
             if(line.equals(line1))
                 {
@@ -401,8 +446,8 @@ public class MainMenu extends AppCompatActivity {
             String idStartStation = (String) getKeyFromValue(stationsMap, spinnerStart.getSelectedItem().toString());
             String idEndStation = (String) getKeyFromValue(stationsMap, spinnerEnd.getSelectedItem().toString());
             restClient.setMethod("GET");
-            restClient.setUrl(getTravelsURL + idStartStation + "/" + idEndStation + ".json");
-            Log.i("URL GENERATED", "https://testcake3333.herokuapp.com/api/timetables_with_final_stations/" + idStartStation + "/" + idEndStation +"/" + dateText.getText().toString() + ".json");
+            restClient.setUrl(getTravelsURL + idStartStation + "/" + idEndStation + "/" + dateText.getText().toString() + ".json");
+            Log.i("URL GENERATED", "https://testcake3333.herokuapp.com/api/timetables_with_final_stations/" + idStartStation + "/" + idEndStation + "/" + dateText.getText().toString() + ".json");
 
             new GetTravelsTask().execute();
 
@@ -472,6 +517,8 @@ public class MainMenu extends AppCompatActivity {
 
         restClient.addHeader("token",token);
     }
+
+
 
     public class BuyButtonOnClickListener implements View.OnClickListener
     {
@@ -593,7 +640,7 @@ public class MainMenu extends AppCompatActivity {
 
                     }
                 } else {
-                    Toast.makeText(MainMenu.this, "Error getting Travels", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainMenu.this, "Error getting Travels Code: " + result, Toast.LENGTH_SHORT).show();
                 }
             }
 
