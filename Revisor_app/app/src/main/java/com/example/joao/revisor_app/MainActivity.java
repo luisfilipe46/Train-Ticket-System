@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (result.equals("No Connection"))
             {
-                Toast.makeText(MainActivity.this, "No internet Connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Can't connect to server", Toast.LENGTH_SHORT).show();
             } else
                 {
 

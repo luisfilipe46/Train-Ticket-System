@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     byte[] passEncrypted;
     private ProgressBar progressBar;
 
+    private CheckInternetConnection connection = CheckInternetConnection.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,12 +201,16 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(Void... params) {
 
 
-            try {
-                return restClient.execute();
-            } catch (IOException | JSONException | InterruptedException e) {
-                e.printStackTrace();
-                return "fail";
+            if (connection.checkConnection()) {
+                try {
+                    return restClient.execute();
+                } catch (IOException | JSONException | InterruptedException e) {
+                    e.printStackTrace();
+                    return "fail";
 
+                }
+            } else {
+                return "No Connection";
             }
         }
 
@@ -214,54 +220,55 @@ public class MainActivity extends AppCompatActivity {
          * the result from doInBackground() */
         protected void onPostExecute(String result) {
 
-
-            if(result.equals("200"))
-            {
-                JSONObject json = null;
-                try {
-                    json = new JSONObject(restClient.getReturn());
-                    String token = json.get("token").toString();
-                    Intent intent = new Intent(getBaseContext(), MainMenu.class);
-                    Bundle info = new Bundle();
-                    info.putString("email", email.getText().toString());
-                    info.putString("password", Arrays.toString(passEncrypted));
-                    info.putString("token", token);
-
-                    intent.putExtras(info);
-
-                    startActivity(intent);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-            else if(result.equals("400"))
-            {
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-                builder.setMessage("Your email/password are incorrect")
-                        .setTitle("Failed login");
-
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-
-               // Toast.makeText(MainActivity.this,"Your email/password are incorrect", Toast.LENGTH_SHORT).show();
-            }
-            else if(result.equals("fail"))
-            {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-                builder.setMessage("Error connecting to server")
-                        .setTitle("Failed login");
-
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-
             progressBar.setVisibility(View.GONE);
+
+            if (result.equals("No Connection"))
+            {
+                Toast.makeText(MainActivity.this, "Can't connect to server", Toast.LENGTH_SHORT).show();
+            } else {
+                if (result.equals("200")) {
+                    JSONObject json = null;
+                    try {
+                        json = new JSONObject(restClient.getReturn());
+                        String token = json.get("token").toString();
+                        Intent intent = new Intent(getBaseContext(), MainMenu.class);
+                        Bundle info = new Bundle();
+                        info.putString("email", email.getText().toString());
+                        info.putString("password", Arrays.toString(passEncrypted));
+                        info.putString("token", token);
+
+                        intent.putExtras(info);
+
+                        startActivity(intent);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                } else if (result.equals("400")) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+                    builder.setMessage("Your email/password are incorrect")
+                            .setTitle("Failed login");
+
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    // Toast.makeText(MainActivity.this,"Your email/password are incorrect", Toast.LENGTH_SHORT).show();
+                } else if (result.equals("fail")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+                    builder.setMessage("Error connecting to server")
+                            .setTitle("Failed login");
+
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            }
+
+
         }
     }
 
@@ -271,11 +278,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
 
-            try {
-                return restClient.execute();
-            } catch (IOException | JSONException | InterruptedException e) {
-                return "fail";
-                //e.printStackTrace();
+            if (connection.checkConnection()) {
+                try {
+                    return restClient.execute();
+                } catch (IOException | JSONException | InterruptedException e) {
+                    e.printStackTrace();
+                    return "fail";
+
+                }
+            } else {
+                return "No Connection";
             }
         }
 
@@ -284,17 +296,19 @@ public class MainActivity extends AppCompatActivity {
         /** The system calls this to perform work in the UI thread and delivers
          * the result from doInBackground() */
         protected void onPostExecute(String result) {
-
-
-            if(result.equals("201"))
-            {
-                Toast.makeText(MainActivity.this,"User account registed", Toast.LENGTH_SHORT).show();
-            }
-            else if(result.equals("400"))
-            {
-                Toast.makeText(MainActivity.this,"Error creating User", Toast.LENGTH_SHORT).show();
-            }
             progressBar.setVisibility(View.GONE);
+
+            if (result.equals("No Connection"))
+            {
+                Toast.makeText(MainActivity.this, "Can't connect to server", Toast.LENGTH_SHORT).show();
+            } else {
+                if (result.equals("201")) {
+                    Toast.makeText(MainActivity.this, "User account registed", Toast.LENGTH_SHORT).show();
+                } else if (result.equals("400")) {
+                    Toast.makeText(MainActivity.this, "Error creating User", Toast.LENGTH_SHORT).show();
+                }
+            }
+
         }
     }
 

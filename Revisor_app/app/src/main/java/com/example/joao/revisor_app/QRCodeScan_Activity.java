@@ -260,7 +260,7 @@ public class QRCodeScan_Activity extends AppCompatActivity {
 
             if (result.equals("No Connection"))
             {
-                Toast.makeText(QRCodeScan_Activity.this, "No internet Connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(QRCodeScan_Activity.this, "Can't connect to server", Toast.LENGTH_SHORT).show();
             } else
             {
                 if(result.equals("200"))

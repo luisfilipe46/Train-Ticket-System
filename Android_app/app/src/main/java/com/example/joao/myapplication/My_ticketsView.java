@@ -62,6 +62,7 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
     private String URL = "https://testcake3333.herokuapp.com/api/tickets.json";
     HashMap<String, String> stationsMap = new HashMap<String, String>();
     private ProgressBar progressBar;
+    private CheckInternetConnection connection = CheckInternetConnection.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -364,12 +365,16 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
         @Override
         protected String doInBackground(Void... params) {
 
-            try {
-                return restClient.execute();
-            } catch (IOException | JSONException | InterruptedException e) {
-                e.printStackTrace();
-                return "fail";
+            if (connection.checkConnection()) {
+                try {
+                    return restClient.execute();
+                } catch (IOException | JSONException | InterruptedException e) {
+                    e.printStackTrace();
+                    return "fail";
 
+                }
+            } else {
+                return "No Connection";
             }
         }
 
@@ -380,54 +385,51 @@ public class My_ticketsView extends AppCompatActivity implements Serializable {
         protected void onPostExecute(String result) {
             btnUpdate.setEnabled(true);
 
-            if(result.equals("200"))
+            progressBar.setVisibility(View.GONE);
+
+            if (result.equals("No Connection"))
             {
-                Toast.makeText(My_ticketsView.this, "Sucesso", Toast.LENGTH_SHORT).show();
-                String retorno = restClient.getReturn();
-                Log.i("TICKETS", retorno);
+                Toast.makeText(My_ticketsView.this, "Can't connect to server", Toast.LENGTH_SHORT).show();
+            } else {
 
-                JSONArray arr = null;
+                if (result.equals("200")) {
+                    Toast.makeText(My_ticketsView.this, "Sucesso", Toast.LENGTH_SHORT).show();
+                    String retorno = restClient.getReturn();
+                    Log.i("TICKETS", retorno);
 
-                try {
-                    JSONObject json = new JSONObject(retorno);
-                    arr = json.getJSONArray("tickets");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                    JSONArray arr = null;
 
-                if(arr == null)
-                {
-                    Log.e("TICKETS", "can't form json from server response");
-                }
-                else
-                {
                     try {
-                        tickets.updateTickets(arr);
-                        serializeTickets();
+                        JSONObject json = new JSONObject(retorno);
+                        arr = json.getJSONArray("tickets");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                    showTickets();
+                    if (arr == null) {
+                        Log.e("TICKETS", "can't form json from server response");
+                    } else {
+                        try {
+                            tickets.updateTickets(arr);
+                            serializeTickets();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        showTickets();
+                    }
+                } else if (result.equals("400")) {
+
+                    Toast.makeText(My_ticketsView.this, "Your email/password are incorrect", Toast.LENGTH_SHORT).show();
+
+                    // Toast.makeText(MainActivity.this,"Your email/password are incorrect", Toast.LENGTH_SHORT).show();
+                } else if (result.equals("401")) {
+
+                } else if (result.equals("fail")) {
+
                 }
-            }
-            else if(result.equals("400"))
-            {
-
-                Toast.makeText(My_ticketsView.this, "Your email/password are incorrect", Toast.LENGTH_SHORT).show();
-
-                // Toast.makeText(MainActivity.this,"Your email/password are incorrect", Toast.LENGTH_SHORT).show();
-            }
-            else if(result.equals("401"))
-            {
 
             }
-            else if(result.equals("fail"))
-            {
-
-            }
-
-            progressBar.setVisibility(View.GONE);
         }
     }
 

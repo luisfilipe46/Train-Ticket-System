@@ -30,7 +30,7 @@ public class DialogAddCard extends DialogFragment {
     RestClient restClient;
     String email,pass,token,URL = "https://testcake3333.herokuapp.com/api/credit_cards.json";
     EditText number,validity,type;
-
+    private CheckInternetConnection connection = CheckInternetConnection.getInstance();
 
     public DialogAddCard() throws MalformedURLException {
         restClient = RestClient.getInstance();
@@ -169,11 +169,16 @@ public class DialogAddCard extends DialogFragment {
         @Override
         protected String doInBackground(Void... params) {
 
-            try {
-                return restClient.execute();
-            } catch (IOException | JSONException | InterruptedException e) {
-                return "fail";
-                //e.printStackTrace();
+            if (connection.checkConnection()) {
+                try {
+                    return restClient.execute();
+                } catch (IOException | JSONException | InterruptedException e) {
+                    e.printStackTrace();
+                    return "fail";
+
+                }
+            } else {
+                return "No Connection";
             }
         }
 
@@ -182,18 +187,21 @@ public class DialogAddCard extends DialogFragment {
         /** The system calls this to perform work in the UI thread and delivers
          * the result from doInBackground() */
         protected void onPostExecute(String result) {
-            if(result.equals("201")) {
-                getDialog().dismiss();
-                Toast.makeText(getContext(), "Success creating card", Toast.LENGTH_SHORT).show();
-
-            }
-            else if (result.equals("400") || result.equals("401")){
-                Toast.makeText(getContext(), "Error creating card", Toast.LENGTH_SHORT).show();
-            }
-            else
+            if (result.equals("No Connection"))
             {
-                Toast.makeText(getContext(), "Error code " + result, Toast.LENGTH_SHORT).show();
-                Log.i("CODE 500 ", restClient.getReturn());
+                Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
+            } else {
+
+                if (result.equals("201")) {
+                    getDialog().dismiss();
+                    Toast.makeText(getContext(), "Success creating card", Toast.LENGTH_SHORT).show();
+
+                } else if (result.equals("400") || result.equals("401")) {
+                    Toast.makeText(getContext(), "Error creating card", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Error code " + result, Toast.LENGTH_SHORT).show();
+                    Log.i("CODE 500 ", restClient.getReturn());
+                }
             }
 
 

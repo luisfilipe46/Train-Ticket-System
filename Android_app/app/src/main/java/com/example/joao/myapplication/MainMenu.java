@@ -69,6 +69,8 @@ public class MainMenu extends AppCompatActivity {
     private String token;
     private TextView dateText;
 
+    private CheckInternetConnection connection = CheckInternetConnection.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -540,11 +542,16 @@ public class MainMenu extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
 
-            try {
-                return restClient.execute();
-            } catch (IOException | JSONException | InterruptedException e) {
-                return "fail";
-                //e.printStackTrace();
+            if (connection.checkConnection()) {
+                try {
+                    return restClient.execute();
+                } catch (IOException | JSONException | InterruptedException e) {
+                    e.printStackTrace();
+                    return "fail";
+
+                }
+            } else {
+                return "No Connection";
             }
         }
 
@@ -553,35 +560,41 @@ public class MainMenu extends AppCompatActivity {
         /** The system calls this to perform work in the UI thread and delivers
          * the result from doInBackground() */
         protected void onPostExecute(String result) {
-             if(result.equals("200")) {
-                 JSONArray arr = null;
-                 JSONArray arrCourse = null;
-                 try {
-                     JSONObject json = new JSONObject(restClient.getReturn());
-                     arr = json.getJSONArray("timetables");
-                     arrCourse = json.getJSONArray("routes");
-                 } catch (JSONException e) {
-                     e.printStackTrace();
-                 }
-
-                 if (arr == null) {
-                     Toast.makeText(MainMenu.this, "can't form json from server response", Toast.LENGTH_SHORT).show();
-                     Log.e("GET_TRAVELS", "response: " + restClient.getReturn());
-                 } else {
-                     try {
-                         updateAvailableTravels(arr, arrCourse);
-                     } catch (JSONException e) {
-                         e.printStackTrace();
-                     }
-
-                 }
-             }
-            else {
-                 Toast.makeText(MainMenu.this, "Error getting Travels", Toast.LENGTH_SHORT).show();
-             }
-
-
             progressBar.setVisibility(View.GONE);
+
+            if (result.equals("No Connection"))
+            {
+                Toast.makeText(MainMenu.this, "Can't connect to server", Toast.LENGTH_SHORT).show();
+            } else {
+                if (result.equals("200")) {
+                    JSONArray arr = null;
+                    JSONArray arrCourse = null;
+                    try {
+                        JSONObject json = new JSONObject(restClient.getReturn());
+                        arr = json.getJSONArray("timetables");
+                        arrCourse = json.getJSONArray("routes");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (arr == null) {
+                        Toast.makeText(MainMenu.this, "can't form json from server response", Toast.LENGTH_SHORT).show();
+                        Log.e("GET_TRAVELS", "response: " + restClient.getReturn());
+                    } else {
+                        try {
+                            updateAvailableTravels(arr, arrCourse);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                } else {
+                    Toast.makeText(MainMenu.this, "Error getting Travels", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+
         }
     }
 
@@ -591,12 +604,16 @@ public class MainMenu extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
 
-            try {
-                return restClient.execute();
-            } catch (IOException | JSONException | InterruptedException e) {
-                e.printStackTrace();
-                return "fail";
+            if (connection.checkConnection()) {
+                try {
+                    return restClient.execute();
+                } catch (IOException | JSONException | InterruptedException e) {
+                    e.printStackTrace();
+                    return "fail";
 
+                }
+            } else {
+                return "No Connection";
             }
         }
 
@@ -605,37 +622,37 @@ public class MainMenu extends AppCompatActivity {
         /** The system calls this to perform work in the UI thread and delivers
          * the result from doInBackground() */
         protected void onPostExecute(String result) {
-
-            if(result.equals("200"))
-            {
-                Toast.makeText(MainMenu.this, "Bilhete Comprado", Toast.LENGTH_SHORT).show();
-                Log.i("Retorno: ","cenas 200: "+  restClient.getReturn());
-            }
-            else if(result.equals("401"))
-            {
-                Log.e("COMPRA BILHETE", "Email/pass errados");
-            }
-            else if(result.equals("400"))
-            {
-
-                Log.i("Retorno: ","cenas 400: "+  restClient.getReturn());
-                try {
-
-                    JSONObject json = new JSONObject(restClient.getReturn());
-                    String erro = json.get("error").toString();
-                    Toast.makeText(MainMenu.this, erro, Toast.LENGTH_SHORT).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(MainMenu.this, "Error Buying Ticket", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-            else
-            {
-                Log.e("COMPRA BILHETE", "Retorno nao esperado: " + result);
-
-            }
             progressBar.setVisibility(View.GONE);
+
+            if (result.equals("No Connection"))
+            {
+                Toast.makeText(MainMenu.this, "Can't connect to server", Toast.LENGTH_SHORT).show();
+            } else {
+
+                if (result.equals("200")) {
+                    Toast.makeText(MainMenu.this, "Bilhete Comprado", Toast.LENGTH_SHORT).show();
+                    Log.i("Retorno: ", "cenas 200: " + restClient.getReturn());
+                } else if (result.equals("401")) {
+                    Log.e("COMPRA BILHETE", "Email/pass errados");
+                } else if (result.equals("400")) {
+
+                    Log.i("Retorno: ", "cenas 400: " + restClient.getReturn());
+                    try {
+
+                        JSONObject json = new JSONObject(restClient.getReturn());
+                        String erro = json.get("error").toString();
+                        Toast.makeText(MainMenu.this, erro, Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(MainMenu.this, "Error Buying Ticket", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+                    Log.e("COMPRA BILHETE", "Retorno nao esperado: " + result);
+
+                }
+            }
+
 
         }
     }

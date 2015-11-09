@@ -1,6 +1,5 @@
-package com.example.joao.revisor_app;
+package com.example.joao.myapplication;
 
-import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
 

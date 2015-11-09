@@ -338,7 +338,7 @@ public class MainMenu extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
             if (result.equals("No Connection"))
             {
-                Toast.makeText(MainMenu.this, "No internet Connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainMenu.this, "Can't connect to server", Toast.LENGTH_SHORT).show();
             } else
             {
 
