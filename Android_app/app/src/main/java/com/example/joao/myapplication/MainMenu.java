@@ -607,7 +607,7 @@ public class MainMenu extends AppCompatActivity {
          * delivers it the parameters given to AsyncTask.execute() */
         @Override
         protected String doInBackground(Void... params) {
-            
+
             try {
                 return restClient.execute();
             } catch (IOException | JSONException | InterruptedException e) {

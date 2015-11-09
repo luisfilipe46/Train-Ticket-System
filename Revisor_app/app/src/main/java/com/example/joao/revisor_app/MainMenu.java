@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,14 +53,13 @@ public class MainMenu extends AppCompatActivity {
 
     Spinner spinnerStart,spinnerEnd;
     String token,email,pass;
-    HashMap<String, String> stationsMap = new HashMap<String, String>();
+    StationsMap stationsMap = StationsMap.getInstance();
     Vector_tickets vecTickets;
     Button btnUpdateTickets;
     private RestClient restClient;
     private TextView date,departureTime;
     private String updateTicketsURL = "https://testcake3333.herokuapp.com/api/tickets";
-
-
+    private ProgressBar progressBar;
 
 
     @Override
@@ -68,7 +68,7 @@ public class MainMenu extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
         vecTickets = Vector_tickets.getInstance();
 
-        initializeStationsMap();
+
 
         Intent intent = getIntent();
         Bundle info = intent.getExtras();
@@ -86,7 +86,8 @@ public class MainMenu extends AppCompatActivity {
         departureTime = (TextView) findViewById(R.id.departureTime);
 
 
-
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -136,7 +137,7 @@ public class MainMenu extends AppCompatActivity {
                     startTicketActivity();
                 } else if (position == 1) //Qr code Launch
                 {
-                        launchQrCodeScan(MainMenu.this);
+                    launchQrCodeScan(MainMenu.this);
                 } else {
                     Toast.makeText(MainMenu.this, "Nothing to do", Toast.LENGTH_SHORT).show();
                 }
@@ -166,40 +167,22 @@ public class MainMenu extends AppCompatActivity {
                 android.R.layout.simple_list_item_1, osArray));;
     }
 
-    private void initializeStationsMap() {
-        stationsMap.put("01","Trindade");
-        stationsMap.put("11","S. Joao");
-        stationsMap.put("12","IPO");
-        stationsMap.put("21","Aliados");
-        stationsMap.put("22","Faria Guimaraes");
-        stationsMap.put("31", "Azurara");
-        stationsMap.put("32", "Vila do Conde");
 
 
 
-
-    }
-
-    public static Object getKeyFromValue(Map hm, String value) {
-        for (Object o : hm.keySet()) {
-            if (hm.get(o).equals(value)) {
-                return o;
-            }
-        }
-        return null;
-    }
 
     public void updateTickets(View view) {
 
         if(getFields()){
             restClient.setMethod("GET");
-            String origin = (String) getKeyFromValue(stationsMap,spinnerStart.getSelectedItem().toString());
-            String destiny= (String) getKeyFromValue(stationsMap,spinnerEnd.getSelectedItem().toString());
+            String origin = (String) stationsMap.getStationId(spinnerStart.getSelectedItem().toString());
+            String destiny= (String)  stationsMap.getStationId(spinnerEnd.getSelectedItem().toString());
             String dateText = date.getText().toString();
             String departureTimeText = this.departureTime.getText().toString();
             restClient.setUrl(updateTicketsURL + "/" + origin +"/" + destiny + "/"+ dateText + "/"+ departureTimeText + ".json");
             restClient.addHeader("token", token);
 
+            progressBar.setVisibility(View.VISIBLE);
             new updateTicketsTask().execute();
 
         }
@@ -405,6 +388,8 @@ public class MainMenu extends AppCompatActivity {
             else {
                 Toast.makeText(MainMenu.this, "Code: " + result, Toast.LENGTH_SHORT).show();
             }
+
+            progressBar.setVisibility(View.GONE);
         }
     }
 

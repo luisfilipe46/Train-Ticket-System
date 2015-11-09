@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -24,6 +26,8 @@ public class Tickets_view extends AppCompatActivity {
     TextView percentageInfo,numberOfTicketsInfo;
     LinearLayout allTickets;
     private String token;
+    private ProgressBar progressBar;
+    StationsMap stationsMap = StationsMap.getInstance();
 
 
     @Override
@@ -42,6 +46,9 @@ public class Tickets_view extends AppCompatActivity {
         percentageInfo = (TextView) findViewById(R.id.percentageInfo);
         numberOfTicketsInfo = (TextView) findViewById(R.id.numberOfTicketsInfo);
         allTickets = (LinearLayout) findViewById(R.id.allTickets);
+
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -92,29 +99,33 @@ public class Tickets_view extends AppCompatActivity {
 
             //origin station
             TextView originStation = new TextView(this);
-            originStation.setText("Station " + ticket.startStation + " " + ticket.hourStart);
+            originStation.setText(stationsMap.getStationRealName(ticket.startStation) + " " + ticket.hourStart.substring(0,5));
             LinearLayout.LayoutParams originStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             originStationParams.weight = 3f;
             originStation.setLayoutParams(originStationParams);
 
+
             // "to" text
             TextView toText = new TextView(this);
             toText.setText(" to ");
+
             toText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
 
             //end station
             TextView endStation = new TextView(this);
-            endStation.setText("Station " + ticket.endStation + " " + ticket.hourEnd);
+            endStation.setText(stationsMap.getStationRealName(ticket.endStation) + " " + ticket.hourEnd.substring(0,5));
             LinearLayout.LayoutParams endStationParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             endStationParams.weight = 3f;
             endStation.setLayoutParams(endStationParams);
-
-            // button to see qrCode
-
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                endStation.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            }
             Button qrcodeBtn = new Button(this);
             if(!ticket.used) {
-                qrcodeBtn.setText("Mark as used");
-                qrcodeBtn.setOnClickListener(new MarkUsedOnClickListener(ticket.QrCodeText));
+                qrcodeBtn.setText("Valid");
+                qrcodeBtn.setBackgroundColor(Color.GREEN);
+                qrcodeBtn.setClickable(false);
+
             }
             else
             {
@@ -124,7 +135,7 @@ public class Tickets_view extends AppCompatActivity {
                 qrcodeBtn.setClickable(false);
             }
             LinearLayout.LayoutParams qrcodeBtnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            qrcodeBtnParams.weight = 1f;
+
             qrcodeBtn.setLayoutParams(qrcodeBtnParams);
 
 

@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,13 +29,15 @@ public class MainActivity extends AppCompatActivity {
     MessageDigest digester;
 
     byte[] passEncrypted;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
 
         try {
             restClient = RestClient.getInstance();
@@ -117,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 restClient.addParam("password", Arrays.toString(passEncrypted));
                 //restClient.addParam("password", "test");
 
+                progressBar.setVisibility(View.VISIBLE);
                 new LoginTask().execute();
 
 
@@ -195,6 +199,8 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
+
+            progressBar.setVisibility(View.GONE);
         }
     }
 
