@@ -174,9 +174,6 @@ class TicketsController extends AppController
 
     public function editArray() {
         $array = explode(",", $this->request->data('tickets'));
-        Debugger::dump($array);
-        Debugger::dump($array[0]);
-        Debugger::dump(sizeof($array));
         for ($i = 0; $i < sizeof($array); $i++)
         {
             $this->edit($array[$i]);
