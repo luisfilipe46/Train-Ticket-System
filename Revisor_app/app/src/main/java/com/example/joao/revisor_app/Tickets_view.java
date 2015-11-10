@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,10 +16,17 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Vector;
 
 public class Tickets_view extends AppCompatActivity {
@@ -28,6 +36,10 @@ public class Tickets_view extends AppCompatActivity {
     private String token;
     private ProgressBar progressBar;
     StationsMap stationsMap = StationsMap.getInstance();
+    private RestClient restClient;
+    private CheckInternetConnection connection = CheckInternetConnection.getInstance();
+    private String url = "https://testcake3333.herokuapp.com/api/tickets_use.json";
+    private String publicKey;
 
 
     @Override
@@ -40,8 +52,15 @@ public class Tickets_view extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle info = intent.getExtras();
 
+        try {
+            restClient = RestClient.getInstance();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
 
         token = info.getString("token");
+        publicKey = info.getString("public_key");
 
         percentageInfo = (TextView) findViewById(R.id.percentageInfo);
         numberOfTicketsInfo = (TextView) findViewById(R.id.numberOfTicketsInfo);
@@ -181,6 +200,7 @@ public class Tickets_view extends AppCompatActivity {
         Intent intent = new Intent(getBaseContext(), QRCodeScan_Activity.class);
         Bundle info = new Bundle();
         info.putString("token", token);
+        info.putString("public_key",publicKey);
 
         intent.putExtras(info);
 
@@ -191,17 +211,7 @@ public class Tickets_view extends AppCompatActivity {
 
 
 
-    private class MarkUsedOnClickListener implements View.OnClickListener {
 
-        public MarkUsedOnClickListener(String qrCodeText) {
-
-        }
-
-        @Override
-        public void onClick(View v) {
-
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -216,6 +226,116 @@ public class Tickets_view extends AppCompatActivity {
         }
     }
 
+    public void comunicateServer(View view) {
 
+        Vector<Integer> vec_Int = vecTickets.ticketsForValidation;
+
+        String allTickets= "";
+
+        for(int i = 0;i<vec_Int.size();i++)
+        {
+           if(i==0)
+           {
+               allTickets = Integer.toString(vec_Int.get(i));
+           }
+            else
+           {
+               allTickets = allTickets + "," + vec_Int.get(i);
+           }
+        }
+
+        Log.i("URL ALL TICKETS", allTickets);
+
+        restClient.setMethod("PUT");
+        restClient.setUrl(url);
+        restClient.addParam("tickets", allTickets);
+
+        progressBar.setVisibility(View.VISIBLE);
+        new comunicateServerTask().execute();
+
+
+    }
+
+
+    private class comunicateServerTask extends AsyncTask<Void,Void,String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            if (connection.checkConnection()) {
+                try {
+                    return restClient.execute();
+                } catch (IOException | JSONException | InterruptedException e) {
+                    e.printStackTrace();
+                    return "fail";
+
+                }
+            } else {
+                return "No Connection";
+            }
+        }
+
+
+        protected void onPostExecute(String result) {
+            progressBar.setVisibility(View.GONE);
+            if (result.equals("No Connection"))
+            {
+                Toast.makeText(Tickets_view.this, "Can't connect to server", Toast.LENGTH_SHORT).show();
+            } else
+            {
+
+
+                if(result.equals("200"))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Tickets_view.this);
+
+                    builder.setMessage("Tickets communicated to server")
+                            .setTitle("Success");
+
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    vecTickets.ticketsForValidation.clear();
+                }
+                else if(result.equals("401"))
+                {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Tickets_view.this);
+
+                    builder.setMessage("Can not comunicate")
+                            .setTitle("Error");
+
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    // Toast.makeText(MainActivity.this,"Your email/password are incorrect", Toast.LENGTH_SHORT).show();
+                }
+                else if(result.equals("fail"))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Tickets_view.this);
+
+                    builder.setMessage("Error connecting to server")
+                            .setTitle("Error");
+
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+                else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Tickets_view.this);
+
+                    builder.setMessage("CODE: " + result)
+                            .setTitle("Error");
+
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            }
+
+
+        }
+    }
 
 }

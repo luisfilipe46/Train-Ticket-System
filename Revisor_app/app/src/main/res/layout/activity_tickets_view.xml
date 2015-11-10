@@ -79,12 +79,27 @@
                 android:id="@+id/allTickets"></LinearLayout>
         </ScrollView>
 
-        <Button
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Start Qr Code Scanner"
-            android:id="@+id/button"
-            android:onClick="lauchQrScan"/>
+            android:layout_height="wrap_content">
+
+
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lauch Scanner"
+                android:id="@+id/button"
+                android:onClick="lauchQrScan"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Comunicate Server"
+                android:id="@+id/btnComunicateServer"
+                android:onClick="comunicateServer"/>
+        </LinearLayout>
 
     </LinearLayout>
 

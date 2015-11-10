@@ -4,11 +4,9 @@
     <string name="app_name">Ticket Validator</string>
     <string name="error_field_required">Field Required</string>
     <string-array name="stations_array">
-        <item>S. Joao->Faria Guimaraes</item>
-        <item>Faria Guimaraes->S. Joao</item>
-        <item>Cenas 1 -> Cenas</item>
-        <item>Cenas -> Cenas 1</item>
-        <item>Cenas 22 -> Cenas</item>
-        <item>Cenas -> Cenas 22</item>
+        <item>S. Joao->Aliados</item>
+        <item>Aliados->S. Joao</item>
+        <item>Trindade->Vila do Conde</item>
+        <item>Vila do Conde->Trindade</item>
     </string-array>
 </resources>

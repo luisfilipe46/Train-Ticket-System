@@ -53,6 +53,8 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
     private String updateTicketsURL = "https://testcake3333.herokuapp.com/api/tickets";
     private ProgressBar progressBar;
     private CheckInternetConnection connection = CheckInternetConnection.getInstance();
+    private String publicKey;
+    private String urlGetPublicKey= "https://testcake3333.herokuapp.com/api/publickey.json";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +116,21 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
 
         //set handler
         setHandlerDrawer();
+
+        getPublicKey();
+
+    }
+
+    public void getPublicKey() {
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        restClient.setUrl(urlGetPublicKey);
+        restClient.setMethod("GET");
+        restClient.addHeader("token", token);
+
+        new getPublicKeyTask().execute();
+
 
     }
 
@@ -207,6 +224,7 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
         info.putString("email", email);
         info.putString("password", pass);
         info.putString("token", token);
+        info.putString("public_key",publicKey);
 
         intent.putExtras(info);
 
@@ -370,8 +388,6 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
 
 
 
-
-
     // ------------------------------------------------------------------- REST TASKS ---------------------------------------------------------------------------------
     //
     //
@@ -466,9 +482,64 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
                     dialog.show();
                 }
                 else {
-                    Toast.makeText(MainMenu.this, "Code: " + result, Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainMenu.this);
+
+                    builder.setMessage("Is departure time correct?")
+                            .setTitle("Error");
+
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 }
             }
+
+
+        }
+    }
+
+    private class getPublicKeyTask extends AsyncTask<Void,Void,String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            if (connection.checkConnection()) {
+                try {
+                    return restClient.execute();
+                } catch (IOException | JSONException | InterruptedException e) {
+                    e.printStackTrace();
+                    return "fail";
+
+                }
+            } else {
+                return "No Connection";
+            }
+        }
+
+
+        protected void onPostExecute(String result) {
+            progressBar.setVisibility(View.GONE);
+
+                if(result.equals("200"))
+                {
+
+                        Log.i("getPublicKey", "resposta : " + restClient.getReturn());
+
+                    String toParse = restClient.getReturn();
+
+                    publicKey = toParse.substring(1,toParse.length()-1);
+
+
+
+
+
+                }
+                else{
+                    Log.i("getPublicKey", "CODE:  " + result + "Rest return: " + restClient.getReturn());
+                    Toast.makeText(MainMenu.this, "Error getting public key, quitting", Toast.LENGTH_SHORT).show();
+                    finish();
+
+                }
+
 
 
         }
@@ -484,6 +555,7 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
         info.putString("email", email);
         info.putString("password", pass);
         info.putString("token", token);
+        info.putString("public_key",publicKey);
 
         intent.putExtras(info);
 

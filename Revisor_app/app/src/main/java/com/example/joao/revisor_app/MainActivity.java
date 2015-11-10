@@ -184,6 +184,8 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             json = new JSONObject(restClient.getReturn());
                             String token = json.get("token").toString();
+
+
                             Intent intent = new Intent(getBaseContext(), MainMenu.class);
                             Bundle info = new Bundle();
                             info.putString("email", email.getText().toString());

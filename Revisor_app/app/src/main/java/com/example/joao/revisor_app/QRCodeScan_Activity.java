@@ -24,6 +24,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.security.InvalidKeyException;
@@ -34,6 +35,7 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
 
 public class QRCodeScan_Activity extends AppCompatActivity {
 
@@ -44,6 +46,7 @@ public class QRCodeScan_Activity extends AppCompatActivity {
     private ProgressBar progressBar;
     private CheckInternetConnection connection = CheckInternetConnection.getInstance();
     private StationsMap stationsMap = StationsMap.getInstance();
+    private String publicKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,7 @@ public class QRCodeScan_Activity extends AppCompatActivity {
 
 
         token = info.getString("token");
+        publicKey = info.getString("public_key");
 
         vecTickets = Vector_tickets.getInstance();
         try {
@@ -116,7 +120,9 @@ public class QRCodeScan_Activity extends AppCompatActivity {
         Signature sig = null;
         boolean verifiesSignature = false;
         String publicK = "MEowDQYJKoZIhvcNAQEBBQADOQAwNgIvAKp9Su+TSBa8PMpsoSMzq9ohkykfe/bm GU9MGo+h0p8bHSooLN5NUYyD+ShpGZ0CAwEAAQ==";
-        //String publicK2 = "MEowDQYJKoZIhvcNAQEBBQADOQAwNgIvAKp9Su+TSBa8PMpsoSMzq9ohkykfe/bm\nGU9MGo+h0p8bHSooLN5NUYyD+ShpGZ0CAwEAAQ==";
+        //String publicK = publicKey;
+        Log.i("PUBLIC KEY", publicKey);
+        Log.i("PUBLIC KEY", token);
 
         try {
 
@@ -147,7 +153,26 @@ public class QRCodeScan_Activity extends AppCompatActivity {
         int i = 0;
         final Ticket t = vecTickets.existsTicket(qrCode);
 
-        if(t==null)
+        if(verifiesSignature == false)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(QRCodeScan_Activity.this);
+
+            builder.setMessage("Ticket not signed by Server")
+                    .setTitle("Error");
+
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        }
+        else if(t==null)
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(QRCodeScan_Activity.this);
 
@@ -186,8 +211,11 @@ public class QRCodeScan_Activity extends AppCompatActivity {
             dialog.show();
 
         }
+
         else {
             Log.i("TICKET", "Ticket OK");
+
+            t.used = true;
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -348,18 +376,18 @@ public class QRCodeScan_Activity extends AppCompatActivity {
 
             if (result.equals("No Connection"))
             {
-                Toast.makeText(QRCodeScan_Activity.this, "Can't connect to server", Toast.LENGTH_SHORT).show();
+                Toast.makeText(QRCodeScan_Activity.this, "Not validated on server, in the end of travel comunicate", Toast.LENGTH_SHORT).show();
 
             } else
             {
                 if(result.equals("200"))
                 {
                     Toast.makeText(QRCodeScan_Activity.this, "Ticket Validated on Server", Toast.LENGTH_SHORT).show();
-                    t.used = true;
+
                 }
                 else if(result.equals("fail"))
                 {
-
+                    Toast.makeText(QRCodeScan_Activity.this, "Not validated on server, in the end of travel comunicate", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Toast.makeText(QRCodeScan_Activity.this, "Not validated on server, in the end of travel comunicate", Toast.LENGTH_SHORT).show();
