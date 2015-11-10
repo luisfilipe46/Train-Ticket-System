@@ -373,7 +373,7 @@ $data = [
 		'_truncate' => true,
 		'_defaults' => [],
 	],
-	'tickets' => [
+	/*'tickets' => [
 		'_truncate' => true,
 		'_defaults' => ['created' => '2016-06-06 01:00:00',
 			'modified' => '2016-06-06 01:00:00', 'price' => 1.05],
@@ -381,7 +381,8 @@ $data = [
 			'id_users' => 1,
 			'origin_station' => '11',
 			'destiny_station' => '12',
-			'qr_code' => '11 12 2015-10-06 09:00:00 09:10:00 1.05 1 3234 5e9a31ca1cbeb6c0c38bb52d7d90c04f786bd5f12dd6339c67997cdac70759d2bfba2098cdc4e89c15bf8c0f4f2b',
+			//'qr_code' => '11 12 2015-10-06 09:00:00 09:10:00 1.05 1 3234 5e9a31ca1cbeb6c0c38bb52d7d90c04f786bd5f12dd6339c67997cdac70759d2bfba2098cdc4e89c15bf8c0f4f2b',
+			'qr_code' => '11 12 2015-10-06 09:00:00 09:10:00 1.05 1 26969799 76e9ec7060accbc5c30947676e0fb25124a5a5cd98ae4fc2950f86b552380cbcde936a4e7c154101c4c2b391d173',
 			'used' => false,
 			'departure_time' => '2015-10-06 09:00:00',
 			'arrival_time' => '2015-10-06 09:10:00',
@@ -404,7 +405,7 @@ $data = [
 			'departure_time' => '2015-10-06 22:10:00',
 			'arrival_time' => '2015-10-06 22:20:00',
 		],
-	],
+	],*/
 	'routes' => [
 		'_truncate' => true,
 		'_defaults' => ['created' => '2016-06-06 01:00:00',
