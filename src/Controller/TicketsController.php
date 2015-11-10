@@ -292,6 +292,7 @@ class TicketsController extends AppController
                 $fp = fopen("pubkey.pem", "r");
                 $public_key = fread($fp, 10000);
                 fclose($fp);
+                $public_key = substr($public_key, 27, 105);
                 $this->set(['public_key'], [$public_key]);
                 $this->set(['_serialize'], ['public_key']);
                 return;
