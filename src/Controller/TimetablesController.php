@@ -38,18 +38,13 @@ class TimetablesController extends AppController
         parent::getRouteBetweenStations($station1, $station2, $routeArray, $stationsWithChangeOfTrain);
         $routeArrayInResponse = $routeArray;
         $price = 0.0;
-        $passengers = 0;
+        $passengers = array();
+
         for ($a = 0; $a < sizeof($routeArray)-1; ) {
             $origin_station = $routeArray[$a];
             $destiny_station = $routeArray[$a+1];
             $timetable_aux = $this->Timetables->find()->where(['origin_station =' => $origin_station, 'destiny_station =' => $destiny_station])->toArray();
-            $travelTrains_aux = $this->TravelTrains->find()
-                ->where(['timetable_id =' => $timetable_aux[0]['id'], 'date =' => $day])
-                ->toArray();
 
-            $actualPassengers = $travelTrains_aux[0]['passengers'];
-            if ($actualPassengers > $passengers)
-                $passengers = $actualPassengers;
             $price = $price + $timetable_aux[0]['price'];
             $lotation = $timetable_aux[0]['lotation'];
 
@@ -59,8 +54,14 @@ class TimetablesController extends AppController
 
             for ($i = 0; $i < sizeof($timetable_aux); $i++) {
                 $arrival_time[] = $timetable_aux[$i]['arrival_time'];
+
                 if ($a == 0)
                     $departure_time[] = $timetable_aux[$i]['departure_time'];
+
+                $travelTrains_aux = $this->TravelTrains->find()
+                    ->where(['timetable_id =' => $timetable_aux[$i]['id'], 'date =' => $day])
+                    ->toArray();
+                $passengers[] = $travelTrains_aux[0]['passengers'];
             }
             $a++;
 
@@ -70,14 +71,14 @@ class TimetablesController extends AppController
                 $this->getLine($routeArray, $line);
                 $this->addElementsToTimetablesArray($day, $departure_time, $routeArray, $destiny_station, $line, $arrival_time, $price, $passengers, $lotation, $timetables);
                 $price = 0.0;
-                $passengers = 0;
+                $passengers = array();
             }
             elseif (!empty($stationsWithChangeOfTrain) && $destiny_station == $stationsWithChangeOfTrain[0])
             {
                 $this->getLine($routeArray, $line);
                 $this->addElementsToTimetablesArray($day, $departure_time, $routeArray, $destiny_station, $line, $arrival_time, $price, $passengers, $lotation, $timetables);
                 $price = 0.0;
-                $passengers = 0;
+                $passengers = array();
 
                 for($aa = $a; $aa < sizeof($routeArray); $aa++)
                 {
@@ -206,7 +207,7 @@ class TimetablesController extends AppController
                 'arrival_time' => $day. 'T' . $arrival_time[$ii]->i18nFormat('HH:mm:ss'),
                 'price' => $price,
                 'line' => $line,
-                'passengers' => $passengers,
+                'passengers' => $passengers[$ii],
                 'lotation' => $lotation
             ];
         }
